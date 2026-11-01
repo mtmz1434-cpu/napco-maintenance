@@ -1,445 +1,416 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة طلبات الصيانة - نابكو</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#0f766e', secondary: '#115e59' }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
-        @media print { .no-print { display: none !important; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Napco Maintenance</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:Cairo,system-ui,sans-serif;background:#f3f6f5;color:#1f2937}
+input,select,textarea{border:1px solid #cbd5d1;border-radius:.5rem;padding:.6rem;width:100%;background:#fff}
+@media print{.np{display:none!important}body.p1 .req:not(.only){display:none}}
+</style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body>
+<div id="app"></div>
+<script>
+// ====== SETTINGS: change the two passwords below ======
+const ADMIN_ID = "1072210";
+const ADMIN_PASSWORD = "CHANGE_ME_123";
+const WORKSHOP_ID = "9999";            // shared workshop-screen account
+const WORKSHOP_PASSWORD = "CHANGE_ME_WS";
+// ==============================================
 
-    <div id="app" class="flex-1 flex flex-col"></div>
+const D = `app|نظام صيانة نابكو|Napco Maintenance
+empNo|رقم الموظف|Employee number
+password|كلمة المرور|Password
+confirmPw|تأكيد كلمة المرور|Confirm password
+next|التالي|Next
+logout|خروج|Logout
+back|رجوع|Back
+badEmp|أدخل رقم موظف صحيح (أرقام فقط)|Enter a valid employee number (digits only)
+wrongPw|كلمة المرور غير صحيحة|Wrong password
+pwMismatch|كلمتا المرور غير متطابقتين|Passwords do not match
+pwShort|كلمة المرور 4 أحرف على الأقل|Password must be at least 4 characters
+roleQ|من أنت؟|Who are you?
+operator|مشغّل|Operator
+technician|فني صيانة|Technician
+createPw|أنشئ كلمة مرور خاصة بك|Create your own password
+waiting|تم تسجيلك. بانتظار موافقة المسؤول|You are registered. Waiting for admin approval
+report|تسجيل عطل جديد|Report a machine fault
+machine|الآلة|Machine
+newMachine|+ إضافة آلة جديدة|+ Add new machine
+machineName|اسم الآلة الجديدة|New machine name
+dept|القسم|Department
+ptype|نوع المشكلة|Problem type
+other|أخرى...|Other...
+otherType|اكتب نوع المشكلة باختصار|Type the problem briefly
+typeIt|اكتب نوع المشكلة|Please type the problem type
+overheating|ارتفاع حرارة|Overheating
+electrical|كهربائي|Electrical
+mechanical|ميكانيكي|Mechanical
+hydraulic|هيدروليك / هواء|Hydraulic / Pneumatic
+leak|تسريب|Leak
+noise|اهتزاز / أصوات|Noise / Vibration
+desc|وصف المشكلة|Problem description
+priority|الأولوية|Priority
+low|منخفضة|Low
+medium|متوسطة|Medium
+high|عالية|High
+critical|حرجة|Critical
+stopped|هل الآلة متوقفة؟|Machine stopped?
+yes|نعم|Yes
+no|لا|No
+reportedAt|تاريخ ووقت المشكلة|Problem date & time
+send|إرسال الطلب|Send request
+sent|تم إرسال الطلب|Request sent
+openReq|طلبات الصيانة المفتوحة|Open maintenance requests
+none|لا توجد طلبات|No requests
+take|استلام الطلب|Take this request
+takenAt|تاريخ ووقت الاستلام|Received date & time
+withMe|من ذهب معك؟ (اختياري)|Others who went with you (optional)
+action|ما تم عمله لإصلاح المشكلة|What was done to fix it
+clean|هل تحتاج الآلة تنظيف؟|Needs cleaning?
+parts|هل استخدمت قطع غيار؟|Spare parts used?
+partName|اسم القطعة|Part name
+partNo|رقم القطعة|Part number
+addPart|إضافة قطعة|Add part
+finishedAt|تاريخ ووقت الانتهاء|Finished date & time
+dateErr|وقت الانتهاء قبل وقت الاستلام|Finish time is before receive time
+close|إنهاء وإغلاق الطلب|Finish & close request
+tabOpen|الطلبات المفتوحة|Open requests
+tabPrev|الطلبات السابقة|Previous requests
+tabTech|الفنيون والمشرفون|Technicians & supervisors
+tabStats|الإحصائيات|Statistics
+sOpen|مفتوح|Open
+sProg|قيد التنفيذ|In progress
+approve|موافقة|Approve
+reject|رفض|Reject
+remove|حذف|Remove
+print|طباعة|Print
+printAll|طباعة الكل|Print all
+statsTech|إحصائيات الفنيين|Technician statistics
+taken|مستلمة|Taken
+closedN|مغلقة|Closed
+avg|متوسط وقت الإصلاح|Avg repair time
+hr|س|h
+min|د|m
+machProfiles|سجلات الآلات|Machine profiles
+total|الأعطال|Breakdowns
+stops|مرات التوقف|Stops
+all|كل الفترات|All time
+parts2|قطع الغيار|Spare parts
+tabMach|الآلات والباركود|Machines & QR
+tabShift|تسليم الشفت|Shift handover
+qrHint|اطبع رمز QR والصقه على الآلة. لما المشغل يمسحه يفتح له نموذج العطل لنفس الآلة|Print the QR code and stick it on the machine. Scanning it opens the fault form for that machine
+addMachine|إضافة آلة|Add machine
+topParts|أكثر قطع الغيار استهلاكاً|Most used spare parts
+times|مرة|times
+shiftNote|نظام المناوبة: شفتان، 12 ساعة لكل شفت (من 7 إلى 7)|Two 12-hour shifts (7:00 to 19:00)
+curShift|الشفت الحالي|Current shift
+prevShift|الشفت السابق|Previous shift
+stillOpen|أعطال لم تُغلق (تُسلَّم للشفت القادم)|Faults still open (hand over to next shift)
+doneShift|أعطال أُنجزت في هذا الشفت|Faults completed in this shift
+confirmDel|حذف الآلة؟|Delete this machine?
+supervisor|مشرف|Supervisor
+confirmReq|حذف هذا الطلب نهائياً؟|Delete this request permanently?
+confirmUser|حذف هذا الحساب؟|Delete this account?
+closedMsg|تم إغلاق الطلب وحفظه في الطلبات السابقة|Request closed and saved to previous requests
+sPending|بانتظار الموافقة|Pending approval
+sApproved|معتمد|Approved
+tabWork|استلام الطلبات|Take requests
+notTaken|لم يُستلم بعد|Not taken yet
+waitFor|ينتظر منذ|Waiting
+byTech|الفني|Technician`;
+const L = { ar: {}, en: {} };
+D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k] = e; });
 
-    <script>
-        const translations = {
-            ar: {
-                appName: "نظام صيانة نابكو",
-                loginTitle: "تسجيل الدخول",
-                employeeNumber: "رقم الموظف",
-                password: "كلمة المرور",
-                loginBtn: "دخول",
-                reportFault: "تسجيل عطل جديد",
-                machineName: "اسم الآلة",
-                department: "القسم",
-                problemType: "نوع المشكلة",
-                description: "وصف المشكلة",
-                priority: "الأولوية",
-                machineStopped: "هل الآلة متوقفة؟",
-                yes: "نعم",
-                no: "لا",
-                submit: "إرسال الطلب",
-                logout: "تسجيل الخروج",
-                openRequests: "الطلبات المفتوحة",
-                previousRequests: "الطلبات السابقة",
-                technicians: "الفنيين",
-                statistics: "الإحصائيات",
-                machineProfiles: "سجلات الآلات",
-                handover: "تسليم الشفت (Handover)",
-                sparePartsReport: "قطع الغيار الأكثر استهلاكاً",
-                scanBarcode: "مسح باركود الآلة",
-                takeRequest: "استلام الطلب",
-                repairForm: "نموذج الإصلاح",
-                actionTaken: "ما تم عمله للإصلاح",
-                sparePartsUsed: "قطع الغيار المستخدمة",
-                addPart: "إضافة قطعة غيار",
-                partName: "اسم القطعة",
-                partNumber: "رقم القطعة",
-                finishRepair: "إتمام الإصلاح وإغلاق الطلب",
-                print: "طباعة",
-                printAll: "طباعة الكل"
-            }
-        };
+let lang = localStorage.getItem('lang') || 'ar';
+const tr = k => L[lang][k] ?? k;
+let db = JSON.parse(localStorage.getItem('napco_db') || 'null') || { machines: [], requests: [], techs: [], ops: [], custom: {} };
+let me = JSON.parse(localStorage.getItem('napco_me') || 'null');
+let step = { s: 'emp', e: '' }, tab = 'open', period = 'all';
+const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
+const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
+const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
 
-        let state = {
-            lang: 'ar',
-            currentUser: JSON.parse(localStorage.getItem('napco_user')) || null,
-            view: 'login',
-            requests: JSON.parse(localStorage.getItem('napco_requests')) || [],
-            technicians: JSON.parse(localStorage.getItem('napco_techs')) || [],
-            pendingTechs: JSON.parse(localStorage.getItem('napco_pending_techs')) || [],
-            machines: JSON.parse(localStorage.getItem('napco_machines')) || [
-                { id: "M01", name: "ماكينة البثق 1", dept: "التصنيع" },
-                { id: "M02", name: "ماكينة التغليف 2", dept: "التغليف" }
-            ],
-            adminPassword: "Tmaz"
-        };
+const $ = id => document.getElementById(id);
+const save = () => { localStorage.setItem('napco_db', JSON.stringify(db)); localStorage.setItem('napco_me', JSON.stringify(me)); };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const now = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
+const fd = s => s ? s.replace('T', ' ') : '—';
+const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
+const tl = v => DT.includes(v) ? tr(v) : v;
+const yn = () => `<option value="No">${tr('no')}</option><option value="Yes">${tr('yes')}</option>`;
+const hm = m => m >= 60 ? Math.floor(m / 60) + tr('hr') + ' ' + (m % 60) + tr('min') : m + tr('min');
 
-        function saveState() {
-            localStorage.setItem('napco_user', JSON.stringify(state.currentUser));
-            localStorage.setItem('napco_requests', JSON.stringify(state.requests));
-            localStorage.setItem('napco_techs', JSON.stringify(state.technicians));
-            localStorage.setItem('napco_pending_techs', JSON.stringify(state.pendingTechs));
-            localStorage.setItem('napco_machines', JSON.stringify(state.machines));
-        }
+function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; localStorage.setItem('lang', lang); render(); }
+function logout() { me = null; step = { s: 'emp', e: '' }; save(); render(); }
+function setTab(k) { tab = k; render(); }
+function setPeriod(v) { period = v; render(); }
 
-        function t(key) { return translations.ar[key] || key; }
+function render() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
+  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">#${esc(me.e)}</span><button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4">`;
+  h += !me ? loginView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
+  $('app').innerHTML = h + '</main>';
+  if (me && me.r == 'operator') {
+    const q = new URLSearchParams(location.search), qn = q.get('m');
+    if (qn) {
+      const m = db.machines.find(x => x.n.toLowerCase() == qn.toLowerCase());
+      $('m').value = m ? m.id : 'new';
+      mchg();
+      if (!m) { $('mn').value = qn; $('dp').value = q.get('d') || ''; }
+    } else mchg();
+  }
+  if (me && me.r == 'admin' && tab == 'mach' && window.QRCode) document.querySelectorAll('[data-qr]').forEach(el => new QRCode(el, { text: el.dataset.qr, width: 96, height: 96 }));
+  if (!me) { const f = document.querySelector('#app input'); if (f) f.focus(); }
+}
 
-        function render() {
-            const app = document.getElementById('app');
-            let html = `
-                <header class="bg-teal-800 text-white shadow-md no-print">
-                    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                        <div class="flex items-center space-x-3 space-x-reverse">
-                            <i class="fas fa-tools text-2xl"></i>
-                            <h1 class="font-bold text-lg">${t('appName')}</h1>
-                        </div>
-                        <div class="flex items-center space-x-4 space-x-reverse">
-                            ${state.currentUser ? `
-                                <span class="text-sm bg-teal-900 px-3 py-1 rounded">رقم: ${state.currentUser.empNo}</span>
-                                <button onclick="logout()" class="text-red-200 hover:text-white text-sm"><i class="fas fa-sign-out-alt"></i> ${t('logout')}</button>
-                            ` : ''}
-                        </div>
-                    </div>
-                </header>
-                <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
-            `;
+/* ---------- LOGIN ---------- */
+function loginView() {
+  const s = step.s;
+  const bk = `<button type="button" onclick="step={s:'emp',e:''};render()" class="text-sm text-gray-500 mt-3">← ${tr('back')}</button>`;
+  const wrap = b => `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-8">${b}</div>`;
+  if (s == 'emp') return wrap(`<form onsubmit="doEmp(event)" class="space-y-3"><label class="font-semibold">${tr('empNo')}</label><input id="emp" inputmode="numeric" autocomplete="off"><button class="${btn}">${tr('next')}</button></form>`);
+  if (s == 'pass') return wrap(`<form onsubmit="doPass(event)" class="space-y-3"><b>#${step.e}</b><label class="block font-semibold">${tr('password')}</label><input id="pw" type="password" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
+  if (s == 'role') return wrap(`<b>#${step.e}</b><p class="my-3">${tr('roleQ')}</p><div class="grid gap-3"><button onclick="pickRole('operator')" class="${btn}">${tr('operator')}</button><button onclick="pickRole('tech')" class="${btn}">${tr('technician')}</button><button onclick="pickRole('sup')" class="${btn}">${tr('supervisor')}</button></div>${bk}`);
+  if (s == 'newpw') return wrap(`<form onsubmit="doNew(event)" class="space-y-3"><b>#${step.e}</b><p>${tr('createPw')}</p><input id="pw" type="password" placeholder="${tr('password')}" required><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
+  return wrap(`<p class="text-center py-4">⏳ ${tr('waiting')}</p>${bk}`);
+}
+function doEmp(e) {
+  e.preventDefault();
+  const v = $('emp').value.trim();
+  if (!/^\d{3,12}$/.test(v)) return alert(tr('badEmp'));
+  if (db.ops.includes(v)) { me = { e: v, r: 'operator' }; save(); return render(); }
+  step = { s: (v == ADMIN_ID || v == WORKSHOP_ID || db.techs.some(t => t.e == v)) ? 'pass' : 'role', e: v };
+  render();
+}
+async function doPass(e) {
+  e.preventDefault();
+  const v = $('pw').value, u = step.e;
+  if (u == ADMIN_ID) {
+    if (v !== Tmaz4123i) return alert(tr('wrongPw'));
+    me = { e: u, r: 'admin' }; save(); return render();
+  }
+  if (u == WORKSHOP_ID) {
+    if (v !== 11223344) return alert(tr('wrongPw'));
+    me = { e: u, r: 'workshop' }; save(); return render();
+  }
+  const t = db.techs.find(x => x.e == u);
+  if (!t || await sha(v) !== t.h) return alert(tr('wrongPw'));
+  if (t.st == 'approved') { me = { e: u, r: t.r == 'sup' ? 'supervisor' : 'technician' }; save(); render(); }
+  else { step = { s: 'wait', e: u }; render(); }
+}
+function pickRole(r) {
+  const u = step.e;
+  if (r == 'operator') { db.ops.push(u); me = { e: u, r: 'operator' }; save(); render(); }
+  else { step = { s: 'newpw', e: u, rl: r }; render(); }
+}
+async function doNew(e) {
+  e.preventDefault();
+  const a = $('pw').value, b = $('pw2').value;
+  if (a.length < 4) return alert(tr('pwShort'));
+  if (a !== b) return alert(tr('pwMismatch'));
+  db.techs.push({ e: step.e, h: await sha(a), st: 'pending', r: step.rl || 'tech' });
+  save(); step = { s: 'wait', e: step.e }; render();
+}
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const scanMachineId = urlParams.get('machine');
+/* ---------- OPERATOR ---------- */
+function typeOpts(mid) {
+  const c = Object.values(db.custom).filter(x => x.m === mid && x.n >= 2);
+  return DT.map(k => `<option value="${k}">${tr(k)}</option>`).join('') + c.map(x => `<option value="c:${esc(x.l)}">${esc(x.l)}</option>`).join('') + `<option value="other">${tr('other')}</option>`;
+}
+function opView() {
+  return `<form onsubmit="sendReq(event)" class="bg-white rounded-xl shadow p-5 space-y-3 max-w-xl mx-auto">
+<h2 class="text-xl font-bold text-teal-800">⚠ ${tr('report')}</h2>
+<label class="font-semibold">${tr('machine')}</label>
+<select id="m" onchange="mchg()">${db.machines.map(m => `<option value="${m.id}">${esc(m.n)}</option>`).join('')}<option value="new">${tr('newMachine')}</option></select>
+<div id="nm" class="hidden"><input id="mn" placeholder="${tr('machineName')}"></div>
+<label class="font-semibold">${tr('dept')}</label><input id="dp" required>
+<label class="font-semibold">${tr('ptype')}</label>
+<select id="pt" onchange="$('ot').classList.toggle('hidden',this.value!='other')"></select>
+<input id="ot" class="hidden" placeholder="${tr('otherType')}">
+<label class="font-semibold">${tr('desc')}</label><textarea id="ds" rows="3" required></textarea>
+<div class="grid grid-cols-2 gap-3">
+<div><label class="font-semibold">${tr('priority')}</label><select id="pr"><option value="low">${tr('low')}</option><option value="medium" selected>${tr('medium')}</option><option value="high">${tr('high')}</option><option value="critical">${tr('critical')}</option></select></div>
+<div><label class="font-semibold">${tr('stopped')}</label><select id="st">${yn()}</select></div></div>
+<label class="font-semibold">${tr('reportedAt')}</label><input type="datetime-local" id="ra" value="${now()}" required>
+<button class="${btn}">${tr('send')}</button></form>`;
+}
+function mchg() {
+  const v = $('m').value, nw = v == 'new';
+  $('nm').classList.toggle('hidden', !nw);
+  $('mn').required = nw;
+  $('dp').value = nw ? '' : db.machines.find(x => x.id == v).d;
+  $('pt').innerHTML = typeOpts(nw ? '' : v);
+  $('ot').classList.add('hidden');
+}
+function sendReq(e) {
+  e.preventDefault();
+  const mv = $('m').value, dept = $('dp').value.trim();
+  let m;
+  if (mv == 'new') {
+    const n = $('mn').value.trim();
+    if (!n) return;
+    m = db.machines.find(x => x.n.toLowerCase() == n.toLowerCase());
+    if (!m) { m = { id: String(Date.now()), n, d: dept }; db.machines.push(m); }
+  } else m = db.machines.find(x => x.id == mv);
+  const t = $('pt').value;
+  let tt = t;
+  if (t == 'other') { tt = $('ot').value.trim(); if (!tt) return alert(tr('typeIt')); }
+  else if (t.startsWith('c:')) tt = t.slice(2);
+  if (!DT.includes(tt)) { const k = m.id + '|' + tt.toLowerCase(); const c = db.custom[k] = db.custom[k] || { m: m.id, l: tt, n: 0 }; c.n++; }
+  db.requests.unshift({ id: Date.now(), mid: m.id, mn: m.n, d: dept, pt: tt, ds: $('ds').value.trim(), pr: $('pr').value, st: $('st').value, ra: $('ra').value, by: me.e, s: 'open', ts: null, ta: null, tw: '', fa: null });
+  save(); render(); window.scrollTo(0, 0); alert(tr('sent'));
+}
 
-            if (!state.currentUser) {
-                html += renderLoginScreen();
-            } else if (state.currentUser.role === 'operator') {
-                html += renderOperatorScreen(scanMachineId);
-            } else if (state.currentUser.role === 'technician') {
-                html += renderTechnicianScreen();
-            } else if (state.currentUser.role === 'admin') {
-                html += renderAdminScreen();
-            }
+/* ---------- SHARED CARDS ---------- */
+const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${esc(r.mn)}</b><span class="text-xs px-2 py-1 rounded-full ${pcol[r.pr]}">${tr(r.pr)}</span></div>
+<div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))} · ${tr('stopped')} ${tr(r.st == 'Yes' ? 'yes' : 'no')}</div>
+<p class="text-sm bg-gray-50 rounded p-2 my-2">${esc(r.ds)}</p>
+<div class="text-xs text-gray-500 space-y-0.5"><div>${tr('reportedAt')}: ${fd(r.ra)} (#${esc(r.by)})</div>${r.ta ? `<div>${tr('takenAt')}: ${fd(r.ta)} (#${esc(r.ts)}${r.tw ? ' + ' + esc(r.tw) : ''})</div>` : ''}${r.fa ? `<div>${tr('finishedAt')}: ${fd(r.fa)}</div>` : ''}</div>`;
+const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${esc(r.ac)}</div><div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${tr(r.s2 == 'Yes' ? 'yes' : 'no')}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
 
-            html += `</main>`;
-            app.innerHTML = html;
-        }
+/* ---------- TECHNICIAN ---------- */
+function techView() {
+  const rs = db.requests.filter(r => r.s == 'open' || (r.s == 'prog' && r.ts == me.e));
+  return `<h2 class="text-xl font-bold text-teal-800 mb-3">🔔 ${tr('openReq')}</h2>${rs.length ? '' : `<p class="text-gray-500">${tr('none')}</p>`}
+<div class="grid md:grid-cols-2 gap-4">${rs.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}${r.s == 'open' ? takeForm(r) : finForm(r)}</div>`).join('')}</div>`;
+}
+const takeForm = r => `<form class="mt-3 space-y-2" onsubmit="take(event,${r.id})"><label class="text-sm font-semibold">${tr('takenAt')}</label><input type="datetime-local" id="ta${r.id}" value="${now()}" required><input id="tw${r.id}" placeholder="${tr('withMe')}"><button class="${btn}">${tr('take')}</button></form>`;
+const finForm = r => `<form class="mt-3 space-y-2 border-t pt-3" onsubmit="fin(event,${r.id})">
+<textarea id="ac${r.id}" required rows="2" placeholder="${tr('action')}"></textarea>
+<div class="grid grid-cols-2 gap-2"><div><label class="text-sm font-semibold">${tr('clean')}</label><select id="cl${r.id}">${yn()}</select></div><div><label class="text-sm font-semibold">${tr('stopped')}</label><select id="s2${r.id}">${yn()}</select></div></div>
+<label class="text-sm font-semibold">${tr('parts')}</label><select id="sp${r.id}" onchange="pchg(${r.id},this.value)">${yn()}</select>
+<div id="pb${r.id}" class="hidden space-y-2"><div id="pl${r.id}" class="space-y-2"></div><button type="button" class="text-teal-700 font-semibold" onclick="addPart(${r.id})">+ ${tr('addPart')}</button></div>
+<label class="text-sm font-semibold">${tr('finishedAt')}</label><input type="datetime-local" id="fa${r.id}" value="${now()}" required>
+<button class="w-full bg-green-700 text-white font-bold py-3 rounded-lg">${tr('close')}</button></form>`;
+function take(e, id) {
+  e.preventDefault();
+  const r = db.requests.find(x => x.id == id);
+  r.s = 'prog'; r.ts = me.e; r.ta = $('ta' + id).value; r.tw = $('tw' + id).value.trim();
+  save(); render();
+}
+function pchg(id, v) {
+  $('pb' + id).classList.toggle('hidden', v != 'Yes');
+  if (v == 'Yes' && !$('pl' + id).children.length) addPart(id);
+}
+function addPart(id) {
+  const d = document.createElement('div');
+  d.className = 'grid grid-cols-2 gap-2 pr';
+  d.innerHTML = `<input placeholder="${tr('partName')}"><input placeholder="${tr('partNo')}">`;
+  $('pl' + id).appendChild(d);
+}
+function fin(e, id) {
+  e.preventDefault();
+  const r = db.requests.find(x => x.id == id), fa = $('fa' + id).value;
+  if (fa < r.ta) return alert(tr('dateErr'));
+  r.sp = $('sp' + id).value == 'Yes' ? [...$('pl' + id).querySelectorAll('.pr')].map(d => { const i = d.querySelectorAll('input'); return { n: i[0].value.trim(), p: i[1].value.trim() }; }).filter(x => x.n || x.p) : [];
+  r.ac = $('ac' + id).value.trim(); r.cl = $('cl' + id).value; r.s2 = $('s2' + id).value; r.fa = fa; r.s = 'done';
+  save(); render(); window.scrollTo(0, 0); alert(tr('closedMsg'));
+}
 
-        function renderLoginScreen() {
-            return `
-                <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 mt-12 border">
-                    <div class="text-center mb-6">
-                        <div class="bg-teal-100 text-teal-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800">${t('loginTitle')}</h2>
-                    </div>
-                    <form onsubmit="handleLogin(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">${t('employeeNumber')}</label>
-                            <input type="text" id="loginEmpNo" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="مثال: 1072210 أو رقمك">
-                        </div>
-                        <div id="passwordFieldContainer" style="display:none;">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">${t('password')}</label>
-                            <input type="password" id="loginPassword" class="w-full px-4 py-2 border rounded-lg">
-                        </div>
-                        <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold py-2.5 rounded-lg shadow">
-                            ${t('loginBtn')}
-                        </button>
-                    </form>
-                </div>
-            `;
-        }
+/* ---------- ADMIN ---------- */
+function adminView() {
+  const A = { admin: ['open', 'prev', 'tech', 'stats', 'mach', 'shift'], supervisor: ['work', 'stats'], workshop: ['open', 'prev'] }[me.r];
+  if (!A.includes(tab)) tab = A[0];
+  const N = { work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift' };
+  const pend = db.techs.filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open').length;
+  return (A.length > 1 ? `<div class="flex flex-wrap gap-2 mb-4 np">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}</div>` : '') + ({ work: techView, open: aOpen, prev: aPrev, tech: aTech, stats: aStats, mach: aMach, shift: aShift }[tab])();
+}
+const delBtn = r => me.r == 'admin' ? `<button onclick="delReq(${r.id})" class="np text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button>` : '';
+function delReq(id) { if (confirm(tr('confirmReq'))) { db.requests = db.requests.filter(r => r.id != id); save(); render(); } }
+function aOpen() {
+  const rs = db.requests.filter(r => r.s != 'done').sort((a, b) => (a.s == 'open' ? 0 : 1) - (b.s == 'open' ? 0 : 1));
+  if (!rs.length) return `<p class="text-gray-500">${tr('none')}</p>`;
+  const badge = r => r.s == 'open'
+    ? `<span class="text-xs font-bold text-red-700 bg-red-100 rounded-full px-2 py-1">${tr('notTaken')} · ${tr('waitFor')} ${hm(Math.max(0, Math.round((Date.now() - new Date(r.ra)) / 60000)))}</span>`
+    : `<span class="text-xs font-bold text-teal-800 bg-teal-100 rounded-full px-2 py-1">${tr('sProg')} · ${tr('byTech')} #${esc(r.ts)}${r.tw ? ' + ' + esc(r.tw) : ''}</span>`;
+  return `<div class="grid md:grid-cols-2 gap-4">${rs.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.s == 'open' ? 'ring-2 ring-red-400' : ''} ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="flex justify-between items-center mt-2 gap-2">${badge(r)}${delBtn(r)}</div></div>`).join('')}</div>`;
+}
+function aPrev() {
+  const rs = db.requests.filter(r => r.s == 'done');
+  return `<div class="np flex justify-between items-center mb-3"><b>${rs.length}</b><button onclick="pr()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">🖨 ${tr('printAll')}</button></div>` +
+    (rs.length ? rs.map(r => `<div class="req bg-white rounded-xl shadow p-4 mb-3" style="break-inside:avoid">${card(r)}${done(r)}<div class="np flex gap-4 mt-2"><button onclick="pr(${r.id},this)" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button>${delBtn(r)}</div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`);
+}
+function pr(id, b) {
+  document.body.classList.add('p1');
+  if (id) b.closest('.req').classList.add('only'); else document.querySelectorAll('.req').forEach(x => x.classList.add('only'));
+  window.onafterprint = () => { document.body.classList.remove('p1'); document.querySelectorAll('.only').forEach(x => x.classList.remove('only')); };
+  window.print();
+}
+function aTech() {
+  if (!db.techs.length) return `<p class="text-gray-500">${tr('none')}</p>`;
+  return db.techs.map(t => `<div class="bg-white rounded-lg shadow p-3 flex justify-between items-center mb-2"><div><b>#${esc(t.e)}</b> <span class="text-xs text-gray-500">${tr(t.r == 'sup' ? 'supervisor' : 'technician')} · ${tr(t.st == 'pending' ? 'sPending' : 'sApproved')}</span></div><div class="flex gap-2">${t.st == 'pending' ? `<button onclick="tAct('${t.e}','ok')" class="bg-teal-700 text-white px-3 py-1 rounded">${tr('approve')}</button>` : ''}<button onclick="tAct('${t.e}','rm')" class="bg-red-600 text-white px-3 py-1 rounded">${tr(t.st == 'pending' ? 'reject' : 'remove')}</button></div></div>`).join('');
+}
+function tAct(e, a) {
+  if (a == 'ok') db.techs.find(x => x.e == e).st = 'approved';
+  else { if (!confirm(tr('confirmUser'))) return; db.techs = db.techs.filter(x => x.e != e); }
+  save(); render();
+}
+function aStats() {
+  const ps = new Set();
+  db.requests.forEach(r => { ps.add(r.ra.slice(0, 4)); ps.add(r.ra.slice(0, 7)); });
+  const opts = ['all', ...[...ps].sort()];
+  const inP = s => period == 'all' || (s || '').startsWith(period);
+  const T = {};
+  db.requests.filter(r => r.ts && inP(r.ta)).forEach(r => { const t = T[r.ts] = T[r.ts] || { n: 0, d: 0, ms: 0 }; t.n++; if (r.fa) { t.d++; t.ms += new Date(r.fa) - new Date(r.ta); } });
+  const M = {};
+  db.requests.filter(r => inP(r.ra)).forEach(r => { const m = M[r.mid] = M[r.mid] || { n: r.mn, c: 0, s: 0, t: {} }; m.c++; if (r.st == 'Yes') m.s++; m.t[r.pt] = (m.t[r.pt] || 0) + 1; });
+  const P = {};
+  db.requests.filter(r => r.s == 'done' && inP(r.fa)).forEach(r => r.sp.forEach(x => { const k = x.n + (x.p ? ' (' + x.p + ')' : ''); P[k] = (P[k] || 0) + 1; }));
+  const pt = Object.entries(P).sort((a, b) => b[1] - a[1]);
+  const tk = Object.entries(T), ms = Object.values(M).sort((a, b) => b.c - a.c);
+  return `<select onchange="setPeriod(this.value)" class="mb-4 np">${opts.map(p => `<option value="${p}" ${p == period ? 'selected' : ''}>${p == 'all' ? tr('all') : p}</option>`).join('')}</select>
+${me.r == 'admin' ? `<h3 class="font-bold text-teal-800 mb-2">${tr('statsTech')}</h3>
+<div class="grid md:grid-cols-2 gap-3 mb-6">${tk.length ? tk.map(([e, t]) => `<div class="bg-white rounded-lg shadow p-3"><b>#${esc(e)}</b><div class="text-sm text-gray-600">${tr('taken')}: ${t.n} · ${tr('closedN')}: ${t.d}${t.d ? ' · ' + tr('avg') + ': ' + hm(Math.round(t.ms / t.d / 60000)) : ''}</div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>` : ''}
+<h3 class="font-bold text-teal-800 mb-2">${tr('topParts')}</h3>
+<div class="grid md:grid-cols-2 gap-2 mb-6">${pt.length ? pt.map(([k, v]) => `<div class="bg-teal-50 rounded-lg p-3 flex justify-between gap-2"><span>${esc(k)}</span><b class="text-teal-800 whitespace-nowrap">${v} ${tr('times')}</b></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>
+<h3 class="font-bold text-teal-800 mb-2">${tr('machProfiles')}</h3>
+<div class="grid md:grid-cols-2 gap-3">${ms.length ? ms.map(m => `<div class="bg-white rounded-lg shadow p-3"><div class="flex justify-between"><b>${esc(m.n)}</b><span class="text-sm">${tr('total')}: <b>${m.c}</b> · ${tr('stops')}: <b>${m.s}</b></span></div><div class="flex flex-wrap gap-1 mt-2">${Object.entries(m.t).map(([k, v]) => `<span class="text-xs bg-teal-50 text-teal-800 rounded-full px-2 py-1">${esc(tl(k))}: ${v}</span>`).join('')}</div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
+}
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const empNo = document.getElementById('loginEmpNo').value.trim();
-            const pwdInput = document.getElementById('loginPassword');
+function aMach() {
+  const base = location.origin + location.pathname;
+  return `<form onsubmit="addMach(event)" class="bg-white rounded-lg shadow p-3 mb-3 grid grid-cols-2 gap-2 np"><input id="an" placeholder="${tr('machineName')}" required><input id="ad" placeholder="${tr('dept')}" required><button class="${btn} col-span-2">${tr('addMachine')}</button></form>
+<div class="np flex justify-between items-start gap-3 mb-3"><p class="text-sm text-gray-500">${tr('qrHint')}</p><button onclick="pr()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap">🖨 ${tr('printAll')}</button></div>
+<div class="grid sm:grid-cols-2 gap-3">${db.machines.length ? db.machines.map(m => `<div class="req bg-white rounded-lg shadow p-3 flex gap-3 items-center" style="break-inside:avoid"><div data-qr="${esc(base + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d))}" class="shrink-0"></div><div class="min-w-0"><b>${esc(m.n)}</b><div class="text-xs text-gray-500">${esc(m.d)}</div><button onclick="delMach('${m.id}')" class="np text-xs text-red-600 mt-2">${tr('remove')}</button></div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
+}
+function addMach(e) {
+  e.preventDefault();
+  const n = $('an').value.trim(), d = $('ad').value.trim();
+  if (!db.machines.some(m => m.n.toLowerCase() == n.toLowerCase())) { db.machines.push({ id: String(Date.now()), n, d }); save(); }
+  render();
+}
+function delMach(id) { if (confirm(tr('confirmDel'))) { db.machines = db.machines.filter(m => m.id != id); save(); render(); } }
 
-            if (empNo === "1072210") {
-                if (pwdInput.style.display === "none") {
-                    pwdInput.style.display = "block";
-                    document.getElementById('passwordFieldContainer').style.display = "block";
-                    return;
-                }
-                if (pwdInput.value === state.adminPassword) {
-                    state.currentUser = { empNo, role: 'admin' };
-                    saveState();
-                    render();
-                    return;
-                } else { alert("كلمة المرور غير صحيحة!"); return; }
-            }
+let shOff = 0;
+function setShift(v) { shOff = +v; render(); }
+const loc = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 16); };
+function shiftWin(off) {
+  const d = new Date(), h = d.getHours();
+  let s = new Date(d); s.setMinutes(0, 0, 0);
+  if (h >= 19) s.setHours(19); else if (h >= 7) s.setHours(7); else { s.setDate(s.getDate() - 1); s.setHours(19); }
+  s = new Date(s.getTime() - off * 43200000);
+  return [loc(s), loc(new Date(s.getTime() + 43200000))];
+}
+function aShift() {
+  const [s, e] = shiftWin(shOff);
+  const op = db.requests.filter(r => r.s != 'done'), dn = db.requests.filter(r => r.s == 'done' && r.fa >= s && r.fa < e);
+  const li = (r, x) => `<div class="text-sm bg-white rounded p-2 mb-1 border" style="break-inside:avoid"><b>${esc(r.mn)}</b> (${esc(r.d)}): ${esc(x)}<div class="text-xs text-gray-500">${fd(r.ra)}${r.ts ? ' · #' + esc(r.ts) : ''}${r.fa ? ' → ' + fd(r.fa) : ''}</div></div>`;
+  const empty = `<p class="text-sm text-gray-500">${tr('none')}</p>`;
+  return `<div class="req bg-white rounded-xl shadow p-5 space-y-4"><div class="flex justify-between items-start gap-3"><div><h3 class="text-xl font-bold text-teal-800">📋 ${tr('tabShift')}</h3><p class="text-sm text-gray-500">${tr('shiftNote')}</p><p class="text-sm font-semibold">${fd(s)} → ${fd(e)}</p></div><div class="np space-y-2"><select onchange="setShift(this.value)"><option value="0" ${shOff == 0 ? 'selected' : ''}>${tr('curShift')}</option><option value="1" ${shOff == 1 ? 'selected' : ''}>${tr('prevShift')}</option></select><button onclick="pr()" class="${btn}">🖨 ${tr('print')}</button></div></div>
+<div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, r.ds)).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, r.ac)).join('') : empty}</div></div></div>`;
+}
 
-            const isTech = state.technicians.find(t => t.empNo === empNo);
-            if (isTech) {
-                state.currentUser = { empNo, role: 'technician' };
-                saveState();
-                render();
-                return;
-            }
+// workshop screen: refresh every 30 seconds so waiting times stay current
+setInterval(() => { if (me && me.r == 'workshop' && tab == 'open') { db = JSON.parse(localStorage.getItem('napco_db') || 'null') || db; render(); } }, 30000);
 
-            const roleChoice = confirm("رقم غير مسجل كفني. هل تريد الدخول كـ (مشغل)؟ (موافق = مشغل)");
-            if (roleChoice) {
-                state.currentUser = { empNo, role: 'operator' };
-                saveState();
-                render();
-            }
-        }
-
-        function logout() {
-            state.currentUser = null;
-            saveState();
-            render();
-        }
-
-        function renderOperatorScreen(scanId) {
-            const selectedMachine = state.machines.find(m => m.id === scanId) || state.machines[0];
-            return `
-                <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
-                    <div class="bg-teal-50 border border-teal-200 p-4 rounded-xl mb-6 flex justify-between items-center">
-                        <div>
-                            <p class="text-xs text-teal-600 font-bold">تم المسح عبر باركود الآلة:</p>
-                            <h3 class="font-bold text-lg text-teal-900">${selectedMachine.name}</h3>
-                        </div>
-                        <span class="bg-teal-700 text-white text-xs px-3 py-1 rounded-full">${selectedMachine.dept}</span>
-                    </div>
-
-                    <h2 class="text-2xl font-bold text-teal-800 mb-6"><i class="fas fa-exclamation-triangle ml-2"></i> ${t('reportFault')}</h2>
-                    <form onsubmit="submitFaultReport(event, '${selectedMachine.name}', '${selectedMachine.dept}')" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold mb-1">${t('problemType')}</label>
-                            <select id="problemType" class="w-full p-2.5 border rounded-lg">
-                                <option value="Overheating">ارتفاع حرارة (Overheating)</option>
-                                <option value="Electrical">كهربائي (Electrical)</option>
-                                <option value="Mechanical">ميكانيكي (Mechanical)</option>
-                                <option value="Hydraulic">هيدروليك (Hydraulic)</option>
-                                <option value="Leak">تسريب (Leak)</option>
-                                <option value="Noise">أهتزاز وأصوات (Noise/Vibration)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-1">${t('description')}</label>
-                            <textarea id="problemDesc" rows="3" required class="w-full p-2.5 border rounded-lg" placeholder="اكتب تفاصيل العطل..."></textarea>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold mb-1">${t('priority')}</label>
-                                <select id="priority" class="w-full p-2.5 border rounded-lg">
-                                    <option value="Low">منخفضة</option>
-                                    <option value="Medium" selected>متوسطة</option>
-                                    <option value="Critical">حرجة</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-1">${t('machineStopped')}</label>
-                                <select id="machineStopped" class="w-full p-2.5 border rounded-lg">
-                                    <option value="Yes">نعم</option>
-                                    <option value="No">لا</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-lg shadow transition">
-                            ${t('submit')}
-                        </button>
-                    </form>
-                </div>
-            `;
-        }
-
-        function submitFaultReport(e, machineName, department) {
-            e.preventDefault();
-            const newReq = {
-                id: Date.now(),
-                machineName,
-                department,
-                problemType: document.getElementById('problemType').value,
-                description: document.getElementById('problemDesc').value,
-                priority: document.getElementById('priority').value,
-                machineStopped: document.getElementById('machineStopped').value,
-                dateTime: new Date().toISOString().replace('T', ' ').substring(0, 16),
-                status: "Open",
-                operatorId: state.currentUser.empNo,
-                spareParts: []
-            };
-            state.requests.unshift(newReq);
-            saveState();
-            alert("تم إرسال البلاغ بنجاح وإشعاره للفنيين فوراً!");
-            render();
-        }
-
-        function renderTechnicianScreen() {
-            const openReqs = state.requests.filter(r => r.status === 'Open' || r.status === 'In Progress');
-            return `
-                <div>
-                    <h2 class="text-2xl font-bold mb-4 text-teal-800"><i class="fas fa-bell ml-2"></i> ${t('openRequests')} (تنبيه مباشر)</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${openReqs.length === 0 ? `<p class="text-gray-500">لا توجد طلبات صيانة مفتوحة حالياً.</p>` : ''}
-                        ${openReqs.map(r => `
-                            <div class="bg-white rounded-xl shadow p-5 border-r-4 ${r.priority === 'Critical' ? 'border-red-500 bg-red-50/20' : 'border-teal-600'}">
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="font-bold text-lg">${r.machineName}</span>
-                                    <span class="text-xs px-2.5 py-1 rounded-full bg-red-100 text-red-700 font-bold">${r.priority}</span>
-                                </div>
-                                <p class="text-sm text-gray-600">القسم: ${r.department} | المشكلة: ${r.problemType}</p>
-                                <p class="text-sm bg-gray-50 p-2 rounded my-2">${r.description}</p>
-                                
-                                ${r.status === 'Open' ? `
-                                    <button onclick="takeRequest(${r.id})" class="w-full bg-teal-700 text-white py-2 rounded-lg text-sm font-semibold">${t('takeRequest')}</button>
-                                ` : `
-                                    <div class="border-t pt-3 mt-3">
-                                        <form onsubmit="submitRepair(event, ${r.id})" class="space-y-2">
-                                            <textarea id="action_${r.id}" required placeholder="${t('actionTaken')}" class="w-full p-2 text-sm border rounded"></textarea>
-                                            <input type="text" id="parts_${r.id}" placeholder="قطع الغيار المستخدمة (مثال: سير رقم A44)" class="w-full p-2 text-sm border rounded">
-                                            <button type="submit" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold">${t('finishRepair')}</button>
-                                        </form>
-                                    </div>
-                                `}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function takeRequest(id) {
-            const req = state.requests.find(r => r.id === id);
-            if (req) { req.status = "In Progress"; req.technicianId = state.currentUser.empNo; saveState(); render(); }
-        }
-
-        function submitRepair(e, id) {
-            e.preventDefault();
-            const req = state.requests.find(r => r.id === id);
-            if (req) {
-                req.status = "Closed";
-                req.repairDetails = {
-                    actionTaken: document.getElementById(`action_${id}`).value,
-                    sparePart: document.getElementById(`parts_${id}`).value || "لا يوجد",
-                    finishedAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
-                };
-                saveState();
-                alert("تم إغلاق الطلب بنجاح ونقله للسجلات!");
-                render();
-            }
-        }
-
-        let adminTab = 'machines';
-        function renderAdminScreen() {
-            return `
-                <div>
-                    <div class="flex flex-wrap gap-2 mb-6 border-b pb-3 no-print">
-                        <button onclick="setTab('machines')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'machines' ? 'bg-teal-700 text-white' : 'bg-white border'}">إدارة الآلات والباركود</button>
-                        <button onclick="setTab('stats')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'stats' ? 'bg-teal-700 text-white' : 'bg-white border'}">إحصائيات الأعطال وقطع الغيار</button>
-                        <button onclick="setTab('handover')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'handover' ? 'bg-teal-700 text-white' : 'bg-white border'}">تسليم الشفت (Handover 12h)</button>
-                    </div>
-
-                    ${adminTab === 'machines' ? renderAdminMachines() : ''}
-                    ${adminTab === 'stats' ? renderAdminStats() : ''}
-                    ${adminTab === 'handover' ? renderAdminHandover() : ''}
-                </div>
-            `;
-        }
-
-        function setTab(t) { adminTab = t; render(); }
-
-        function renderAdminMachines() {
-            return `
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-bold mb-4">قائمة الآلات و روابط الـ QR / Barcode السريع</h3>
-                    <p class="text-sm text-gray-500 mb-4">اطبع الروابط أو لصقها على الآلة لتسهيل دخول المشغل مباشرة:</p>
-                    <div class="space-y-4">
-                        ${state.machines.map(m => `
-                            <div class="border p-4 rounded-xl flex justify-between items-center bg-gray-50">
-                                <div>
-                                    <h4 class="font-bold text-teal-800">${m.name}</h4>
-                                    <p class="text-xs text-gray-500">القسم: ${m.dept} | المعرف: ${m.id}</p>
-                                </div>
-                                <a href="?machine=${m.id}" target="_blank" class="bg-teal-700 text-white px-3 py-1.5 rounded text-sm font-semibold">
-                                    <i class="fas fa-qrcode ml-1"></i> رابط الباركود السريع
-                                </a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderAdminStats() {
-            let machineBreakdowns = {};
-            let partsCount = {};
-
-            state.requests.forEach(r => {
-                machineBreakdowns[r.machineName] = (machineBreakdowns[r.machineName] || 0) + 1;
-                if (r.repairDetails && r.repairDetails.sparePart) {
-                    let p = r.repairDetails.sparePart;
-                    partsCount[p] = (partsCount[p] || 0) + 1;
-                }
-            });
-
-            return `
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-xl font-bold mb-4 text-teal-800">📊 كم مرة خربت كل آلة؟</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${Object.keys(machineBreakdowns).length === 0 ? '<p>لا توجد بيانات كافية بعد.</p>' : ''}
-                            ${Object.keys(machineBreakdowns).map(m => `
-                                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center border">
-                                    <span class="font-bold">${m}</span>
-                                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-bold">${machineBreakdowns[m]} أعطال</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-xl font-bold mb-4 text-teal-800">🛠️ أكثر قطع الغيار المستخدمة</h3>
-                        <div class="space-y-2">
-                            ${Object.keys(partsCount).length === 0 ? '<p>لم يتم تسجيل قطع غيار مستخدمة بعد.</p>' : ''}
-                            ${Object.keys(partsCount).map(part => `
-                                <div class="flex justify-between p-3 bg-teal-50 rounded-lg">
-                                    <span>${part}</span>
-                                    <span class="font-bold text-teal-800">${partsCount[part]} مرات استبدال</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderAdminHandover() {
-            const openReqs = state.requests.filter(r => r.status !== 'Closed');
-            const closedToday = state.requests.filter(r => r.status === 'Closed');
-            return `
-                <div class="bg-white p-6 rounded-xl shadow space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-xl font-bold text-teal-800">📋 تسليم الشفت (Shift Handover Report)</h3>
-                            <p class="text-sm text-gray-500">نظام المناوبة: شفتين (12 ساعة لكل شفت من 7 إلى 7)</p>
-                        </div>
-                        <button onclick="window.print()" class="bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold no-print">
-                            <i class="fas fa-print ml-1"></i> طباعة تقرير الشفت
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="border p-4 rounded-xl bg-amber-50/40">
-                            <h4 class="font-bold text-amber-800 mb-2">⚠️ الأعطال التي لا زالت مفتوحة (تُسلم للشفت القادم):</h4>
-                            ${openReqs.length === 0 ? '<p class="text-sm text-gray-500">لا توجد أعطال معلقة.</p>' : ''}
-                            ${openReqs.map(r => `<p class="text-sm bg-white p-2 rounded mb-1 border"><strong>${r.machineName}:</strong> ${r.description}</p>`).join('')}
-                        </div>
-                        <div class="border p-4 rounded-xl bg-green-50/40">
-                            <h4 class="font-bold text-green-800 mb-2">✅ الأعطال التي تم إنجازها في الشفت الحالي:</h4>
-                            ${closedToday.length === 0 ? '<p class="text-sm text-gray-500">لم يتم إغلاق أي عطل بعد.</p>' : ''}
-                            ${closedToday.map(r => `<p class="text-sm bg-white p-2 rounded mb-1 border"><strong>${r.machineName}:</strong> ${r.repairDetails ? r.repairDetails.actionTaken : ''}</p>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        render();
-    </script>
+render();
+</script>
 </body>
 </html>
