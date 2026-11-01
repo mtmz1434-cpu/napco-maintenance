@@ -18,9 +18,9 @@ input,select,textarea{border:1px solid #cbd5d1;border-radius:.5rem;padding:.6rem
 <script>
 // ====== SETTINGS: change the two passwords below ======
 const ADMIN_ID = "1072210";
-const ADMIN_PASSWORD = "CHANGE_ME_123";
+const ADMIN_PASSWORD = "Tmaz4123i";
 const WORKSHOP_ID = "9999";            // shared workshop-screen account
-const WORKSHOP_PASSWORD = "CHANGE_ME_WS";
+const WORKSHOP_PASSWORD = "11223344";
 // ==============================================
 
 const D = `app|نظام صيانة نابكو|Napco Maintenance
@@ -193,11 +193,11 @@ async function doPass(e) {
   e.preventDefault();
   const v = $('pw').value, u = step.e;
   if (u == ADMIN_ID) {
-    if (v !== Tmaz4123i) return alert(tr('wrongPw'));
+    if (v !== ADMIN_PASSWORD) return alert(tr('wrongPw'));
     me = { e: u, r: 'admin' }; save(); return render();
   }
   if (u == WORKSHOP_ID) {
-    if (v !== 11223344) return alert(tr('wrongPw'));
+    if (v !== WORKSHOP_PASSWORD) return alert(tr('wrongPw'));
     me = { e: u, r: 'workshop' }; save(); return render();
   }
   const t = db.techs.find(x => x.e == u);
