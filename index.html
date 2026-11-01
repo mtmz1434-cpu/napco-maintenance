@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة طلبات الصيانة - نابكو</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#0f766e', secondary: '#115e59' }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <div id="app" class="flex-1 flex flex-col"></div>
+
+    <script>
+        const translations = {
+            ar: {
+                appName: "نظام صيانة نابكو",
+                loginTitle: "تسجيل الدخول",
+                employeeNumber: "رقم الموظف",
+                password: "كلمة المرور",
+                loginBtn: "دخول",
+                reportFault: "تسجيل عطل جديد",
+                machineName: "اسم الآلة",
+                department: "القسم",
+                problemType: "نوع المشكلة",
+                description: "وصف المشكلة",
+                priority: "الأولوية",
+                machineStopped: "هل الآلة متوقفة؟",
+                yes: "نعم",
+                no: "لا",
+                submit: "إرسال الطلب",
+                logout: "تسجيل الخروج",
+                openRequests: "الطلبات المفتوحة",
+                previousRequests: "الطلبات السابقة",
+                technicians: "الفنيين",
+                statistics: "الإحصائيات",
+                machineProfiles: "سجلات الآلات",
+                handover: "تسليم الشفت (Handover)",
+                sparePartsReport: "قطع الغيار الأكثر استهلاكاً",
+                scanBarcode: "مسح باركود الآلة",
+                takeRequest: "استلام الطلب",
+                repairForm: "نموذج الإصلاح",
+                actionTaken: "ما تم عمله للإصلاح",
+                sparePartsUsed: "قطع الغيار المستخدمة",
+                addPart: "إضافة قطعة غيار",
+                partName: "اسم القطعة",
+                partNumber: "رقم القطعة",
+                finishRepair: "إتمام الإصلاح وإغلاق الطلب",
+                print: "طباعة",
+                printAll: "طباعة الكل"
+            }
+        };
+
+        let state = {
+            lang: 'ar',
+            currentUser: JSON.parse(localStorage.getItem('napco_user')) || null,
+            view: 'login',
+            requests: JSON.parse(localStorage.getItem('napco_requests')) || [],
+            technicians: JSON.parse(localStorage.getItem('napco_techs')) || [],
+            pendingTechs: JSON.parse(localStorage.getItem('napco_pending_techs')) || [],
+            machines: JSON.parse(localStorage.getItem('napco_machines')) || [
+                { id: "M01", name: "ماكينة البثق 1", dept: "التصنيع" },
+                { id: "M02", name: "ماكينة التغليف 2", dept: "التغليف" }
+            ],
+            adminPassword: "Tmaz"
+        };
+
+        function saveState() {
+            localStorage.setItem('napco_user', JSON.stringify(state.currentUser));
+            localStorage.setItem('napco_requests', JSON.stringify(state.requests));
+            localStorage.setItem('napco_techs', JSON.stringify(state.technicians));
+            localStorage.setItem('napco_pending_techs', JSON.stringify(state.pendingTechs));
+            localStorage.setItem('napco_machines', JSON.stringify(state.machines));
+        }
+
+        function t(key) { return translations.ar[key] || key; }
+
+        function render() {
+            const app = document.getElementById('app');
+            let html = `
+                <header class="bg-teal-800 text-white shadow-md no-print">
+                    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <i class="fas fa-tools text-2xl"></i>
+                            <h1 class="font-bold text-lg">${t('appName')}</h1>
+                        </div>
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            ${state.currentUser ? `
+                                <span class="text-sm bg-teal-900 px-3 py-1 rounded">رقم: ${state.currentUser.empNo}</span>
+                                <button onclick="logout()" class="text-red-200 hover:text-white text-sm"><i class="fas fa-sign-out-alt"></i> ${t('logout')}</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </header>
+                <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+            `;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const scanMachineId = urlParams.get('machine');
+
+            if (!state.currentUser) {
+                html += renderLoginScreen();
+            } else if (state.currentUser.role === 'operator') {
+                html += renderOperatorScreen(scanMachineId);
+            } else if (state.currentUser.role === 'technician') {
+                html += renderTechnicianScreen();
+            } else if (state.currentUser.role === 'admin') {
+                html += renderAdminScreen();
+            }
+
+            html += `</main>`;
+            app.innerHTML = html;
+        }
+
+        function renderLoginScreen() {
+            return `
+                <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 mt-12 border">
+                    <div class="text-center mb-6">
+                        <div class="bg-teal-100 text-teal-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">${t('loginTitle')}</h2>
+                    </div>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">${t('employeeNumber')}</label>
+                            <input type="text" id="loginEmpNo" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500" placeholder="مثال: 1072210 أو رقمك">
+                        </div>
+                        <div id="passwordFieldContainer" style="display:none;">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">${t('password')}</label>
+                            <input type="password" id="loginPassword" class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                        <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold py-2.5 rounded-lg shadow">
+                            ${t('loginBtn')}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const empNo = document.getElementById('loginEmpNo').value.trim();
+            const pwdInput = document.getElementById('loginPassword');
+
+            if (empNo === "1072210") {
+                if (pwdInput.style.display === "none") {
+                    pwdInput.style.display = "block";
+                    document.getElementById('passwordFieldContainer').style.display = "block";
+                    return;
+                }
+                if (pwdInput.value === state.adminPassword) {
+                    state.currentUser = { empNo, role: 'admin' };
+                    saveState();
+                    render();
+                    return;
+                } else { alert("كلمة المرور غير صحيحة!"); return; }
+            }
+
+            const isTech = state.technicians.find(t => t.empNo === empNo);
+            if (isTech) {
+                state.currentUser = { empNo, role: 'technician' };
+                saveState();
+                render();
+                return;
+            }
+
+            const roleChoice = confirm("رقم غير مسجل كفني. هل تريد الدخول كـ (مشغل)؟ (موافق = مشغل)");
+            if (roleChoice) {
+                state.currentUser = { empNo, role: 'operator' };
+                saveState();
+                render();
+            }
+        }
+
+        function logout() {
+            state.currentUser = null;
+            saveState();
+            render();
+        }
+
+        function renderOperatorScreen(scanId) {
+            const selectedMachine = state.machines.find(m => m.id === scanId) || state.machines[0];
+            return `
+                <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <div class="bg-teal-50 border border-teal-200 p-4 rounded-xl mb-6 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-teal-600 font-bold">تم المسح عبر باركود الآلة:</p>
+                            <h3 class="font-bold text-lg text-teal-900">${selectedMachine.name}</h3>
+                        </div>
+                        <span class="bg-teal-700 text-white text-xs px-3 py-1 rounded-full">${selectedMachine.dept}</span>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-teal-800 mb-6"><i class="fas fa-exclamation-triangle ml-2"></i> ${t('reportFault')}</h2>
+                    <form onsubmit="submitFaultReport(event, '${selectedMachine.name}', '${selectedMachine.dept}')" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">${t('problemType')}</label>
+                            <select id="problemType" class="w-full p-2.5 border rounded-lg">
+                                <option value="Overheating">ارتفاع حرارة (Overheating)</option>
+                                <option value="Electrical">كهربائي (Electrical)</option>
+                                <option value="Mechanical">ميكانيكي (Mechanical)</option>
+                                <option value="Hydraulic">هيدروليك (Hydraulic)</option>
+                                <option value="Leak">تسريب (Leak)</option>
+                                <option value="Noise">أهتزاز وأصوات (Noise/Vibration)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">${t('description')}</label>
+                            <textarea id="problemDesc" rows="3" required class="w-full p-2.5 border rounded-lg" placeholder="اكتب تفاصيل العطل..."></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">${t('priority')}</label>
+                                <select id="priority" class="w-full p-2.5 border rounded-lg">
+                                    <option value="Low">منخفضة</option>
+                                    <option value="Medium" selected>متوسطة</option>
+                                    <option value="Critical">حرجة</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">${t('machineStopped')}</label>
+                                <select id="machineStopped" class="w-full p-2.5 border rounded-lg">
+                                    <option value="Yes">نعم</option>
+                                    <option value="No">لا</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-lg shadow transition">
+                            ${t('submit')}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function submitFaultReport(e, machineName, department) {
+            e.preventDefault();
+            const newReq = {
+                id: Date.now(),
+                machineName,
+                department,
+                problemType: document.getElementById('problemType').value,
+                description: document.getElementById('problemDesc').value,
+                priority: document.getElementById('priority').value,
+                machineStopped: document.getElementById('machineStopped').value,
+                dateTime: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                status: "Open",
+                operatorId: state.currentUser.empNo,
+                spareParts: []
+            };
+            state.requests.unshift(newReq);
+            saveState();
+            alert("تم إرسال البلاغ بنجاح وإشعاره للفنيين فوراً!");
+            render();
+        }
+
+        function renderTechnicianScreen() {
+            const openReqs = state.requests.filter(r => r.status === 'Open' || r.status === 'In Progress');
+            return `
+                <div>
+                    <h2 class="text-2xl font-bold mb-4 text-teal-800"><i class="fas fa-bell ml-2"></i> ${t('openRequests')} (تنبيه مباشر)</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${openReqs.length === 0 ? `<p class="text-gray-500">لا توجد طلبات صيانة مفتوحة حالياً.</p>` : ''}
+                        ${openReqs.map(r => `
+                            <div class="bg-white rounded-xl shadow p-5 border-r-4 ${r.priority === 'Critical' ? 'border-red-500 bg-red-50/20' : 'border-teal-600'}">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="font-bold text-lg">${r.machineName}</span>
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-red-100 text-red-700 font-bold">${r.priority}</span>
+                                </div>
+                                <p class="text-sm text-gray-600">القسم: ${r.department} | المشكلة: ${r.problemType}</p>
+                                <p class="text-sm bg-gray-50 p-2 rounded my-2">${r.description}</p>
+                                
+                                ${r.status === 'Open' ? `
+                                    <button onclick="takeRequest(${r.id})" class="w-full bg-teal-700 text-white py-2 rounded-lg text-sm font-semibold">${t('takeRequest')}</button>
+                                ` : `
+                                    <div class="border-t pt-3 mt-3">
+                                        <form onsubmit="submitRepair(event, ${r.id})" class="space-y-2">
+                                            <textarea id="action_${r.id}" required placeholder="${t('actionTaken')}" class="w-full p-2 text-sm border rounded"></textarea>
+                                            <input type="text" id="parts_${r.id}" placeholder="قطع الغيار المستخدمة (مثال: سير رقم A44)" class="w-full p-2 text-sm border rounded">
+                                            <button type="submit" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold">${t('finishRepair')}</button>
+                                        </form>
+                                    </div>
+                                `}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function takeRequest(id) {
+            const req = state.requests.find(r => r.id === id);
+            if (req) { req.status = "In Progress"; req.technicianId = state.currentUser.empNo; saveState(); render(); }
+        }
+
+        function submitRepair(e, id) {
+            e.preventDefault();
+            const req = state.requests.find(r => r.id === id);
+            if (req) {
+                req.status = "Closed";
+                req.repairDetails = {
+                    actionTaken: document.getElementById(`action_${id}`).value,
+                    sparePart: document.getElementById(`parts_${id}`).value || "لا يوجد",
+                    finishedAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
+                };
+                saveState();
+                alert("تم إغلاق الطلب بنجاح ونقله للسجلات!");
+                render();
+            }
+        }
+
+        let adminTab = 'machines';
+        function renderAdminScreen() {
+            return `
+                <div>
+                    <div class="flex flex-wrap gap-2 mb-6 border-b pb-3 no-print">
+                        <button onclick="setTab('machines')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'machines' ? 'bg-teal-700 text-white' : 'bg-white border'}">إدارة الآلات والباركود</button>
+                        <button onclick="setTab('stats')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'stats' ? 'bg-teal-700 text-white' : 'bg-white border'}">إحصائيات الأعطال وقطع الغيار</button>
+                        <button onclick="setTab('handover')" class="px-4 py-2 rounded-lg font-bold text-sm ${adminTab === 'handover' ? 'bg-teal-700 text-white' : 'bg-white border'}">تسليم الشفت (Handover 12h)</button>
+                    </div>
+
+                    ${adminTab === 'machines' ? renderAdminMachines() : ''}
+                    ${adminTab === 'stats' ? renderAdminStats() : ''}
+                    ${adminTab === 'handover' ? renderAdminHandover() : ''}
+                </div>
+            `;
+        }
+
+        function setTab(t) { adminTab = t; render(); }
+
+        function renderAdminMachines() {
+            return `
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-bold mb-4">قائمة الآلات و روابط الـ QR / Barcode السريع</h3>
+                    <p class="text-sm text-gray-500 mb-4">اطبع الروابط أو لصقها على الآلة لتسهيل دخول المشغل مباشرة:</p>
+                    <div class="space-y-4">
+                        ${state.machines.map(m => `
+                            <div class="border p-4 rounded-xl flex justify-between items-center bg-gray-50">
+                                <div>
+                                    <h4 class="font-bold text-teal-800">${m.name}</h4>
+                                    <p class="text-xs text-gray-500">القسم: ${m.dept} | المعرف: ${m.id}</p>
+                                </div>
+                                <a href="?machine=${m.id}" target="_blank" class="bg-teal-700 text-white px-3 py-1.5 rounded text-sm font-semibold">
+                                    <i class="fas fa-qrcode ml-1"></i> رابط الباركود السريع
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminStats() {
+            let machineBreakdowns = {};
+            let partsCount = {};
+
+            state.requests.forEach(r => {
+                machineBreakdowns[r.machineName] = (machineBreakdowns[r.machineName] || 0) + 1;
+                if (r.repairDetails && r.repairDetails.sparePart) {
+                    let p = r.repairDetails.sparePart;
+                    partsCount[p] = (partsCount[p] || 0) + 1;
+                }
+            });
+
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <h3 class="text-xl font-bold mb-4 text-teal-800">📊 كم مرة خربت كل آلة؟</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${Object.keys(machineBreakdowns).length === 0 ? '<p>لا توجد بيانات كافية بعد.</p>' : ''}
+                            ${Object.keys(machineBreakdowns).map(m => `
+                                <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center border">
+                                    <span class="font-bold">${m}</span>
+                                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-bold">${machineBreakdowns[m]} أعطال</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <h3 class="text-xl font-bold mb-4 text-teal-800">🛠️ أكثر قطع الغيار المستخدمة</h3>
+                        <div class="space-y-2">
+                            ${Object.keys(partsCount).length === 0 ? '<p>لم يتم تسجيل قطع غيار مستخدمة بعد.</p>' : ''}
+                            ${Object.keys(partsCount).map(part => `
+                                <div class="flex justify-between p-3 bg-teal-50 rounded-lg">
+                                    <span>${part}</span>
+                                    <span class="font-bold text-teal-800">${partsCount[part]} مرات استبدال</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminHandover() {
+            const openReqs = state.requests.filter(r => r.status !== 'Closed');
+            const closedToday = state.requests.filter(r => r.status === 'Closed');
+            return `
+                <div class="bg-white p-6 rounded-xl shadow space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-teal-800">📋 تسليم الشفت (Shift Handover Report)</h3>
+                            <p class="text-sm text-gray-500">نظام المناوبة: شفتين (12 ساعة لكل شفت من 7 إلى 7)</p>
+                        </div>
+                        <button onclick="window.print()" class="bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold no-print">
+                            <i class="fas fa-print ml-1"></i> طباعة تقرير الشفت
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border p-4 rounded-xl bg-amber-50/40">
+                            <h4 class="font-bold text-amber-800 mb-2">⚠️ الأعطال التي لا زالت مفتوحة (تُسلم للشفت القادم):</h4>
+                            ${openReqs.length === 0 ? '<p class="text-sm text-gray-500">لا توجد أعطال معلقة.</p>' : ''}
+                            ${openReqs.map(r => `<p class="text-sm bg-white p-2 rounded mb-1 border"><strong>${r.machineName}:</strong> ${r.description}</p>`).join('')}
+                        </div>
+                        <div class="border p-4 rounded-xl bg-green-50/40">
+                            <h4 class="font-bold text-green-800 mb-2">✅ الأعطال التي تم إنجازها في الشفت الحالي:</h4>
+                            ${closedToday.length === 0 ? '<p class="text-sm text-gray-500">لم يتم إغلاق أي عطل بعد.</p>' : ''}
+                            ${closedToday.map(r => `<p class="text-sm bg-white p-2 rounded mb-1 border"><strong>${r.machineName}:</strong> ${r.repairDetails ? r.repairDetails.actionTaken : ''}</p>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        render();
+    </script>
+</body>
+</html>
