@@ -6,7 +6,6 @@
 <title>Napco Maintenance</title>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<!-- إضافة مكتبة Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -26,7 +25,7 @@ const _supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, S
 // ====== SETTINGS: passwords ======
 const ADMIN_ID = "1072210";
 const ADMIN_PASSWORD = "Tmaz4123i";
-const WORKSHOP_ID = "9999";            // shared workshop-screen account
+const WORKSHOP_ID = "9999";            
 const WORKSHOP_PASSWORD = "11223344";
 // ==============================================
 
@@ -158,9 +157,43 @@ function logout() { me = null; step = { s: 'emp', e: '' }; save(); render(); }
 function setTab(k) { tab = k; render(); }
 function setPeriod(v) { period = v; render(); }
 
-function render() {
+async function loadCloudRequests() {
+  if (!_supabase) return;
+  try {
+    const { data, error } = await _supabase.from('maintenance_requests').select('*').order('created_at', { ascending: false });
+    if (!error && data && data.length > 0) {
+      db.requests = data.map(item => ({
+        id: item.id || Date.now(),
+        mid: item.machine_name || '1',
+        mn: item.machine_name || 'آلة عامة',
+        d: item.department || 'القسم العام',
+        pt: item.problem_type || 'electrical',
+        ds: item.issue_description || 'لا يوجد وصف',
+        pr: item.priority || 'medium',
+        st: item.stopped || 'Yes',
+        ra: item.created_at ? item.created_at.slice(0, 16) : now(),
+        by: item.employee_id || 'مشغل',
+        s: item.status || 'open',
+        ts: item.tech_id || null,
+        ta: item.taken_at || null,
+        tw: '',
+        fa: item.finished_at || null,
+        ac: item.action || ''
+      }));
+      save();
+    }
+  } catch (err) {
+    console.log('Cloud sync error:', err);
+  }
+}
+
+async function render() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
+  if (me && me.r != 'operator') {
+    await loadCloudRequests();
+  }
+
   let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">#${esc(me.e)}</span><button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4">`;
   h += !me ? loginView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
   $('app').innerHTML = h + '</main>';
@@ -275,18 +308,25 @@ async function sendReq(e) {
   
   const reqData = { id: Date.now(), mid: m.id, mn: m.n, d: dept, pt: tt, ds: $('ds').value.trim(), pr: $('pr').value, st: $('st').value, ra: $('ra').value, by: me.e, s: 'open', ts: null, ta: null, tw: '', fa: null };
   
-  // الحفظ المحلي
   db.requests.unshift(reqData);
   save();
 
-  // إرسال البيانات إلى Supabase
   if (_supabase) {
     try {
       await _supabase.from('maintenance_requests').insert([
-        { employee_id: me.e, issue_description: reqData.ds, machine_name: m.n, department: dept, priority: reqData.pr }
+        { 
+          employee_id: String(me.e), 
+          issue_description: reqData.ds, 
+          machine_name: m.n, 
+          department: dept, 
+          priority: reqData.pr,
+          problem_type: tt,
+          stopped: reqData.st,
+          status: 'open'
+        }
       ]);
     } catch (err) {
-      console.log('Supabase Sync error:', err);
+      console.log('Cloud send error:', err);
     }
   }
 
@@ -407,7 +447,7 @@ function aMach() {
 }
 function addMach(e) {
   e.preventDefault();
-  const n = $('an').value.trim(), d = $('ad').value.trim();
+  const n = $('an').value.tdrim ? $('an').value.trim() : $('an').value.trim(), d = $('ad').value.trim();
   if (!db.machines.some(m => m.n.toLowerCase() == n.toLowerCase())) { db.machines.push({ id: String(Date.now()), n, d }); save(); }
   render();
 }
@@ -432,8 +472,11 @@ function aShift() {
 <div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, r.ds)).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, r.ac)).join('') : empty}</div></div></div>`;
 }
 
-// workshop screen: refresh every 30 seconds
-setInterval(() => { if (me && me.r == 'workshop' && tab == 'open') { db = JSON.parse(localStorage.getItem('napco_db') || 'null') || db; render(); } }, 30000);
+setInterval(() => {
+  if (me && me.r != 'operator') {
+    loadCloudRequests().then(() => render());
+  }
+}, 15000);
 
 render();
 </script>
