@@ -6,6 +6,8 @@
 <title>Napco Maintenance</title>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- إضافة مكتبة Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body{font-family:Cairo,system-ui,sans-serif;background:#f3f6f5;color:#1f2937}
@@ -16,7 +18,12 @@ input,select,textarea{border:1px solid #cbd5d1;border-radius:.5rem;padding:.6rem
 <body>
 <div id="app"></div>
 <script>
-// ====== SETTINGS: change the two passwords below ======
+// ====== SUPABASE CONFIG ======
+const SUPABASE_URL = 'https://nkrhntuswynyqwcgzzsm.supabase.co';
+const SUPABASE_KEY = 'Sb_publishable_KHOEk1POW43tUKgh7nPLIw_aA-uIPTA';
+const _supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// ====== SETTINGS: passwords ======
 const ADMIN_ID = "1072210";
 const ADMIN_PASSWORD = "Tmaz4123i";
 const WORKSHOP_ID = "9999";            // shared workshop-screen account
@@ -249,7 +256,8 @@ function mchg() {
   $('pt').innerHTML = typeOpts(nw ? '' : v);
   $('ot').classList.add('hidden');
 }
-function sendReq(e) {
+
+async function sendReq(e) {
   e.preventDefault();
   const mv = $('m').value, dept = $('dp').value.trim();
   let m;
@@ -264,8 +272,25 @@ function sendReq(e) {
   if (t == 'other') { tt = $('ot').value.trim(); if (!tt) return alert(tr('typeIt')); }
   else if (t.startsWith('c:')) tt = t.slice(2);
   if (!DT.includes(tt)) { const k = m.id + '|' + tt.toLowerCase(); const c = db.custom[k] = db.custom[k] || { m: m.id, l: tt, n: 0 }; c.n++; }
-  db.requests.unshift({ id: Date.now(), mid: m.id, mn: m.n, d: dept, pt: tt, ds: $('ds').value.trim(), pr: $('pr').value, st: $('st').value, ra: $('ra').value, by: me.e, s: 'open', ts: null, ta: null, tw: '', fa: null });
-  save(); render(); window.scrollTo(0, 0); alert(tr('sent'));
+  
+  const reqData = { id: Date.now(), mid: m.id, mn: m.n, d: dept, pt: tt, ds: $('ds').value.trim(), pr: $('pr').value, st: $('st').value, ra: $('ra').value, by: me.e, s: 'open', ts: null, ta: null, tw: '', fa: null };
+  
+  // الحفظ المحلي
+  db.requests.unshift(reqData);
+  save();
+
+  // إرسال البيانات إلى Supabase
+  if (_supabase) {
+    try {
+      await _supabase.from('maintenance_requests').insert([
+        { employee_id: me.e, issue_description: reqData.ds, machine_name: m.n, department: dept, priority: reqData.pr }
+      ]);
+    } catch (err) {
+      console.log('Supabase Sync error:', err);
+    }
+  }
+
+  render(); window.scrollTo(0, 0); alert(tr('sent'));
 }
 
 /* ---------- SHARED CARDS ---------- */
@@ -407,7 +432,7 @@ function aShift() {
 <div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, r.ds)).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, r.ac)).join('') : empty}</div></div></div>`;
 }
 
-// workshop screen: refresh every 30 seconds so waiting times stay current
+// workshop screen: refresh every 30 seconds
 setInterval(() => { if (me && me.r == 'workshop' && tab == 'open') { db = JSON.parse(localStorage.getItem('napco_db') || 'null') || db; render(); } }, 30000);
 
 render();
