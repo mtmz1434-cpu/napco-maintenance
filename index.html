@@ -24,6 +24,8 @@ const SUPABASE_KEY = 'sb_publishable_KHOEk1POW43tUKgh7nPLIw_aA-uIPTA';
 const ADMIN_ID = '1072210', WORKSHOP_ID = '9999';
 // Minutes a new request may wait before it counts as overdue (by priority). Change freely.
 const SLA = { critical: 15, high: 30, medium: 60, low: 120 };
+// Preventive tasks that fall due within this many days are flagged as "due soon" in the alerts. Change freely.
+const PM_SOON = 3;
 
 const D = `app|نظام صيانة نابكو|Napco Maintenance
 loading|جارٍ التحميل...|Loading...
@@ -185,15 +187,99 @@ prevSol|حلول سابقة|Previous solutions
 sameType|نفس نوع العطل على آلات أخرى|same fault type on other machines
 dupWarn|تنبيه: يوجد طلب مفتوح لنفس الآلة ونفس العطل|Warning: an open request already exists for this machine and fault
 dupConfirm|يوجد طلب مفتوح لنفس العطل على هذه الآلة. هل تريد إرسال طلب جديد رغم ذلك؟|An open request already exists for this fault on this machine. Send a new one anyway?
-tvMode|وضع الشاشة|Screen mode`;
+tvMode|وضع الشاشة|Screen mode
+machHist|سجل إصلاحات الآلة|Machine repair history
+machHistMore|المعروض آخر 10 من|Showing the last 10 of
+tabDash|لوحة المتابعة|Dashboard
+stoppedMach|آلات متوقفة الآن|Machines stopped now
+progN|قيد التنفيذ|In progress
+lateN|متأخرة|Overdue
+closedToday|أُغلقت اليوم|Closed today
+last7bk|أعطال آخر 7 أيام|Breakdowns, last 7 days
+prev7|الأسبوع السابق|previous 7 days
+mttrMonth|MTTR هذا الشهر|MTTR this month
+lastMonth|الشهر الماضي|last month
+riskMach|آلات تحتاج انتباهاً (آخر 30 يوماً)|Machines needing attention (last 30 days)
+riskNote|الترتيب: كل عطل نقطتان، كل توقف 3 نقاط، متوقفة الآن 5، وجود طلب متأخر 2|Ranking: 2 points per breakdown, 3 per stop, 5 if stopped now, 2 if a request is overdue
+weekly|الأعطال أسبوعياً (آخر 8 أسابيع)|Breakdowns per week (last 8 weeks)
+wkOf|أسبوع|Week of
+typesRecent|أنواع الأعطال (آخر 30 يوماً)|Fault types (last 30 days)
+workload|الطلبات الجارية لكل فني|Requests in progress per technician
+mfile|ملف الآلة|Machine file
+mdetails|بيانات الآلة|Machine details
+serial|الرقم التسلسلي|Serial number
+model|الموديل|Model
+locationT|الموقع|Location
+installedT|تاريخ التركيب|Installation date
+notesT|ملاحظات|Notes
+editDetails|تعديل بيانات الآلة|Edit machine details
+saveDetails|حفظ البيانات|Save details
+noStop|لا يوجد توقف حالي|No current stoppage
+partsOnMach|قطع الغيار المستخدمة على الآلة|Spare parts used on this machine
+rcOnMach|الأسباب الجذرية|Root causes
+today|اليوم|Today
+yesterday|أمس|Yesterday
+last7|آخر 7 أيام|Last 7 days
+thisMonth|هذا الشهر|This month
+custom|فترة محددة|Custom range
+from|من|From
+to|إلى|To
+allMach|كل الآلات|All machines
+showing|المعروض|Showing
+selectedN|المحدد|Selected
+selectAll|تحديد كل المعروض|Select all shown
+clearSel|إلغاء التحديد|Clear selection
+select|تحديد|Select
+printSel|طباعة المحدد|Print selected
+exportSel|تنزيل Excel للمحدد|Download selected as Excel
+selHint|إذا ما حددت شي، تُطبع أو تُنزّل كل الطلبات المعروضة. الفلتر حسب تاريخ الإنهاء|If nothing is selected, everything shown is printed or downloaded. The date filter uses the finish date
+tabPM|الصيانة الوقائية|Preventive maintenance
+pm|صيانة وقائية|Preventive maintenance
+pmDue|موعد الاستحقاق|Due date
+pmOverdueBy|متأخرة بـ|overdue by
+pmToday|مستحقة اليوم|due today
+addPlan|إضافة خطة صيانة وقائية|Add preventive maintenance plan
+planTitle|عنوان المهمة (مثال: تزييت وفحص السيور)|Task title (e.g. lubrication and belt check)
+everyDays|التكرار: كل كم يوم|Repeat every (days)
+firstDue|الموعد القادم|Next due date
+planActive|الخطة فعّالة|Plan is active
+planChecklist|قائمة الفحص (بند في كل سطر)|Checklist (one item per line)
+planNext|الموعد القادم|Next due
+planLast|آخر تنفيذ|Last done
+planItems|بنود الفحص|checklist items
+savePlan|حفظ الخطة|Save plan
+confirmPlan|حذف هذه الخطة؟|Delete this plan?
+noPlans|لا توجد خطط صيانة وقائية بعد|No preventive maintenance plans yet
+every|كل|every
+days|يوم|days
+ckTitle|قائمة الفحص|Checklist
+ckOk|سليم|OK
+ckBad|غير سليم|Not OK
+ckNa|لا ينطبق|N/A
+ckNote|ملاحظة أو قراءة|Note or reading
+ckAll|أجب على كل بنود قائمة الفحص|Answer every checklist item
+kindCol|نوع الطلب|Request type
+bdKind|عطل|Breakdown
+ckCol|نتائج قائمة الفحص|Checklist results
+allKinds|كل الأنواع|All types
+pmWeek|وقائية مستحقة خلال 7 أيام|PM due within 7 days
+pmLate|وقائية متأخرة|PM overdue
+pmDoneM|وقائية أُنجزت هذا الشهر|PM done this month
+pmAlertLate|صيانة وقائية متأخرة|Preventive maintenance overdue
+pmAlertSoon|صيانة وقائية قريبة الاستحقاق|Preventive maintenance due soon
+pmOldest|الأقدم|oldest
+pmUpcoming|الصيانة الوقائية القادمة والمتأخرة|Upcoming and overdue preventive maintenance
+pmInD|بعد {n} يوم|in {n} days
+pmOnMach|الصيانة الوقائية لهذه الآلة|Preventive maintenance on this machine
+pmNoPlan|لا توجد خطط وقائية لهذه الآلة|No preventive plans for this machine`;
 const L = { ar: {}, en: {} };
 D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k] = e; });
 
 let lang = localStorage.getItem('lang') || 'ar';
 const tr = k => L[lang][k] ?? k;
-let db = { machines: [], requests: [], techs: [], ops: [], custom: {} };
+let db = { machines: [], requests: [], techs: [], ops: [], custom: {}, plans: [] };
 let me = JSON.parse(localStorage.getItem('napco_me') || 'null');
-let step = { s: 'emp', e: '' }, tab = 'open', period = 'all', shOff = 0, editId = null, mview = null, tv = false;
+let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, pf = { r: 'all', from: '', to: '', m: '', k: '' }, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
@@ -206,7 +292,7 @@ const loc = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTim
 const now = () => loc(new Date());
 const fd = s => s ? s.replace('T', ' ') : '—';
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
-const tl = v => DT.includes(v) ? tr(v) : v;
+const tl = v => DT.includes(v) || v == 'pm' ? tr(v) : v;
 const yn = () => `<option value="No">${tr('no')}</option><option value="Yes">${tr('yes')}</option>`;
 const hm = m => m >= 60 ? Math.floor(m / 60) + tr('hr') + ' ' + (m % 60) + tr('min') : m + tr('min');
 const dhm = m => { m = Math.round(m); const d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + tr('day') + ' ' : '') + h + tr('hr') + ' ' + (m % 60) + tr('min'); };
@@ -216,22 +302,47 @@ const crewTxt = r => cw(r).length ? ' + ' + cw(r).map(who).join(', ') : '';
 const RC = ['rc_elec', 'rc_mech', 'rc_misuse', 'rc_wear', 'rc_maint', 'rc_sw', 'rc_mat'];
 const rl = v => RC.includes(v) ? tr(v) : (v || '');
 const rcOpts = cur => `<option value="">—</option>${RC.map(k => `<option value="${k}" ${k == cur ? 'selected' : ''}>${tr(k)}</option>`).join('')}${cur && !RC.includes(cur) ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ''}<option value="other">${tr('other')}</option>`;
+const ymd = d => loc(d).slice(0, 10);
+const box = (t, b) => `<div class="bg-white rounded-xl shadow p-4 mb-5"><h3 class="font-bold text-teal-800 mb-3">${t}</h3>${b}</div>`;
+const kpi = (v, l, c = 'text-teal-800') => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c}">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
+const bars = (arr, col) => { const mx = Math.max(1, ...arr.map(x => x[1])); return arr.map(([l, v]) => `<div class="flex items-center gap-2 text-sm mb-1"><span class="w-28 shrink-0 truncate">${esc(l)}</span><div class="flex-1 bg-gray-100 rounded"><div class="${col} rounded text-white text-xs px-2 py-0.5" style="width:${Math.max(8, v / mx * 100)}%">${v}</div></div></div>`).join(''); };
+function withXL(go) {
+  if (window.XLSX) return go();
+  const sc = document.createElement('script');
+  sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  sc.onload = go; sc.onerror = () => alert(tr('xlErr'));
+  document.head.appendChild(sc);
+}
+// one Excel row per request (used by the statistics export and by "download selected")
+function reqRows(list) {
+  const dt = s => s ? s.replace('T', ' ') : '', y = v => v ? tr(v == 'Yes' ? 'yes' : 'no') : '';
+  const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
+  return list.map(r => ({
+    [tr('reqNo')]: r.no, [tr('kindCol')]: r.k == 'pm' ? tr('pm') : tr('bdKind'), [tr('machine')]: r.mn, [tr('dept')]: r.d, [tr('ptype')]: tl(r.pt), [tr('priority')]: tr(r.pr), [tr('stopped')]: y(r.st),
+    [tr('desc')]: r.ds, [tr('reporter')]: r.by, [tr('reportedAt')]: dt(r.ra), [tr('tech')]: r.ts ? stf(r.ts) : '', [tr('withMe2')]: cw(r).map(stf).join(', '),
+    [tr('takenAt')]: dt(r.ta), [tr('finishedAt')]: dt(r.fa), [tr('status')]: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'),
+    [tr('repMin')]: r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', [tr('action')]: r.ac || '', [tr('rootCause')]: rl(r.rc), [tr('clean')]: y(r.cl),
+    [tr('parts2')]: (r.sp || []).map(x => x.n + (x.p ? ' (' + x.p + ')' : '')).join(', '),
+    [tr('ckCol')]: (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | ')
+  }));
+}
 const av = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
 // how long a request has waited, and whether it is overdue (counted from when it was submitted)
 const slaOf = r => { const lim = SLA[r.pr] || 60, el = Math.max(0, (Date.now() - new Date(r.cr || r.ra)) / 60000); return { lim, el, late: el >= lim, warn: el >= lim * 0.75 }; };
 const slaBadge = r => { const x = slaOf(r), c = x.late ? 'text-white bg-red-600 animate-pulse' : x.warn ? 'text-amber-800 bg-amber-100' : 'text-red-700 bg-red-100'; return `<span class="text-xs font-bold ${c} rounded-full px-2 py-1">${x.late ? '⏰ ' + tr('overdue') + ' · ' : ''}${tr('notTaken')} · ${tr('waitFor')} ${dhm(x.el)} (${tr('limit')} ${hm(x.lim)})</span>`; };
 // supervisor / admin alerts: overdue requests + the same fault 3+ times on a machine within 30 days
 function alerts() {
-  const out = [], od = db.requests.filter(r => r.s == 'open' && slaOf(r).late).length;
+  const out = [], od = db.requests.filter(r => r.k != 'pm' && r.s == 'open' && slaOf(r).late).length;
   if (od) out.push(`⏰ ${od} ${tr('overdueN')}`);
   const since = loc(new Date(Date.now() - 30 * 864e5)), C = {};
-  db.requests.filter(r => r.ra >= since).forEach(r => { const k = r.mid + '|' + String(r.pt).toLowerCase(), o = C[k] = C[k] || { n: r.mn, t: r.pt, c: 0 }; o.c++; });
+  db.requests.filter(r => r.k != 'pm' && r.ra >= since).forEach(r => { const k = r.mid + '|' + String(r.pt).toLowerCase(), o = C[k] = C[k] || { n: r.mn, t: r.pt, c: 0 }; o.c++; });
   Object.values(C).filter(o => o.c >= 3).sort((a, b) => b.c - a.c).forEach(o => out.push(`🔁 ${tr('repAlert')}: ${esc(o.n)} — ${esc(tl(o.t))} × ${o.c} ${tr('inDays')}`));
+  pmAlerts().forEach(x => out.push(x));
   return out.length ? `<div class="np bg-red-50 border border-red-300 text-red-800 rounded-xl p-3 mb-4 text-sm space-y-1"><b>⚠ ${tr('alertsT')}</b>${out.map(x => `<div>${x}</div>`).join('')}</div>` : '';
 }
 // earlier fixes for the same machine + fault type, shown to the technician
 function sol(r) {
-  const same = db.requests.filter(x => x.s == 'done' && x.ac && x.id != r.id && String(x.pt).toLowerCase() == String(r.pt).toLowerCase());
+  const same = db.requests.filter(x => x.k != 'pm' && x.s == 'done' && x.ac && x.id != r.id && String(x.pt).toLowerCase() == String(r.pt).toLowerCase());
   const a = same.filter(x => String(x.mid) == String(r.mid)).slice(0, 3), l = a.length ? a : same.slice(0, 3);
   if (!l.length) return '';
   return `<details class="mt-2 text-sm bg-blue-50 rounded-lg p-2"><summary class="font-semibold text-blue-800 cursor-pointer">💡 ${tr('prevSol')} (${l.length})${a.length ? '' : ' — ' + tr('sameType')}</summary>${l.map(x => `<div class="border-t border-blue-100 mt-2 pt-1"><div class="text-xs text-gray-500">${esc(x.mn)} · ${fd(x.fa)}${x.rc ? ' · ' + esc(rl(x.rc)) : ''}</div>${esc(x.ac)}</div>`).join('')}</details>`;
@@ -251,11 +362,11 @@ async function pages(q) {
   let all = [], o = 0;
   for (;;) { const p = await api(q + '&limit=1000&offset=' + o); all = all.concat(p); if (p.length < 1000) return all; o += 1000; }
 }
-const fromReq = x => ({ id: x.id, no: x.id, mid: x.machine_id, mn: x.machine_name, d: x.dept, pt: x.problem_type, ds: x.description, pr: x.priority, st: x.stopped, ra: x.reported_at, by: x.reported_by, s: x.status, ts: x.taken_by, ta: x.taken_at, tw: x.companions || [], fa: x.finished_at, ac: x.action, cl: x.cleaning, s2: x.stopped_after, sp: x.parts || [], rc: x.root_cause, cr: x.created_at });
+const fromReq = x => ({ id: x.id, no: x.id, mid: x.machine_id, mn: x.machine_name, d: x.dept, pt: x.problem_type, ds: x.description, pr: x.priority, st: x.stopped, ra: x.reported_at, by: x.reported_by, s: x.status, ts: x.taken_by, ta: x.taken_at, tw: x.companions || [], fa: x.finished_at, ac: x.action, cl: x.cleaning, s2: x.stopped_after, sp: x.parts || [], rc: x.root_cause, cr: x.created_at, k: x.kind || 'bd', pl: x.plan_id, ck: x.checklist || [] });
 
 // full = reload everything; otherwise only fetch what changed since the last sync
 async function load(full) {
-  const [m, u, c] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*')]);
+  const [m, u, c, pp] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => [])]);
   let n = 0;
   if (full || !lastSync) {
     const rs = await pages('requests?select=*&order=id');
@@ -276,19 +387,22 @@ async function load(full) {
     n = ch.length + dl.length;
   }
   db.requests.sort((a, b) => b.id - a.id);
-  db.machines = m.map(x => ({ id: String(x.id), n: x.name, d: x.dept }));
+  db.machines = m.map(x => ({ id: String(x.id), n: x.name, d: x.dept, sn: x.serial, md: x.model, lc: x.location, ins: x.installed, nt: x.notes }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: x.emp, nm: x.name, st: x.status, r: x.role }));
   db.ops = u.filter(x => x.role == 'op').map(x => x.emp);
   db.custom = Object.fromEntries(c.map(x => [x.k, { m: x.machine_id, l: x.label, n: x.n }]));
-  const sig = JSON.stringify([m, u, c]);
+  db.plans = pp.map(x => ({ id: x.id, mid: x.machine_id, mn: x.machine_name, d: x.dept, t: x.title, iv: x.interval_days, pr: x.priority, ck: x.checklist || [], nd: x.next_due, ac: x.active, ld: x.last_done }));
+  const sig = JSON.stringify([m, u, c, pp]);
   const changed = n > 0 || sig !== smallSig;
   smallSig = sig;
   return changed;
 }
 async function refresh() { await load(); render(); }
+// creates the preventive tasks that are due (safe to call many times: never duplicates an open task)
+async function genPM() { try { const n = await rpc('pm_generate', {}); if (n > 0) await load(); } catch (e) { /* plans not set up yet */ } }
 async function poll() {
   if (document.hidden) return;
-  try { polls++; const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || (me.r == 'admin' && tab == 'open')); if ((ch || tick) && !dirty) render(); } catch (e) { /* try again next time */ }
+  try { polls++; if (polls % 30 == 0) await genPM(); const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || ((me.r == 'admin' || me.r == 'supervisor') && (tab == 'open' || tab == 'dash'))); if ((ch || tick) && !dirty) render(); } catch (e) { /* try again next time */ }
 }
 const adm = async (fn, args) => {
   try { await rpc(fn, { p_h: me.h, ...args }); await refresh(); } catch (e) { alert(tr('netErr')); }
@@ -299,7 +413,7 @@ document.addEventListener('change', () => { dirty = true; });
 
 function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; localStorage.setItem('lang', lang); render(); }
 function logout() { me = null; step = { s: 'emp', e: '' }; save(); render(); }
-function setTab(k) { tab = k; mview = null; editId = null; render(); }
+function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; render(); }
 function setPeriod(v) { period = v; render(); }
 
 function render() {
@@ -319,7 +433,7 @@ function render() {
       if (!m) { $('mn').value = qn; $('dp').value = q.get('d') || ''; }
     } else mchg();
   }
-  if (me && me.r == 'admin' && tab == 'mach' && window.QRCode) document.querySelectorAll('[data-qr]').forEach(el => new QRCode(el, { text: el.dataset.qr, width: 96, height: 96 }));
+  if (window.QRCode) document.querySelectorAll('[data-qr]').forEach(el => new QRCode(el, { text: el.dataset.qr, width: 96, height: 96 }));
   if (!me) { const f = document.querySelector('#app input'); if (f) f.focus(); }
 }
 
@@ -413,7 +527,7 @@ function mchg() {
   dupchk();
 }
 function curType() { const t = $('pt').value; return t == 'other' ? $('ot').value.trim() : t.startsWith('c:') ? t.slice(2) : t; }
-const dupFind = (mid, tt) => db.requests.find(r => r.s != 'done' && String(r.mid) == String(mid) && String(r.pt).toLowerCase() == String(tt).toLowerCase());
+const dupFind = (mid, tt) => db.requests.find(r => r.k != 'pm' && r.s != 'done' && String(r.mid) == String(mid) && String(r.pt).toLowerCase() == String(tt).toLowerCase());
 function dupchk() {
   const mv = $('m').value, tt = curType(), el = $('dup'), r = mv != 'new' && tt ? dupFind(mv, tt) : null;
   el.classList.toggle('hidden', !r);
@@ -451,27 +565,55 @@ async function sendReq(e) {
 }
 
 /* ---------- SHARED CARDS ---------- */
-const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${esc(r.mn)}${r.no ? ` <span class="text-xs font-normal text-gray-400">${tr('reqNo')} ${r.no}</span>` : ''}</b><span class="text-xs px-2 py-1 rounded-full ${pcol[r.pr]}">${tr(r.pr)}</span></div>
-<div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))} · ${tr('stopped')} ${tr(r.st == 'Yes' ? 'yes' : 'no')}</div>
+const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${esc(r.mn)}${r.no ? ` <span class="text-xs font-normal text-gray-400">${tr('reqNo')} ${r.no}</span>` : ''}</b><span class="flex gap-1">${r.k == 'pm' ? `<span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-bold">🗓 PM</span>` : ''}<span class="text-xs px-2 py-1 rounded-full ${pcol[r.pr]}">${tr(r.pr)}</span></span></div>
+<div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))}${r.k == 'pm' ? '' : ' · ' + tr('stopped') + ' ' + tr(r.st == 'Yes' ? 'yes' : 'no')}</div>
 <p class="text-sm bg-gray-50 rounded p-2 my-2">${esc(r.ds)}</p>
-<div class="text-xs text-gray-500 space-y-0.5"><div>${tr('reportedAt')}: ${fd(r.ra)} (#${esc(r.by)})</div>${r.ta ? `<div>${tr('takenAt')}: ${fd(r.ta)} (${who(r.ts)}${crewTxt(r)})</div>` : ''}${r.fa ? `<div>${tr('finishedAt')}: ${fd(r.fa)}</div>` : ''}</div>`;
-const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${esc(r.ac)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${tr(r.s2 == 'Yes' ? 'yes' : 'no')}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
+<div class="text-xs text-gray-500 space-y-0.5"><div>${r.k == 'pm' ? tr('pmDue') + ': ' + esc((r.ra || '').slice(0, 10)) : tr('reportedAt') + ': ' + fd(r.ra) + ' (#' + esc(r.by) + ')'}</div>${r.ta ? `<div>${tr('takenAt')}: ${fd(r.ta)} (${who(r.ts)}${crewTxt(r)})</div>` : ''}${r.fa ? `<div>${tr('finishedAt')}: ${fd(r.fa)}</div>` : ''}</div>`;
+const ckRes = r => (r.ck || []).some(c => c.r) ? `<div class="mt-1"><b>${tr('ckTitle')}:</b>${r.ck.map(c => `<div class="text-xs ${c.r == 'bad' ? 'text-red-700 font-semibold' : ''}">${c.r == 'ok' ? '✅' : c.r == 'bad' ? '⚠' : '—'} ${esc(c.t)}${c.n ? ' — ' + esc(c.n) : ''}</div>`).join('')}</div>` : '';
+const pmBadge = r => { const n = Math.floor((new Date(ymd(new Date())) - new Date((r.ra || '').slice(0, 10))) / 864e5); return `<span class="text-xs font-bold ${n > 0 ? 'text-white bg-red-600' : 'text-blue-800 bg-blue-100'} rounded-full px-2 py-1">🗓 ${tr('pm')} · ${n > 0 ? tr('pmOverdueBy') + ' ' + n + ' ' + tr('days') : tr('pmToday')}</span>`; };
+// preventive-maintenance picture: open tasks plus plans that have no open task yet, each with days left (negative = overdue)
+const pmDue = r => (r.ra || '').slice(0, 10);
+const dayDiff = (a, b) => Math.round((new Date(a) - new Date(b)) / 864e5);
+function pmState() {
+  const td = ymd(new Date()), op = db.requests.filter(r => r.k == 'pm' && r.s != 'done');
+  const items = op.map(r => ({ due: pmDue(r), mn: r.mn, t: r.ds, mid: r.mid, s: r.s }))
+    .concat((db.plans || []).filter(p => p.ac && !op.some(r => r.pl == p.id)).map(p => ({ due: p.nd, mn: p.mn, t: p.t, mid: p.mid, s: 'plan' })))
+    .sort((a, b) => a.due.localeCompare(b.due));
+  items.forEach(x => { x.d = dayDiff(x.due, td); });
+  return { items, late: items.filter(x => x.d < 0), soon: items.filter(x => x.d >= 0 && x.d <= PM_SOON) };
+}
+function pmAlerts() {
+  const S = pmState(), out = [], nm = l => { const u = [...new Set(l.map(x => x.mn))]; return u.slice(0, 3).map(esc).join(', ') + (u.length > 3 ? ' +' + (u.length - 3) : ''); };
+  if (S.late.length) out.push(`🗓 ${tr('pmAlertLate')}: ${S.late.length} — ${nm(S.late)} (${tr('pmOldest')}: ${tr('pmOverdueBy')} ${-S.late[0].d} ${tr('days')})`);
+  if (S.soon.length) out.push(`🗓 ${tr('pmAlertSoon')}: ${S.soon.length} — ${nm(S.soon)}`);
+  return out;
+}
+const pmBanner = () => { const o = pmAlerts(); return o.length ? `<div class="np bg-blue-50 border border-blue-300 text-blue-900 rounded-xl p-3 mb-4 text-sm space-y-1">${o.map(x => `<div>${x}</div>`).join('')}</div>` : ''; };
+const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${esc(r.ac)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}${ckRes(r)}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${tr(r.s2 == 'Yes' ? 'yes' : 'no')}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
+
+// repair history of the same machine, shown under a request the technician / supervisor has taken
+function hist(r) {
+  const all = db.requests.filter(x => x.s == 'done' && String(x.mid) == String(r.mid) && x.id != r.id).sort((a, b) => (b.fa || '').localeCompare(a.fa || '')), l = all.slice(0, 10);
+  const body = l.length ? l.map(x => `<div class="border-t border-gray-200 pt-2 mt-2"><div class="flex justify-between gap-2"><b>${tr('reqNo')} ${x.no} · ${esc(tl(x.pt))}</b><span class="text-xs text-gray-500">${fd(x.fa)}</span></div><div class="text-xs text-gray-500">${who(x.ts)}${crewTxt(x)} · ${fd(x.ta)} → ${fd(x.fa)}</div><div class="mt-1">${esc(x.ac)}</div>${x.rc ? `<div class="text-xs"><b>${tr('rootCause')}:</b> ${esc(rl(x.rc))}</div>` : ''}${x.sp.length ? `<div class="text-xs"><b>${tr('parts2')}:</b> ${x.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`).join('') + (all.length > 10 ? `<p class="text-xs text-gray-500 mt-2">${tr('machHistMore')} ${all.length}</p>` : '') : `<p class="text-gray-500 mt-2">${tr('none')}</p>`;
+  return `<details open class="mt-3 bg-gray-50 rounded-lg p-3 text-sm"><summary class="font-bold text-teal-800 cursor-pointer">🛠 ${tr('machHist')} — ${esc(r.mn)} (${all.length})</summary>${body}</details>`;
+}
 
 /* ---------- TECHNICIAN / SUPERVISOR ---------- */
 function techView() {
   const rs = db.requests.filter(r => r.s == 'open' || (r.s == 'prog' && r.ts == me.e));
-  return `<h2 class="text-xl font-bold text-teal-800 mb-3">🔔 ${tr('openReq')}</h2>${rs.length ? '' : `<p class="text-gray-500">${tr('none')}</p>`}
-<div class="grid md:grid-cols-2 gap-4">${rs.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}${r.s == 'open' ? slaBadge(r) : ''}${sol(r)}${r.s == 'open' ? takeForm(r) : finForm(r)}</div>`).join('')}</div>`;
+  return `${me.r == 'technician' ? pmBanner() : ''}<h2 class="text-xl font-bold text-teal-800 mb-3">🔔 ${tr('openReq')}</h2>${rs.length ? '' :`<p class="text-gray-500">${tr('none')}</p>`}
+<div class="grid md:grid-cols-2 gap-4">${rs.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}${r.s == 'open' ? (r.k == 'pm' ? pmBadge(r) : slaBadge(r)) : ''}${sol(r)}${r.s == 'open' ? takeForm(r) : hist(r) + finForm(r)}</div>`).join('')}</div>`;
 }
 const takeForm = r => `<form class="mt-3 space-y-2" onsubmit="take(event,${r.id})"><label class="text-sm font-semibold">${tr('takenAt')}</label><input type="datetime-local" id="ta${r.id}" value="${now()}" required>
 <div id="tw${r.id}" class="border rounded-lg p-2 text-sm space-y-1"><div class="font-semibold">${tr('withMe')}</div>${db.techs.filter(t => t.st == 'approved' && t.e != me.e).map(t => `<label class="flex items-center gap-2"><input type="checkbox" value="${esc(t.e)}"> ${who(t.e)}</label>`).join('') || `<span class="text-gray-500">${tr('none')}</span>`}</div>
 <button class="${btn}">${tr('take')}</button></form>`;
+const ckForm = r => (r.ck || []).length ? `<div class="border rounded-lg p-2 space-y-2"><div class="font-bold text-teal-800 text-sm">☑ ${tr('ckTitle')}</div>${r.ck.map((c, i) => `<div class="text-sm"><div class="font-semibold">${i + 1}. ${esc(c.t)}</div><div class="grid grid-cols-3 gap-2 mt-1"><select id="ck${r.id}_${i}"><option value="">—</option><option value="ok">✅ ${tr('ckOk')}</option><option value="bad">⚠ ${tr('ckBad')}</option><option value="na">${tr('ckNa')}</option></select><input id="cn${r.id}_${i}" class="col-span-2" placeholder="${tr('ckNote')}"></div></div>`).join('')}</div>` : '';
 const finForm = r => `<form class="mt-3 space-y-2 border-t pt-3" onsubmit="fin(event,${r.id})">
 <textarea id="ac${r.id}" required rows="2" placeholder="${tr('action')}"></textarea>
 <div class="grid grid-cols-2 gap-2"><div><label class="text-sm font-semibold">${tr('clean')}</label><select id="cl${r.id}">${yn()}</select></div><div><label class="text-sm font-semibold">${tr('stopped')}</label><select id="s2${r.id}">${yn()}</select></div></div>
 <label class="text-sm font-semibold">${tr('parts')}</label><select id="sp${r.id}" onchange="pchg(${r.id},this.value)">${yn()}</select>
 <div id="pb${r.id}" class="hidden space-y-2"><div id="pl${r.id}" class="space-y-2"></div><button type="button" class="text-teal-700 font-semibold" onclick="addPart(${r.id})">+ ${tr('addPart')}</button></div>
-<label class="text-sm font-semibold">${tr('rootCause')} *</label><select id="rc${r.id}" required onchange="$('rco${r.id}').classList.toggle('hidden',this.value!='other')">${rcOpts('')}</select><input id="rco${r.id}" class="hidden" placeholder="${tr('rcTypeIt')}">
+${r.k == 'pm' ? ckForm(r) : `<label class="text-sm font-semibold">${tr('rootCause')} *</label><select id="rc${r.id}" required onchange="$('rco${r.id}').classList.toggle('hidden',this.value!='other')">${rcOpts('')}</select><input id="rco${r.id}" class="hidden" placeholder="${tr('rcTypeIt')}">`}
 <label class="text-sm font-semibold">${tr('finishedAt')}</label><input type="datetime-local" id="fa${r.id}" value="${now()}" required>
 <button class="w-full bg-green-700 text-white font-bold py-3 rounded-lg">${tr('close')}</button></form>`;
 async function take(e, id) {
@@ -498,43 +640,91 @@ async function fin(e, id) {
   const r = db.requests.find(x => x.id == id), fa = $('fa' + id).value;
   if (fa < r.ta) return alert(tr('dateErr'));
   const sp = $('sp' + id).value == 'Yes' ? [...$('pl' + id).querySelectorAll('.pr')].map(d => { const i = d.querySelectorAll('input'); return { n: i[0].value.trim(), p: i[1].value.trim() }; }).filter(x => x.n || x.p) : [];
-  let rc = $('rc' + id).value;
-  if (rc == 'other') { rc = $('rco' + id).value.trim(); if (!rc) return alert(tr('rcTypeIt')); }
-  if (!rc) return alert(tr('rcPick'));
+  let rc = null, ck = null;
+  if (r.k == 'pm') {
+    ck = (r.ck || []).map((c, i) => ({ t: c.t, r: $('ck' + id + '_' + i).value, n: $('cn' + id + '_' + i).value.trim() }));
+    if (ck.some(c => !c.r)) return alert(tr('ckAll'));
+  } else {
+    rc = $('rc' + id).value;
+    if (rc == 'other') { rc = $('rco' + id).value.trim(); if (!rc) return alert(tr('rcTypeIt')); }
+    if (!rc) return alert(tr('rcPick'));
+  }
   try {
-    await api('requests?id=eq.' + id + '&taken_by=eq.' + me.e, 'PATCH', { status: 'done', root_cause: rc, finished_at: fa, action: $('ac' + id).value.trim(), cleaning: $('cl' + id).value, stopped_after: $('s2' + id).value, parts: sp });
+    await api('requests?id=eq.' + id + '&taken_by=eq.' + me.e, 'PATCH', { status: 'done', root_cause: rc, ...(ck ? { checklist: ck } : {}), finished_at: fa, action: $('ac' + id).value.trim(), cleaning: $('cl' + id).value, stopped_after: $('s2' + id).value, parts: sp });
     await load(); render(); window.scrollTo(0, 0); alert(tr('closedMsg'));
   } catch (err) { alert(tr('netErr')); }
 }
 
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['open', 'prev', 'tech', 'stats', 'mach', 'shift'], supervisor: ['work', 'stats'], workshop: ['open', 'prev'] }[me.r];
+  const A = { admin: ['dash', 'open', 'prev', 'tech', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'pm', 'stats'], workshop: ['open', 'prev'] }[me.r];
   if (tv) tab = 'open';
-  if (!A.includes(tab)) tab = A[0];
-  const N = { work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift' };
+  if (!tab || !A.includes(tab)) tab = A[0];
+  const N = { pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift' };
   const pend = db.techs.filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open').length;
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}</div>` : '') + ({ work: techView, open: aOpen, prev: aPrev, tech: aTech, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}</div>` : '') + ({ pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3"><button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 function delReq(id) { if (confirm(tr('confirmReq'))) adm('admin_delete', { p_kind: 'request', p_id: String(id) }); }
 function aOpen() {
   const rs = db.requests.filter(r => r.s != 'done').sort((a, b) => (a.s == 'open' ? 0 : 1) - (b.s == 'open' ? 0 : 1));
   if (!rs.length) return `<p class="text-gray-500">${tr('none')}</p>`;
-  const badge = r => r.s == 'open' ? slaBadge(r) : `<span class="text-xs font-bold text-teal-800 bg-teal-100 rounded-full px-2 py-1">${tr('sProg')} · ${tr('byTech')} ${who(r.ts)}${crewTxt(r)}</span>`;
+  const badge = r => r.s == 'open' ? (r.k == 'pm' ? pmBadge(r) : slaBadge(r)) : `<span class="text-xs font-bold text-teal-800 bg-teal-100 rounded-full px-2 py-1">${tr('sProg')} · ${tr('byTech')} ${who(r.ts)}${crewTxt(r)}</span>`;
   return `<div class="grid ${tv ? 'md:grid-cols-2 xl:grid-cols-3' : 'md:grid-cols-2'} gap-4">${rs.map(r => editId == r.id ? `<div class="bg-white rounded-xl shadow p-4 border-2 border-teal-600 md:col-span-2">${editForm(r)}</div>` : `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.s == 'open' ? 'ring-2 ring-red-400' : ''} ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="flex justify-between items-center mt-2 gap-2">${badge(r)}${delBtn(r)}</div></div>`).join('')}</div>`;
 }
+function prevList() {
+  const td = ymd(new Date()), yd = ymd(new Date(Date.now() - 864e5)), d7 = ymd(new Date(Date.now() - 6 * 864e5)), mo = td.slice(0, 7);
+  return db.requests.filter(r => r.s == 'done').filter(r => {
+    const d = (r.fa || '').slice(0, 10);
+    if (pf.r == 'today' && d != td) return false;
+    if (pf.r == 'yday' && d != yd) return false;
+    if (pf.r == 'w' && d < d7) return false;
+    if (pf.r == 'month' && !d.startsWith(mo)) return false;
+    if (pf.r == 'custom' && ((pf.from && d < pf.from) || (pf.to && d > pf.to))) return false;
+    if (pf.m && String(r.mid) != pf.m) return false;
+    if (pf.k == 'pm' && r.k != 'pm') return false;
+    if (pf.k == 'bd' && r.k == 'pm') return false;
+    return true;
+  }).sort((a, b) => (b.fa || '').localeCompare(a.fa || ''));
+}
+function setPF(k, v) { pf[k] = v; sel.clear(); render(); }
+function toggleSel(id, on) { if (on) sel.add(id); else sel.delete(id); const el = $('selN'); if (el) el.textContent = sel.size; }
+function selAll(on) { if (on) prevList().forEach(r => sel.add(r.id)); else sel.clear(); render(); }
+function printSel() {
+  document.body.classList.add('p1');
+  const els = [...document.querySelectorAll('.req')], pick = sel.size ? els.filter(x => sel.has(+x.dataset.id)) : els;
+  pick.forEach(x => x.classList.add('only'));
+  window.onafterprint = () => { document.body.classList.remove('p1'); document.querySelectorAll('.only').forEach(x => x.classList.remove('only')); };
+  window.print();
+}
+function exportPrev() {
+  const l = prevList(), rs = sel.size ? l.filter(r => sel.has(r.id)) : l;
+  if (!rs.length) return alert(tr('none'));
+  withXL(() => {
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(reqRows(rs)), tr('shReq').slice(0, 31));
+    try { wb.Workbook = { Views: [{ RTL: lang == 'ar' }] }; } catch (e) { /* optional */ }
+    XLSX.writeFile(wb, 'napco-requests-' + ymd(new Date()) + '.xlsx');
+  });
+}
 function aPrev() {
-  const rs = db.requests.filter(r => r.s == 'done');
-  return `<div class="np flex justify-between items-center mb-3"><b>${rs.length}</b><button onclick="pr()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">🖨 ${tr('printAll')}</button></div>` +
-    (rs.length ? rs.map(r => editId == r.id ? `<div class="bg-white rounded-xl shadow p-4 mb-3 border-2 border-teal-600">${editForm(r)}</div>` : `<div class="req bg-white rounded-xl shadow p-4 mb-3" style="break-inside:avoid">${card(r)}${done(r)}<div class="np flex gap-4 mt-2"><button onclick="pr(${r.id},this)" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button>${delBtn(r)}</div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`);
+  const rs = prevList(), ms = [...new Map(db.requests.filter(r => r.s == 'done').map(r => [String(r.mid), r.mn]))];
+  const rg = [['all', 'all'], ['today', 'today'], ['yday', 'yesterday'], ['w', 'last7'], ['month', 'thisMonth'], ['custom', 'custom']];
+  const bar = `<div class="np bg-white rounded-xl shadow p-3 mb-3 space-y-2">
+<div class="grid grid-cols-2 gap-2"><select onchange="setPF('r',this.value)">${rg.map(([k, l]) => `<option value="${k}" ${pf.r == k ? 'selected' : ''}>${tr(l)}</option>`).join('')}</select><select onchange="setPF('m',this.value)"><option value="">${tr('allMach')}</option>${ms.map(([id, n]) => `<option value="${esc(id)}" ${pf.m == id ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></div>
+<select onchange="setPF('k',this.value)"><option value="">${tr('allKinds')}</option><option value="bd" ${pf.k == 'bd' ? 'selected' : ''}>${tr('bdKind')}</option><option value="pm" ${pf.k == 'pm' ? 'selected' : ''}>${tr('pm')}</option></select>
+${pf.r == 'custom' ? `<div class="grid grid-cols-2 gap-2"><label class="text-xs">${tr('from')}<input type="date" value="${esc(pf.from)}" onchange="setPF('from',this.value)"></label><label class="text-xs">${tr('to')}<input type="date" value="${esc(pf.to)}" onchange="setPF('to',this.value)"></label></div>` : ''}
+<div class="flex flex-wrap items-center gap-3 text-sm"><span>${tr('showing')} <b>${rs.length}</b> · ${tr('selectedN')} <b id="selN">${sel.size}</b></span><button onclick="selAll(true)" class="text-teal-700 font-semibold">${tr('selectAll')}</button><button onclick="selAll(false)" class="text-gray-500">${tr('clearSel')}</button></div>
+<div class="flex gap-2"><button onclick="printSel()" class="flex-1 bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">🖨 ${tr('printSel')}</button>${me.r == 'admin' ? `<button onclick="exportPrev()" class="flex-1 bg-green-700 text-white px-3 py-2 rounded-lg text-sm">⬇ ${tr('exportSel')}</button>` : ''}</div>
+<p class="text-xs text-gray-500">${tr('selHint')}</p></div>`;
+  return bar + (rs.length ? rs.map(r => editId == r.id ? `<div class="bg-white rounded-xl shadow p-4 mb-3 border-2 border-teal-600">${editForm(r)}</div>` : `<div class="req bg-white rounded-xl shadow p-4 mb-3" data-id="${r.id}" style="break-inside:avoid"><label class="np flex items-center gap-2 mb-2 text-sm text-gray-600"><input type="checkbox" ${sel.has(r.id) ? 'checked' : ''} onchange="toggleSel(${r.id},this.checked)"> ${tr('select')}</label>${card(r)}${done(r)}<div class="np flex gap-4 mt-2"><button onclick="pr(${r.id},this)" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button>${delBtn(r)}</div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`);
 }
 function editReq(id) { editId = id; render(); }
 function cancelEdit() { editId = null; render(); }
 function editForm(r) {
   const known = db.machines.some(m => String(m.id) == String(r.mid)), fin2 = r.s == 'done', yo = v => `<option value="No" ${v == 'No' ? 'selected' : ''}>${tr('no')}</option><option value="Yes" ${v == 'Yes' ? 'selected' : ''}>${tr('yes')}</option>`;
   const lb = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
-  const tOpts = DT.map(k => `<option value="${k}" ${k == r.pt ? 'selected' : ''}>${tr(k)}</option>`).join('') + (DT.includes(r.pt) ? '' : `<option value="${esc(r.pt)}" selected>${esc(r.pt)}</option>`) + `<option value="other">${tr('other')}</option>`;
+  const tOpts = DT.map(k => `<option value="${k}" ${k == r.pt ? 'selected' : ''}>${tr(k)}</option>`).join('') + (DT.includes(r.pt) ? '' : `<option value="${esc(r.pt)}" selected>${esc(tl(r.pt))}</option>`) + `<option value="other">${tr('other')}</option>`;
   return `<form onsubmit="saveEdit(event,${r.id})" class="space-y-2"><b class="text-teal-800">✏ ${tr('edit')} — ${tr('reqNo')} ${r.no}</b>
 ${lb('machine')}<select id="em">${db.machines.map(m => `<option value="${m.id}" ${String(m.id) == String(r.mid) ? 'selected' : ''}>${esc(m.n)}</option>`).join('')}${known ? '' : `<option value="${esc(r.mid)}" selected>${esc(r.mn)}</option>`}</select>
 ${lb('dept')}<input id="ed" value="${esc(r.d)}" required>
@@ -592,7 +782,7 @@ function mst(list) {
 }
 function calc() {
   const inP = s => period == 'all' || (s || '').startsWith(period);
-  const rs = db.requests.filter(r => inP(r.ra));
+  const rs = db.requests.filter(r => r.k != 'pm' && inP(r.ra));
   const G = {}, M = {}, SN = {}, P = {}, PM = {}, T = {}, RCc = {};
   rs.forEach(r => (G[r.mid] = G[r.mid] || []).push(r));
   Object.entries(G).forEach(([id, l]) => { M[id] = { n: l[0].mn, d: l[0].d, ...mst(l) }; });
@@ -607,23 +797,42 @@ function calc() {
     });
   });
   db.requests.filter(r => r.ts && inP(r.ta)).forEach(r => {
-    const t = T[r.ts] = T[r.ts] || { n: 0, d: 0, ms: 0 };
+    const t = T[r.ts] = T[r.ts] || { n: 0, d: 0, ms: 0, p: 0 };
+    if (r.k == 'pm') { t.p++; return; }
     t.n++; if (r.fa) { t.d++; t.ms += new Date(r.fa) - new Date(r.ta); }
   });
   const all = Object.values(M);
   return { rs, M, SN, P, PM, T, RC: RCc, mttr: av([].concat(...all.map(m => m.rep))), mtbf: av([].concat(...all.map(m => m.gap))) };
 }
-function openM(id) { mview = id; render(); window.scrollTo(0, 0); }
+function openM(id) { mview = id; medit = false; render(); window.scrollTo(0, 0); }
+function goM(id) { tab = 'stats'; openM(id); }
+function editM(v) { medit = v; render(); }
+async function saveMach(e, id) {
+  e.preventDefault(); medit = false;
+  await adm('admin_update_machine', { p_id: id, p_dept: $('mfd').value.trim(), p_serial: $('mfs').value.trim(), p_model: $('mfm').value.trim(), p_location: $('mfl').value.trim(), p_installed: $('mfi').value, p_notes: $('mfn').value.trim() });
+}
 function machView(S) {
-  const all = db.requests.filter(r => String(r.mid) == String(mview)), m = mst(all), f = v => v == null ? tr('na') : dhm(v);
+  const mc = db.machines.find(x => String(x.id) == String(mview)) || {}, all = db.requests.filter(r => String(r.mid) == String(mview)), m = mst(all.filter(r => r.k != 'pm')), f = v => v == null ? tr('na') : dhm(v);
+  const nm = mc.n || (all.length ? all[0].mn : ''), dp = mc.d || (all.length ? all[0].d : ''), base = location.origin + location.pathname;
   const kp = (v, l) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-lg font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
-  return `<button onclick="openM(null)" class="np text-sm text-gray-600 mb-3">← ${tr('back')}</button>
-<h3 class="text-xl font-bold text-teal-800">${esc(all.length ? all[0].mn : '')} <span class="text-sm font-normal text-gray-500">${esc(all.length ? all[0].d : '')}</span></h3>
-${S.SN[mview] ? `<span class="inline-block my-2 text-xs font-bold text-white bg-red-600 rounded-full px-3 py-1">${tr('stoppedNow')} ${dhm((Date.now() - new Date(S.SN[mview])) / 60000)}</span>` : ''}
+  const P = {}, RCm = {}, mplans = (db.plans || []).filter(p => String(p.mid) == String(mview));
+  all.filter(r => r.s == 'done').forEach(r => { (r.sp || []).forEach(x => { const k = x.n + (x.p ? ' (' + x.p + ')' : ''); P[k] = (P[k] || 0) + 1; }); if (r.rc) RCm[r.rc] = (RCm[r.rc] || 0) + 1; });
+  const chips = (o, fmt) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, v]) => `<span class="text-xs bg-teal-50 text-teal-800 rounded-full px-2 py-1">${esc(fmt ? fmt(k) : k)}: ${v}</span>`).join('') || `<span class="text-xs text-gray-400">${tr('none')}</span>`;
+  const row = (k, v) => `<div class="flex justify-between gap-3 border-b py-1 text-sm"><span class="text-gray-500">${tr(k)}</span><b>${v ? esc(v) : '—'}</b></div>`;
+  const lb = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
+  const details = me.r == 'admin' && medit && mc.id
+    ? `<form onsubmit="saveMach(event,'${esc(mc.id)}')" class="space-y-2 np">${lb('dept')}<input id="mfd" value="${esc(mc.d)}" required>${lb('serial')}<input id="mfs" value="${esc(mc.sn)}">${lb('model')}<input id="mfm" value="${esc(mc.md)}">${lb('locationT')}<input id="mfl" value="${esc(mc.lc)}">${lb('installedT')}<input type="date" id="mfi" value="${esc(mc.ins)}">${lb('notesT')}<textarea id="mfn" rows="2">${esc(mc.nt)}</textarea><div class="flex gap-2"><button class="${btn}">${tr('saveDetails')}</button><button type="button" onclick="editM(false)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`
+    : `${row('dept', dp)}${row('serial', mc.sn)}${row('model', mc.md)}${row('locationT', mc.lc)}${row('installedT', mc.ins)}${row('notesT', mc.nt)}`;
+  return `<div class="req"><div class="np flex justify-between mb-3"><button onclick="openM(null)" class="text-sm text-gray-600">← ${tr('back')}</button><span class="flex gap-3">${me.r == 'admin' && mc.id && !medit ? `<button onclick="editM(true)" class="text-sm text-teal-700 font-semibold">✏ ${tr('editDetails')}</button>` : ''}<button onclick="pr()" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button></span></div>
+<div class="flex justify-between items-start gap-3 mb-2"><div><h3 class="text-xl font-bold text-teal-800">${esc(nm)}</h3><div class="text-sm text-gray-500">${tr('mfile')}</div>${S.SN[mview] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red-600 rounded-full px-3 py-1">${tr('stoppedNow')} ${dhm((Date.now() - new Date(S.SN[mview])) / 60000)}</span>` : `<span class="inline-block mt-2 text-xs font-bold text-green-800 bg-green-100 rounded-full px-3 py-1">✅ ${tr('noStop')}</span>`}</div><div data-qr="${esc(base + '?m=' + encodeURIComponent(nm) + '&d=' + encodeURIComponent(dp))}" class="shrink-0"></div></div>
+<div class="bg-white rounded-xl shadow p-4 mb-3"><h4 class="font-bold text-teal-800 mb-2">${tr('mdetails')}</h4>${details}</div>
+<div class="bg-white rounded-xl shadow p-4 mb-3"><h4 class="font-bold text-teal-800 mb-2">🗓 ${tr('pmOnMach')}</h4>${mplans.length ? mplans.map(p => { const d = dayDiff(p.nd, ymd(new Date())), op = all.find(r => r.pl == p.id && r.s != 'done'); return `<div class="flex justify-between gap-2 border-b py-2 text-sm"><div><b>${esc(p.t)}</b><div class="text-xs text-gray-500">${tr('every')} ${p.iv} ${tr('days')} · ${tr('planLast')}: ${p.ld ? fd(p.ld) : '—'}${op ? ' · ' + tr(op.s == 'open' ? 'sOpen' : 'sProg') : ''}${p.ac ? '' : ' · ⏸'}</div></div><div class="text-xs font-bold whitespace-nowrap ${p.ac && d < 0 ? 'text-red-600' : 'text-blue-800'}">${tr('planNext')}: ${esc(p.nd)}</div></div>`; }).join('') : `<p class="text-sm text-gray-500">${tr('pmNoPlan')}</p>`}</div>
 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 my-3">${kp(m.c, tr('total'))}${kp(m.s, tr('stops'))}${kp(dhm(m.dt), tr('stopDur'))}${kp(f(m.mttr), 'MTTR')}${kp(f(m.mtbf), 'MTBF')}</div>
-<div class="flex flex-wrap gap-1 mb-4">${Object.entries(m.t).map(([k, v]) => `<span class="text-xs bg-teal-50 text-teal-800 rounded-full px-2 py-1">${esc(tl(k))}: ${v}</span>`).join('')}</div>
+<div class="flex flex-wrap gap-1 mb-3">${Object.entries(m.t).map(([k, v]) => `<span class="text-xs bg-orange-50 text-orange-800 rounded-full px-2 py-1">${esc(tl(k))}: ${v}</span>`).join('')}</div>
+<h4 class="font-bold text-teal-800 mt-3 mb-1">${tr('partsOnMach')}</h4><div class="flex flex-wrap gap-1 mb-3">${chips(P)}</div>
+<h4 class="font-bold text-teal-800 mb-1">${tr('rcOnMach')}</h4><div class="flex flex-wrap gap-1 mb-4">${chips(RCm, rl)}</div>
 <h4 class="font-bold text-teal-800 mb-2">${tr('timeline')}</h4>
-${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 border-s-4 ${r.s == 'done' ? 'border-green-500' : 'border-red-500'}">${card(r)}${r.s == 'done' ? done(r) : `<span class="text-xs font-bold text-red-700">${tr(r.s == 'open' ? 'sOpen' : 'sProg')}</span>`}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}`;
+${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 border-s-4 ${r.s == 'done' ? 'border-green-500' : 'border-red-500'}" style="break-inside:avoid">${card(r)}${r.s == 'done' ? done(r) : `<span class="text-xs font-bold text-red-700">${tr(r.s == 'open' ? 'sOpen' : 'sProg')}</span>`}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
 }
 function aStats() {
   const S = calc();
@@ -634,9 +843,6 @@ function aStats() {
   const pm = Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo) || b.c - a.c);
   const tk = Object.entries(S.T), rcs = Object.entries(S.RC).sort((a, b) => b[1] - a[1]);
   const none = `<p class="text-gray-500">${tr('none')}</p>`;
-  const box = (t, b) => `<div class="bg-white rounded-xl shadow p-4 mb-5"><h3 class="font-bold text-teal-800 mb-3">${t}</h3>${b}</div>`;
-  const kpi = (v, l) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
-  const bars = (arr, col) => { const mx = Math.max(1, ...arr.map(x => x[1])); return arr.map(([l, v]) => `<div class="flex items-center gap-2 text-sm mb-1"><span class="w-28 shrink-0 truncate">${esc(l)}</span><div class="flex-1 bg-gray-100 rounded"><div class="${col} rounded text-white text-xs px-2 py-0.5" style="width:${Math.max(8, v / mx * 100)}%">${v}</div></div></div>`).join(''); };
   const th = k => `<th class="p-2 text-start">${tr(k)}</th>`;
   const ptab = `<div class="overflow-x-auto mt-4"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('partName')}${th('partNo')}${th('timesUsed')}${th('usedIn')}</tr></thead><tbody>${pt.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(x.n)}</td><td class="p-2 font-mono text-xs">${esc(x.p)}</td><td class="p-2 font-bold text-blue-700">${x.c}</td><td class="p-2 text-gray-500">${[...x.m].map(esc).join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
   const pmtab = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('month')}${th('machine')}${th('partName')}${th('timesUsed')}</tr></thead><tbody>${pm.map(x => `<tr class="border-b"><td class="p-2">${esc(x.mo)}</td><td class="p-2">${esc(x.m)}</td><td class="p-2">${esc(x.n)}${x.p ? ' <span class="font-mono text-xs text-gray-500">(' + esc(x.p) + ')</span>' : ''}</td><td class="p-2 font-bold text-blue-700">${x.c}</td></tr>`).join('')}</tbody></table></div>`;
@@ -646,7 +852,7 @@ function aStats() {
 <div class="text-xs text-gray-700 mt-1">MTTR: <b>${m.mttr == null ? tr('na') : dhm(m.mttr)}</b> · MTBF: <b>${m.mtbf == null ? tr('na') : dhm(m.mtbf)}</b></div>
 ${S.SN[id] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red-600 rounded-full px-3 py-1">${tr('stoppedNow')} ${dhm((Date.now() - new Date(S.SN[id])) / 60000)}</span>` : ''}
 <div class="flex flex-wrap gap-1 mt-2">${Object.entries(m.t).map(([k, v]) => `<span class="text-xs bg-teal-50 text-teal-800 rounded-full px-2 py-1">${esc(tl(k))}: ${v}</span>`).join('')}</div></div>`).join('');
-  const techs = tk.length ? `<div class="grid md:grid-cols-2 gap-3">${tk.map(([e, t]) => `<div class="border rounded-lg p-3"><b>${who(e)}</b><div class="text-sm text-gray-600">${tr('taken')}: ${t.n} · ${tr('closedN')}: ${t.d}${t.d ? ' · ' + tr('avg') + ': ' + hm(Math.round(t.ms / t.d / 60000)) : ''}</div></div>`).join('')}</div>` : none;
+  const techs = tk.length ? `<div class="grid md:grid-cols-2 gap-3">${tk.map(([e, t]) => `<div class="border rounded-lg p-3"><b>${who(e)}</b><div class="text-sm text-gray-600">${tr('taken')}: ${t.n} · ${tr('closedN')}: ${t.d}${t.d ? ' · ' + tr('avg') + ': ' + hm(Math.round(t.ms / t.d / 60000)) : ''}${t.p ? ' · PM: ' + t.p : ''}</div></div>`).join('')}</div>` : none;
   return `<div class="np flex gap-2 mb-4"><select class="flex-1" onchange="setPeriod(this.value)">${['all', ...[...ps].sort()].map(p => `<option value="${p}" ${p == period ? 'selected' : ''}>${p == 'all' ? tr('all') : p}</option>`).join('')}</select><button onclick="exportXl()" class="bg-green-700 text-white px-3 rounded-lg whitespace-nowrap font-semibold">⬇ ${tr('exportXl')}</button></div>
 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-2">${kpi(S.rs.length, tr('total'))}${kpi(S.rs.filter(r => r.st == 'Yes').length, tr('stops'))}${kpi(pt.reduce((a, x) => a + x.c, 0), tr('parts2'))}${kpi(S.mttr == null ? tr('na') : dhm(S.mttr), 'MTTR')}${kpi(S.mtbf == null ? tr('na') : dhm(S.mtbf), 'MTBF')}</div>
 <p class="text-xs text-gray-500 mb-5">${tr('kpiNote')}</p>
@@ -663,13 +869,7 @@ function exportXl() {
     const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
     const wb = XLSX.utils.book_new();
     const add = (n, rows) => { if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), n.slice(0, 31)); };
-    add(tr('shReq'), S.rs.map(r => ({
-      [tr('reqNo')]: r.no, [tr('machine')]: r.mn, [tr('dept')]: r.d, [tr('ptype')]: tl(r.pt), [tr('priority')]: tr(r.pr), [tr('stopped')]: y(r.st),
-      [tr('desc')]: r.ds, [tr('reporter')]: r.by, [tr('reportedAt')]: dt(r.ra), [tr('tech')]: r.ts ? stf(r.ts) : '', [tr('withMe2')]: cw(r).map(stf).join(', '),
-      [tr('takenAt')]: dt(r.ta), [tr('finishedAt')]: dt(r.fa), [tr('status')]: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'),
-      [tr('repMin')]: r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', [tr('action')]: r.ac || '', [tr('rootCause')]: rl(r.rc), [tr('clean')]: y(r.cl),
-      [tr('parts2')]: (r.sp || []).map(x => x.n + (x.p ? ' (' + x.p + ')' : '')).join(', ')
-    })));
+    add(tr('shReq'), reqRows(S.rs));
     add(tr('shMach'), Object.values(S.M).sort((a, b) => b.c - a.c).map(m => ({
       [tr('machine')]: m.n, [tr('dept')]: m.d, [tr('total')]: m.c, [tr('stops')]: m.s, [tr('stopMin')]: Math.round(m.dt), [tr('mttr') + ' (' + tr('min') + ')']: m.mttr == null ? '' : Math.round(m.mttr), [tr('mtbf') + ' (' + tr('min') + ')']: m.mtbf == null ? '' : Math.round(m.mtbf), [tr('lastFault')]: dt(m.last),
       [tr('ptype')]: Object.entries(m.t).map(([k, v]) => tl(k) + ': ' + v).join(', ')
@@ -681,11 +881,7 @@ function exportXl() {
     try { wb.Workbook = { Views: [{ RTL: lang == 'ar' }] }; } catch (e) { /* optional */ }
     XLSX.writeFile(wb, 'napco-' + (period == 'all' ? 'all' : period) + '.xlsx');
   };
-  if (window.XLSX) return go();
-  const sc = document.createElement('script');
-  sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-  sc.onload = go; sc.onerror = () => alert(tr('xlErr'));
-  document.head.appendChild(sc);
+  withXL(go);
 }
 
 /* ---------- MACHINES + QR ---------- */
@@ -693,7 +889,7 @@ function aMach() {
   const base = location.origin + location.pathname;
   return `<form onsubmit="addMach(event)" class="bg-white rounded-lg shadow p-3 mb-3 grid grid-cols-2 gap-2 np"><input id="an" placeholder="${tr('machineName')}" required><input id="ad" placeholder="${tr('dept')}" required><button class="${btn} col-span-2">${tr('addMachine')}</button></form>
 <div class="np flex justify-between items-start gap-3 mb-3"><p class="text-sm text-gray-500">${tr('qrHint')}</p><button onclick="pr()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap">🖨 ${tr('printAll')}</button></div>
-<div class="grid sm:grid-cols-2 gap-3">${db.machines.length ? db.machines.map(m => `<div class="req bg-white rounded-lg shadow p-3 flex gap-3 items-center" style="break-inside:avoid"><div data-qr="${esc(base + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d))}" class="shrink-0"></div><div class="min-w-0"><b>${esc(m.n)}</b><div class="text-xs text-gray-500">${esc(m.d)}</div><button onclick="delMach('${m.id}')" class="np text-xs text-red-600 mt-2">${tr('remove')}</button></div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
+<div class="grid sm:grid-cols-2 gap-3">${db.machines.length ? db.machines.map(m => `<div class="req bg-white rounded-lg shadow p-3 flex gap-3 items-center" style="break-inside:avoid"><div data-qr="${esc(base + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d))}" class="shrink-0"></div><div class="min-w-0"><b>${esc(m.n)}</b><div class="text-xs text-gray-500">${esc(m.d)}</div><div class="np flex gap-3 mt-2"><button onclick="goM('${m.id}')" class="text-xs text-teal-700 font-semibold">📁 ${tr('mfile')}</button><button onclick="delMach('${m.id}')" class="text-xs text-red-600">${tr('remove')}</button></div></div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
 }
 async function addMach(e) {
   e.preventDefault();
@@ -723,6 +919,86 @@ function aShift() {
 <div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, r.ds)).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, r.ac)).join('') : empty}</div></div></div>`;
 }
 
+/* ---------- PREVENTIVE MAINTENANCE PLANS ---------- */
+function editPM(v) { pmEdit = v; render(); }
+function pmForm(p) {
+  const L2 = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
+  return `<form onsubmit="savePM(event,'${p ? p.id : ''}')" class="bg-white rounded-xl shadow p-4 mb-3 space-y-2 border-2 border-teal-600"><b class="text-teal-800">${p ? '✏ ' + tr('edit') : '+ ' + tr('addPlan')}</b>
+${L2('machine')}<select id="pmm">${db.machines.map(m => `<option value="${m.id}" ${p && String(p.mid) == String(m.id) ? 'selected' : ''}>${esc(m.n)}</option>`).join('')}</select>
+${L2('planTitle')}<input id="pmt" value="${esc(p ? p.t : '')}" required>
+<div class="grid grid-cols-2 gap-2"><div>${L2('everyDays')}<input id="pmi" type="number" min="1" value="${p ? p.iv : 30}" required></div><div>${L2('priority')}<select id="pmp">${['low', 'medium', 'high', 'critical'].map(k => `<option value="${k}" ${k == (p ? p.pr : 'medium') ? 'selected' : ''}>${tr(k)}</option>`).join('')}</select></div></div>
+${L2('firstDue')}<input id="pmd" type="date" value="${esc(p ? p.nd : ymd(new Date()))}" required>
+${L2('planChecklist')}<textarea id="pmc" rows="5">${esc(p ? p.ck.join('\n') : '')}</textarea>
+<label class="flex items-center gap-2 text-sm"><input type="checkbox" id="pma" ${!p || p.ac ? 'checked' : ''}> ${tr('planActive')}</label>
+<div class="flex gap-2"><button class="${btn}">${tr('savePlan')}</button><button type="button" onclick="editPM(null)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`;
+}
+function aPM() {
+  const isA = me.r == 'admin', pl = db.plans || [], td = ymd(new Date());
+  const form = isA && pmEdit != null ? pmForm(pmEdit === 'new' ? null : pl.find(p => p.id == pmEdit)) : '';
+  const items = pl.map(p => {
+    const op = db.requests.find(r => r.pl == p.id && r.s != 'done'), late = p.ac && p.nd < td;
+    return `<div class="bg-white rounded-xl shadow p-4 mb-3 ${p.ac ? '' : 'opacity-60'}"><div class="flex justify-between gap-2"><div><b>${esc(p.mn)}</b><div class="text-sm">${esc(p.t)}</div></div><span class="text-xs font-bold text-blue-800 bg-blue-100 rounded-full px-2 py-1 h-fit whitespace-nowrap">${tr('every')} ${p.iv} ${tr('days')}</span></div>
+<div class="text-xs text-gray-500 mt-1">${tr('planNext')}: <b class="${late ? 'text-red-600' : ''}">${esc(p.nd)}</b> · ${tr('planLast')}: ${p.ld ? fd(p.ld) : '—'} · ${tr('planItems')}: ${p.ck.length}${op ? ' · ' + tr(op.s == 'open' ? 'sOpen' : 'sProg') : ''}${p.ac ? '' : ' · ⏸'}</div>
+${isA ? `<div class="np flex gap-3 mt-2"><button onclick="editPM('${p.id}')" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delPM('${p.id}')" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></div>` : ''}</div>`;
+  }).join('');
+  return (isA && pmEdit == null ? `<button onclick="editPM('new')" class="${btn} mb-3 np">+ ${tr('addPlan')}</button>` : '') + form + (items || (form ? '' : `<p class="text-gray-500">${tr('noPlans')}</p>`));
+}
+async function savePM(e, id) {
+  e.preventDefault();
+  const items = $('pmc').value.split('\n').map(x => x.trim()).filter(Boolean), iv = +$('pmi').value;
+  if (!(iv >= 1)) return;
+  pmEdit = null;
+  await adm('admin_pm_save', { p_id: id, p_machine_id: $('pmm').value, p_title: $('pmt').value.trim(), p_interval: iv, p_priority: $('pmp').value, p_checklist: items, p_next_due: $('pmd').value, p_active: $('pma').checked });
+  await genPM(); render();
+}
+function delPM(id) { if (confirm(tr('confirmPlan'))) adm('admin_delete', { p_kind: 'plan', p_id: String(id) }); }
+
+/* ---------- DASHBOARD ---------- */
+function dashData() {
+  const R = db.requests.filter(r => r.k != 'pm'), AL = db.requests, d0 = new Date(), td = ymd(d0), ago = n => ymd(new Date(Date.now() - n * 864e5));
+  const inR = (r, a, b) => { const d = (r.ra || '').slice(0, 10); return d >= a && d <= b; };
+  const live = R.filter(r => r.s != 'done'), stopped = new Set(live.filter(r => r.st == 'Yes').map(r => String(r.mid)));
+  const lateL = live.filter(r => r.s == 'open' && slaOf(r).late), lateM = new Set(lateL.map(r => String(r.mid)));
+  const mo = td.slice(0, 7), lm = ymd(new Date(d0.getFullYear(), d0.getMonth() - 1, 15)).slice(0, 7);
+  const rep = m => av(R.filter(r => r.fa && r.ta && r.fa.startsWith(m)).map(r => Math.max(0, (new Date(r.fa) - new Date(r.ta)) / 60000)));
+  const G = {}, T30 = {}, load = {};
+  R.filter(r => inR(r, ago(29), td)).forEach(r => { (G[r.mid] = G[r.mid] || []).push(r); T30[r.pt] = (T30[r.pt] || 0) + 1; });
+  live.filter(r => r.s == 'prog').forEach(r => { load[r.ts] = (load[r.ts] || 0) + 1; });
+  const risk = Object.entries(G).map(([id, l]) => { const c = l.length, s = l.filter(r => r.st == 'Yes').length, sn = stopped.has(id), lt = lateM.has(id); return { id, n: l[0].mn, c, s, sn, lt, score: c * 2 + s * 3 + (sn ? 5 : 0) + (lt ? 2 : 0) }; }).sort((a, b) => b.score - a.score).slice(0, 5);
+  const weeks = [...Array(8).keys()].map(i => ({ i, from: ago(6 + 7 * i), n: R.filter(r => inR(r, ago(6 + 7 * i), ago(7 * i))).length })).reverse();
+  const pmOpen = AL.filter(r => r.k == 'pm' && r.s != 'done'), due = r => (r.ra || '').slice(0, 10), in7 = ago(-7);
+  const pmLate = pmOpen.filter(r => due(r) < td).length;
+  const pmWeek = pmOpen.filter(r => due(r) >= td && due(r) <= in7).length + (db.plans || []).filter(p => p.ac && p.nd > td && p.nd <= in7 && !pmOpen.some(r => r.pl == p.id)).length;
+  const pmDone = AL.filter(r => r.k == 'pm' && r.s == 'done' && (r.fa || '').startsWith(mo)).length;
+  return {
+    pmLate, pmWeek, pmDone, stopped: stopped.size, openN: live.filter(r => r.s == 'open').length, progN: live.filter(r => r.s == 'prog').length, lateN: lateL.length,
+    closedToday: R.filter(r => r.s == 'done' && (r.fa || '').startsWith(td)).length,
+    w0: R.filter(r => inR(r, ago(6), td)).length, w1: R.filter(r => inR(r, ago(13), ago(7))).length,
+    mttrM: rep(mo), mttrL: rep(lm), risk, weeks, types: Object.entries(T30).sort((a, b) => b[1] - a[1]).slice(0, 5), load: Object.entries(load)
+  };
+}
+// next preventive jobs: everything overdue plus what falls due in the next 14 days (tap a row to open the machine file)
+function pmBox() {
+  const l = pmState().items.filter(x => x.d <= 14).slice(0, 8);
+  const st = x => x.d < 0 ? `<span class="text-xs font-bold text-white bg-red-600 rounded-full px-2 py-1 whitespace-nowrap">${tr('pmOverdueBy')} ${-x.d} ${tr('days')}</span>`
+    : x.d == 0 ? `<span class="text-xs font-bold text-blue-800 bg-blue-100 rounded-full px-2 py-1 whitespace-nowrap">${tr('pmToday')}</span>`
+    : `<span class="text-xs font-bold ${x.d <= PM_SOON ? 'text-amber-800 bg-amber-100' : 'text-gray-600 bg-gray-100'} rounded-full px-2 py-1 whitespace-nowrap">${tr('pmInD').replace('{n}', x.d)}</span>`;
+  return box('🗓 ' + tr('pmUpcoming'), l.length ? l.map(x => `<div onclick="goM('${esc(x.mid)}')" class="flex justify-between items-center gap-2 border-b py-2 cursor-pointer"><div class="min-w-0"><b>${esc(x.mn)}</b><div class="text-xs text-gray-500">${esc(x.t)} · ${esc(x.due)}${x.s == 'prog' ? ' · ' + tr('sProg') : ''}</div></div>${st(x)}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`);
+}
+function aDash() {
+  const d = dashData(), none = `<p class="text-gray-500">${tr('none')}</p>`, mm = v => v == null ? tr('na') : dhm(v);
+  const arrow = (a, b) => a > b ? '▲' : a < b ? '▼' : '＝';
+  const bd = x => x.score >= 10 ? 'bg-red-100 text-red-700' : x.score >= 5 ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600';
+  return `<div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-3">${kpi(d.stopped, tr('stoppedMach'), d.stopped ? 'text-red-600' : 'text-teal-800')}${kpi(d.openN, tr('notTaken'), d.openN ? 'text-orange-600' : 'text-teal-800')}${kpi(d.progN, tr('progN'))}${kpi(d.lateN, tr('lateN'), d.lateN ? 'text-red-600' : 'text-teal-800')}${kpi(d.closedToday, tr('closedToday'), 'text-green-700')}</div>
+<div class="grid grid-cols-2 gap-3 mb-5">${kpi(d.w0 + ' ' + arrow(d.w0, d.w1), tr('last7bk') + ' (' + tr('prev7') + ': ' + d.w1 + ')')}${kpi(mm(d.mttrM), tr('mttrMonth') + ' (' + tr('lastMonth') + ': ' + mm(d.mttrL) + ')')}</div>
+<div class="grid grid-cols-3 gap-3 mb-5">${kpi(d.pmLate, tr('pmLate'), d.pmLate ? 'text-red-600' : 'text-teal-800')}${kpi(d.pmWeek, tr('pmWeek'), 'text-blue-700')}${kpi(d.pmDone, tr('pmDoneM'), 'text-green-700')}</div>
+${pmBox()}
+${box(tr('riskMach'), d.risk.length ? d.risk.map(x => `<div onclick="goM('${esc(x.id)}')" class="flex justify-between items-center gap-2 border-b py-2 cursor-pointer"><div><b>${esc(x.n)}</b><div class="text-xs text-gray-500">${tr('total')}: ${x.c} · ${tr('stops')}: ${x.s}</div></div><div class="flex flex-wrap gap-1 justify-end">${x.sn ? `<span class="text-xs font-bold text-white bg-red-600 rounded-full px-2 py-1">${tr('stoppedMach')}</span>` : ''}${x.lt ? `<span class="text-xs font-bold text-red-700 bg-red-100 rounded-full px-2 py-1">${tr('overdue')}</span>` : ''}<span class="text-xs font-bold rounded-full px-2 py-1 ${bd(x)}">${x.score}</span></div></div>`).join('') + `<p class="text-xs text-gray-500 mt-2">${tr('riskNote')}</p>` : none)}
+${box(tr('weekly'), bars(d.weeks.map(w => [w.i == 0 ? tr('last7') : tr('wkOf') + ' ' + w.from.slice(5), w.n]), 'bg-orange-600'))}
+${box(tr('typesRecent'), d.types.length ? bars(d.types.map(([k, v]) => [tl(k), v]), 'bg-blue-600') : none)}
+${me.r == 'admin' ? box(tr('workload'), d.load.length ? d.load.map(([e, n]) => `<div class="flex justify-between border-b py-1 text-sm"><span>${who(e)}</span><b>${n}</b></div>`).join('') : none) : ''}`;
+}
+
 /* ---------- WORKSHOP SCREEN MODE ---------- */
 function toggleTv() {
   tv = !tv;
@@ -738,6 +1014,7 @@ document.addEventListener('fullscreenchange', () => { if (tv && document.fullscr
   $('app').innerHTML = `<p class="p-8 text-center text-gray-500">${tr('loading')}</p>`;
   try {
     await load(true);
+    await genPM();
     if (me && me.r == 'admin' && !(await rpc('admin_login', { p_h: me.h }))) me = null;
     if (me && (me.r == 'technician' || me.r == 'supervisor') && !db.techs.some(t => t.e == me.e && t.st == 'approved')) me = null;
     save();
