@@ -133,7 +133,7 @@ confirmDel|حذف الآلة؟|Delete this machine?
 print|طباعة|Print
 printAll|طباعة الكل|Print all
 exportXl|تصدير إلى Excel|Export to Excel
-xlErr|تعذر تحميل مكتبة Excel، تأكد من الاتصال|Could not load the Excel library, check your connection
+xlErr|تعذر إنشاء ملف Excel، حاول مرة أخرى|Could not create the Excel file, try again
 statsTech|إحصائيات الفنيين|Technician statistics
 taken|مستلمة|Taken
 closedN|مغلقة|Closed
@@ -296,6 +296,15 @@ dMach|آلات تعطّلت|Machines affected
 dNow|متوقفة الآن|Stopped now
 dHrs|ساعات التوقف|Downtime (h)
 shDept|الأقسام|Departments
+shSummary|الملخص الإداري|Summary
+xlTitle|تقرير الصيانة|Maintenance report
+xlPeriod|الفترة|Period
+xlGen|تاريخ الإصدار|Generated
+kClosed|أعطال مغلقة|Closed breakdowns
+kOpenN|أعطال مفتوحة|Open breakdowns
+xlTypes|أنواع الأعطال|Breakdown types
+xlShare|النسبة|Share
+xlTrend|الاتجاه الشهري|Monthly trend
 adminT|المدير|Admin
 acct|إعدادات الحساب|Account settings
 curPw|كلمة المرور الحالية|Current password
@@ -356,25 +365,304 @@ const ymd = d => loc(d).slice(0, 10);
 const box = (t, b) => `<div class="bg-white rounded-xl shadow p-4 mb-5"><h3 class="font-bold text-teal-800 mb-3">${t}</h3>${b}</div>`;
 const kpi = (v, l, c = 'text-teal-800') => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c}">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
 const bars = (arr, col) => { const mx = Math.max(1, ...arr.map(x => x[1])); return arr.map(([l, v]) => `<div class="flex items-center gap-2 text-sm mb-1"><span class="w-28 shrink-0 truncate">${esc(l)}</span><div class="flex-1 bg-gray-100 rounded"><div class="${v ? col + ' text-white' : 'bg-gray-200 text-gray-500'} rounded text-xs px-2 py-0.5" style="width:${Math.max(8, v / mx * 100)}%">${v}</div></div></div>`).join(''); };
-function withXL(go) {
-  if (window.XLSX) return go();
-  const sc = document.createElement('script');
-  sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-  sc.onload = go; sc.onerror = () => alert(tr('xlErr'));
-  document.head.appendChild(sc);
-}
-// one Excel row per request (used by the statistics export and by "download selected")
-function reqRows(list) {
-  const dt = s => s ? s.replace('T', ' ') : '', y = v => v ? tr(v == 'Yes' ? 'yes' : 'no') : '';
-  const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
-  return list.map(r => ({
-    [tr('reqNo')]: r.no, [tr('kindCol')]: r.k == 'pm' ? tr('pm') : tr('bdKind'), [tr('machine')]: r.mn, [tr('dept')]: r.d, [tr('ptype')]: tl(r.pt), [tr('priority')]: tr(r.pr), [tr('stopped')]: y(r.st),
-    [tr('desc')]: r.ds, [tr('reporter')]: r.by, [tr('reportedAt')]: dt(r.ra), [tr('tech')]: r.ts ? stf(r.ts) : '', [tr('withMe2')]: cw(r).map(stf).join(', '),
-    [tr('takenAt')]: dt(r.ta), [tr('finishedAt')]: dt(r.fa), [tr('status')]: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'),
-    [tr('repMin')]: r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', [tr('action')]: r.ac || '', [tr('rootCause')]: rl(r.rc), [tr('clean')]: y(r.cl),
-    [tr('parts2')]: (r.sp || []).map(x => x.n + (x.p ? ' (' + x.p + ')' : '')).join(', '),
-    [tr('ckCol')]: (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | ')
+/* ---------- EXCEL ----------
+   The .xlsx file is built right here (no outside library, nothing to download), so it can carry real
+   formatting, filters, frozen headers and native Excel charts, and it works offline. */
+const XW = (() => {
+  const enc = new TextEncoder(), MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  const HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  const X = s => String(s == null ? '' : s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const col = n => { let s = ''; for (n++; n > 0; n = Math.floor((n - 1) / 26)) s = String.fromCharCode(65 + (n - 1) % 26) + s; return s; };
+  const ref = (r, c) => col(c) + (r + 1);
+  const absRng = (r1, c1, r2, c2) => '$' + col(c1) + '$' + (r1 + 1) + ':$' + col(c2) + '$' + (r2 + 1);
+  const idx = (a, x) => { let i = a.indexOf(x); if (i < 0) i = a.push(x) - 1; return i; };
+  const NF = { '0': 1, '0.00': 2, '#,##0': 3, '0%': 9 };
+  // a date/time text ("2026-03-05T14:30") becomes an Excel date serial so the column sorts and filters as dates
+  const date = s => { const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?/.exec(typeof s == 'string' ? s : ''); return m ? { d: (Date.UTC(+m[1], m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)) - Date.UTC(1899, 11, 30)) / 864e5 } : ''; };
+  const crcT = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = crcT[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+
+  // minimal ZIP writer: deflate when the browser can, otherwise stored
+  async function zip(files) {
+    const parts = [], cd = [], now = new Date();
+    const dd = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate(), tt = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    let off = 0;
+    for (const [name, text] of files) {
+      const raw = enc.encode(text), nm = enc.encode(name), crc = crc32(raw);
+      let data = raw, method = 0;
+      try {
+        if (typeof CompressionStream == 'function' && raw.length > 200) {
+          const z = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
+          if (z.length < raw.length) { data = z; method = 8; }
+        }
+      } catch (e) { /* keep it stored */ }
+      const h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, method, true); h.setUint16(10, tt, true); h.setUint16(12, dd, true);
+      h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, raw.length, true); h.setUint16(26, nm.length, true);
+      parts.push(new Uint8Array(h.buffer), nm, data);
+      const c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, method, true); c.setUint16(12, tt, true); c.setUint16(14, dd, true);
+      c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, raw.length, true); c.setUint16(28, nm.length, true); c.setUint32(42, off, true);
+      cd.push(new Uint8Array(c.buffer), nm);
+      off += 30 + nm.length + data.length;
+    }
+    const e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true);
+    e.setUint32(12, cd.reduce((a, b) => a + b.length, 0), true); e.setUint32(16, off, true);
+    return new Blob([...parts, ...cd, new Uint8Array(e.buffer)], { type: MIME });
+  }
+
+  // one bar / column chart with a single series (one hue per chart, data labels, light grid)
+  function chartXml(S, ch) {
+    const ink = '374151', n = ch.vals.length, hor = ch.kind == 'bar', q = "'" + S.name.replace(/'/g, "''") + "'!";
+    const rp = (sz, b) => `<a:defRPr sz="${sz}" b="${b ? 1 : 0}"><a:solidFill><a:srgbClr val="${ink}"/></a:solidFill></a:defRPr>`;
+    const tx = (sz, b) => `<c:txPr><a:bodyPr/><a:lstStyle/><a:p><a:pPr>${rp(sz, b)}</a:pPr><a:endParaRPr lang="en-US"/></a:p></c:txPr>`;
+    const title = `<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:pPr>${rp(1200, 1)}</a:pPr><a:r><a:rPr lang="ar-SA" sz="1200" b="1"><a:solidFill><a:srgbClr val="${ink}"/></a:solidFill></a:rPr><a:t>${X(ch.title)}</a:t></a:r></a:p></c:rich></c:tx><c:overlay val="0"/></c:title>`;
+    const cat = `<c:cat><c:strRef><c:f>${X(q + absRng(ch.r1, ch.cc, ch.r2, ch.cc))}</c:f><c:strCache><c:ptCount val="${n}"/>${ch.cats.map((t, i) => `<c:pt idx="${i}"><c:v>${X(t)}</c:v></c:pt>`).join('')}</c:strCache></c:strRef></c:cat>`;
+    const val = `<c:val><c:numRef><c:f>${X(q + absRng(ch.r1, ch.vc, ch.r2, ch.vc))}</c:f><c:numCache><c:formatCode>${X(ch.fmt || 'General')}</c:formatCode><c:ptCount val="${n}"/>${ch.vals.map((v, i) => `<c:pt idx="${i}"><c:v>${+v || 0}</c:v></c:pt>`).join('')}</c:numCache></c:numRef></c:val>`;
+    const lbl = `<c:dLbls><c:numFmt formatCode="${X(ch.fmt || '0')}" sourceLinked="0"/><c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>${tx(900)}<c:dLblPos val="outEnd"/><c:showLegendKey val="0"/><c:showVal val="1"/><c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbls>`;
+    const ser = `<c:ser><c:idx val="0"/><c:order val="0"/><c:tx><c:v>${X(ch.name)}</c:v></c:tx><c:spPr><a:solidFill><a:srgbClr val="${ch.color}"/></a:solidFill></c:spPr><c:invertIfNegative val="0"/>${lbl}${cat}${val}</c:ser>`;
+    const line = '<c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="9CA3AF"/></a:solidFill></a:ln></c:spPr>';
+    const mx = Math.max(0, ...ch.vals.map(Number));
+    const catAx = `<c:catAx><c:axId val="111"/><c:scaling><c:orientation val="${hor ? 'maxMin' : 'minMax'}"/></c:scaling><c:delete val="0"/><c:axPos val="${hor ? 'l' : 'b'}"/><c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>${line}${tx(900)}<c:crossAx val="222"/><c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/><c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>`;
+    const valAx = `<c:valAx><c:axId val="222"/><c:scaling><c:orientation val="minMax"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="${hor ? 'b' : 'l'}"/><c:majorGridlines><c:spPr><a:ln w="6350"><a:solidFill><a:srgbClr val="E5E7EB"/></a:solidFill></a:ln></c:spPr></c:majorGridlines><c:numFmt formatCode="${X(ch.fmt || '0')}" sourceLinked="0"/><c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/><c:spPr><a:ln><a:noFill/></a:ln></c:spPr>${tx(900)}<c:crossAx val="111"/><c:crosses val="${hor ? 'max' : 'autoZero'}"/><c:crossBetween val="between"/>${ch.whole && mx <= 10 ? '<c:majorUnit val="1"/>' : ''}</c:valAx>`;
+    return HEAD + `<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><c:roundedCorners val="0"/><c:chart>${title}<c:autoTitleDeleted val="0"/><c:plotArea><c:layout/><c:barChart><c:barDir val="${hor ? 'bar' : 'col'}"/><c:grouping val="clustered"/><c:varyColors val="0"/>${ser}<c:gapWidth val="60"/><c:axId val="111"/><c:axId val="222"/></c:barChart>${catAx}${valAx}</c:plotArea><c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart><c:spPr><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:ln w="9525"><a:solidFill><a:srgbClr val="D1D5DB"/></a:solidFill></a:ln></c:spPr>${tx(900)}</c:chartSpace>`;
+  }
+
+  function Book(rtl) {
+    const fonts = ['<font><sz val="11"/><name val="Calibri"/><family val="2"/></font>'];
+    const fills = ['<fill><patternFill patternType="none"/></fill>', '<fill><patternFill patternType="gray125"/></fill>'];
+    const borders = ['<border><left/><right/><top/><bottom/><diagonal/></border>'];
+    const nfs = [], xfs = ['<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'], cache = {}, sst = [], sstMap = new Map(), sheets = [];
+
+    // style = { b, i, sz, c (text colour), bg (fill), bd (thin border colour), bb (medium bottom line), nf (number format), h, v, w (wrap), ind }
+    const style = o => {
+      if (!o) return 0;
+      const k = JSON.stringify(o);
+      if (cache[k] != null) return cache[k];
+      const fo = idx(fonts, `<font>${o.b ? '<b/>' : ''}${o.i ? '<i/>' : ''}<sz val="${o.sz || 11}"/>${o.c ? `<color rgb="FF${o.c}"/>` : ''}<name val="Calibri"/><family val="2"/></font>`);
+      const fi = o.bg ? idx(fills, `<fill><patternFill patternType="solid"><fgColor rgb="FF${o.bg}"/><bgColor indexed="64"/></patternFill></fill>`) : 0;
+      const ln = (t, s, c) => s ? `<${t} style="${s}"><color rgb="FF${c}"/></${t}>` : `<${t}/>`;
+      const bo = o.bd || o.bb ? idx(borders, `<border>${ln('left', o.bd && 'thin', o.bd)}${ln('right', o.bd && 'thin', o.bd)}${ln('top', o.bd && 'thin', o.bd)}${ln('bottom', o.bb ? 'medium' : o.bd && 'thin', o.bb || o.bd)}<diagonal/></border>`) : 0;
+      const nf = o.nf ? (NF[o.nf] || 164 + idx(nfs, o.nf)) : 0;
+      const al = o.h || o.v || o.w || o.ind ? `<alignment${o.h ? ` horizontal="${o.h}"` : ''}${o.v ? ` vertical="${o.v}"` : ''}${o.w ? ' wrapText="1"' : ''}${o.ind ? ` indent="${o.ind}"` : ''}/>` : '';
+      const xf = `<xf numFmtId="${nf}" fontId="${fo}" fillId="${fi}" borderId="${bo}" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"${al ? ' applyAlignment="1">' + al + '</xf>' : '/>'}`;
+      return cache[k] = idx(xfs, xf);
+    };
+
+    // sheet(name, { grid:false, tab:'RRGGBB', land:true }) -> { set, merge, widths, heights, freeze, filter, titleRows, charts }
+    const sheet = (name, o = {}) => {
+      const S = { cells: [], merges: [], widths: [], heights: {}, charts: [], freeze: 0, filter: '', titleRows: 0, ...o };
+      const base = String(name).replace(/[\[\]:*?\/\\]/g, ' ').replace(/^'+|'+$/g, '').trim().slice(0, 31) || 'Sheet';
+      S.name = base; let n = 2;
+      while (sheets.some(x => x.name.toLowerCase() == S.name.toLowerCase())) S.name = base.slice(0, 28) + ' ' + n++;
+      S.set = (r, c, v, s) => { (S.cells[r] = S.cells[r] || [])[c] = { v, s: style(s) }; return S; };
+      S.merge = (r1, c1, r2, c2, v, s) => {
+        for (let r = r1; r <= r2; r++) for (let c = c1; c <= c2; c++) S.set(r, c, r == r1 && c == c1 ? v : '', s);
+        if (r1 != r2 || c1 != c2) S.merges.push(ref(r1, c1) + ':' + ref(r2, c2));
+        return S;
+      };
+      sheets.push(S);
+      return S;
+    };
+
+    const cellXml = (r, c, x) => {
+      const h = `<c r="${ref(r, c)}"${x.s ? ` s="${x.s}"` : ''}`, v = x.v;
+      if (typeof v == 'number' && isFinite(v)) return `${h}><v>${v}</v></c>`;
+      if (v && typeof v == 'object' && isFinite(v.d)) return `${h}><v>${v.d}</v></c>`;
+      const t = v == null ? '' : String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '').slice(0, 32000);
+      if (!t) return `${h}/>`;
+      if (!sstMap.has(t)) { sstMap.set(t, sst.length); sst.push(t); }
+      return `${h} t="s"><v>${sstMap.get(t)}</v></c>`;
+    };
+    const sheetXml = (S, i, drawingRid) => {
+      let maxR = 0, maxC = 0;
+      const rows = [];
+      Object.keys(S.heights).forEach(r => { if (!S.cells[r]) S.cells[r] = []; });
+      S.cells.forEach((row, r) => {
+        let cs = '';
+        row.forEach((x, c) => { cs += cellXml(r, c, x); if (c > maxC) maxC = c; });
+        if (r > maxR) maxR = r;
+        rows.push(`<row r="${r + 1}"${S.heights[r] ? ` ht="${S.heights[r]}" customHeight="1"` : ''}>${cs}</row>`);
+      });
+      const fr = S.freeze ? `<pane ySplit="${S.freeze}" topLeftCell="A${S.freeze + 1}" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A${S.freeze + 1}" sqref="A${S.freeze + 1}"/>` : '';
+      return HEAD + '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+        + `<sheetPr>${S.tab ? `<tabColor rgb="FF${S.tab}"/>` : ''}<pageSetUpPr fitToPage="1"/></sheetPr>`
+        + `<dimension ref="A1:${ref(maxR, maxC)}"/>`
+        + `<sheetViews><sheetView${rtl ? ' rightToLeft="1"' : ''}${S.grid === false ? ' showGridLines="0"' : ''}${i == 0 ? ' tabSelected="1"' : ''} workbookViewId="0">${fr}</sheetView></sheetViews>`
+        + '<sheetFormatPr defaultRowHeight="15"/>'
+        + (S.widths.length ? `<cols>${Array.from(S.widths, (w, c) => `<col min="${c + 1}" max="${c + 1}" width="${w || 10}" customWidth="1"/>`).join('')}</cols>` : '')
+        + `<sheetData>${rows.join('')}</sheetData>`
+        + (S.filter ? `<autoFilter ref="${S.filter}"/>` : '')
+        + (S.merges.length ? `<mergeCells count="${S.merges.length}">${S.merges.map(m => `<mergeCell ref="${m}"/>`).join('')}</mergeCells>` : '')
+        + '<pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/>'
+        + `<pageSetup orientation="${S.land ? 'landscape' : 'portrait'}" fitToWidth="1" fitToHeight="0"/>`
+        + (drawingRid ? `<drawing r:id="${drawingRid}"/>` : '') + '</worksheet>';
+    };
+    const drawingXml = S => HEAD + '<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+      + S.charts.map((ch, i) => `<xdr:oneCellAnchor><xdr:from><xdr:col>${ch.c}</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${ch.r}</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from><xdr:ext cx="${ch.w * 9525}" cy="${ch.h * 9525}"/><xdr:graphicFrame macro=""><xdr:nvGraphicFramePr><xdr:cNvPr id="${i + 2}" name="Chart ${i + 1}" descr="${X(ch.title)}"/><xdr:cNvGraphicFramePr/></xdr:nvGraphicFramePr><xdr:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/></xdr:xfrm><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:chart xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rId${i + 1}"/></a:graphicData></a:graphic></xdr:graphicFrame><xdr:clientData/></xdr:oneCellAnchor>`).join('') + '</xdr:wsDr>';
+
+    const build = async () => {
+      const RELNS = 'http://schemas.openxmlformats.org/package/2006/relationships', OD = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/';
+      const rel = (id, type, target) => `<Relationship Id="${id}" Type="${OD}${type}" Target="${target}"/>`;
+      const rels = list => HEAD + `<Relationships xmlns="${RELNS}">${list.join('')}</Relationships>`;
+      const sheetFiles = [], extra = [], ctypes = [];
+      let chartN = 0, drawN = 0;
+      sheets.forEach((S, i) => {
+        let rid = '';
+        if (S.charts.length) {
+          drawN++;
+          const cr = S.charts.map((c, j) => { chartN++; extra.push(['xl/charts/chart' + chartN + '.xml', chartXml(S, c)]); ctypes.push(`<Override PartName="/xl/charts/chart${chartN}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>`); return rel('rId' + (j + 1), 'chart', '../charts/chart' + chartN + '.xml'); });
+          extra.push(['xl/drawings/drawing' + drawN + '.xml', drawingXml(S)], ['xl/drawings/_rels/drawing' + drawN + '.xml.rels', rels(cr)], ['xl/worksheets/_rels/sheet' + (i + 1) + '.xml.rels', rels([rel('rId1', 'drawing', '../drawings/drawing' + drawN + '.xml')])]);
+          ctypes.push(`<Override PartName="/xl/drawings/drawing${drawN}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>`);
+          rid = 'rId1';
+        }
+        sheetFiles.push(['xl/worksheets/sheet' + (i + 1) + '.xml', sheetXml(S, i, rid)]);
+        ctypes.push(`<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`);
+      });
+      const names = sheets.map((S, i) => S.titleRows ? `<definedName name="_xlnm.Print_Titles" localSheetId="${i}">'${X(S.name.replace(/'/g, "''"))}'!$1:$${S.titleRows}</definedName>` : '').join('');
+      const workbook = HEAD + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews>'
+        + `<sheets>${sheets.map((S, i) => `<sheet name="${X(S.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets>${names ? `<definedNames>${names}</definedNames>` : ''}</workbook>`;
+      const n = sheets.length;
+      const styles = HEAD + '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        + (nfs.length ? `<numFmts count="${nfs.length}">${nfs.map((f, i) => `<numFmt numFmtId="${164 + i}" formatCode="${X(f)}"/>`).join('')}</numFmts>` : '')
+        + `<fonts count="${fonts.length}">${fonts.join('')}</fonts><fills count="${fills.length}">${fills.join('')}</fills><borders count="${borders.length}">${borders.join('')}</borders>`
+        + '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+        + `<cellXfs count="${xfs.length}">${xfs.join('')}</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+      const strings = HEAD + `<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${sst.length}" uniqueCount="${sst.length}">${sst.map(t => `<si><t xml:space="preserve">${X(t)}</t></si>`).join('')}</sst>`;
+      const ct = HEAD + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
+        + '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>'
+        + ctypes.join('') + '</Types>';
+      return zip([
+        ['[Content_Types].xml', ct],
+        ['_rels/.rels', rels([rel('rId1', 'officeDocument', 'xl/workbook.xml')])],
+        ['xl/workbook.xml', workbook],
+        ['xl/_rels/workbook.xml.rels', rels([...sheets.map((S, i) => rel('rId' + (i + 1), 'worksheet', 'worksheets/sheet' + (i + 1) + '.xml')), rel('rId' + (n + 1), 'styles', 'styles.xml'), rel('rId' + (n + 2), 'sharedStrings', 'sharedStrings.xml')])],
+        ['xl/styles.xml', styles],
+        ['xl/sharedStrings.xml', strings],
+        ...sheetFiles, ...extra
+      ]);
+    };
+    return { sheet, build, style };
+  }
+  return { Book, date, col, X };
+})();
+// colours: counts are always blue and hours always orange (same meaning = same colour in every chart); the rest is the app's teal
+const XC = { teal: '0F766E', dark: '134E4A', blue: '2A78D6', orange: 'EB6834', line: 'D1D5DB', mute: '6B7280' };
+const XHEAD = { b: 1, c: 'FFFFFF', bg: XC.teal, bd: '0B5F58', h: 'center', v: 'center', w: 1 };
+const XPRIO = { critical: ['FEE2E2', '991B1B'], high: ['FFEDD5', '9A3412'], medium: ['FEF9C3', '854D0E'], low: ['DCFCE7', '166534'] };
+const XSTAT = { open: ['FEE2E2', '991B1B'], prog: ['DBEAFE', '1E40AF'], done: ['DCFCE7', '166534'] };
+const xTint = p => p ? { bg: p[0], c: p[1], b: 1, h: 'center' } : {};
+// a data sheet: coloured header, set widths, filter buttons, frozen header row. cols: [{h, w, t}], rows: arrays (a cell may be {v, s} for its own style)
+function xlTable(bk, name, cols, rows) {
+  const ST = { txt: {}, wrap: { w: 1 }, mid: { h: 'center' }, int: { nf: '#,##0', h: 'center' }, dec: { nf: '0.0', h: 'center' }, date: { nf: 'yyyy-mm-dd hh:mm', h: 'center' } };
+  const sh = bk.sheet(name, { tab: XC.teal, land: cols.length > 6, freeze: 1, titleRows: 1 });
+  cols.forEach((c, i) => { sh.widths[i] = c.w || 14; sh.set(0, i, c.h, XHEAD); });
+  rows.forEach((row, r) => row.forEach((x, i) => {
+    const o = x && typeof x == 'object' && 'v' in x ? x : { v: x };
+    sh.set(r + 1, i, o.v, { bd: XC.line, v: 'top', ...ST[cols[i].t || 'txt'], ...o.s });
   }));
+  sh.heights[0] = 32;
+  sh.filter = 'A1:' + XW.col(cols.length - 1) + (rows.length + 1);
+  return sh;
+}
+// one row per request (used by the statistics export and by "download selected")
+function reqTable(bk, list) {
+  const y = v => v ? tr(v == 'Yes' ? 'yes' : 'no') : '', dt = XW.date;
+  const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
+  const cols = [
+    { h: tr('reqNo'), w: 10, t: 'int' }, { h: tr('kindCol'), w: 13, t: 'mid' }, { h: tr('machine'), w: 22 }, { h: tr('dept'), w: 16 }, { h: tr('ptype'), w: 15 }, { h: tr('priority'), w: 11, t: 'mid' }, { h: tr('stopped'), w: 12, t: 'mid' },
+    { h: tr('desc'), w: 42, t: 'wrap' }, { h: tr('reporter'), w: 16 }, { h: tr('reportedAt'), w: 18, t: 'date' }, { h: tr('tech'), w: 18 }, { h: tr('withMe2'), w: 20, t: 'wrap' },
+    { h: tr('takenAt'), w: 18, t: 'date' }, { h: tr('finishedAt'), w: 18, t: 'date' }, { h: tr('status'), w: 13, t: 'mid' }, { h: tr('repMin'), w: 12, t: 'int' },
+    { h: tr('action'), w: 42, t: 'wrap' }, { h: tr('rootCause'), w: 18 }, { h: tr('clean'), w: 10, t: 'mid' }, { h: tr('parts2'), w: 30, t: 'wrap' }, { h: tr('ckCol'), w: 44, t: 'wrap' }
+  ];
+  const rows = list.map(r => [
+    r.no, { v: r.k == 'pm' ? tr('pm') : tr('bdKind'), s: r.k == 'pm' ? { bg: 'DBEAFE', c: '1E40AF' } : {} }, r.mn, r.d, tl(r.pt), { v: tr(r.pr), s: xTint(XPRIO[r.pr]) },
+    { v: y(r.st), s: r.st == 'Yes' ? { c: 'B91C1C', b: 1 } : {} }, r.ds, r.by, dt(r.ra), r.ts ? stf(r.ts) : '', cw(r).map(stf).join(', '),
+    dt(r.ta), dt(r.fa), { v: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'), s: xTint(XSTAT[r.s]) },
+    r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', r.ac || '', rl(r.rc), y(r.cl),
+    (r.sp || []).map(x => x.n + (x.p ? ' (' + x.p + ')' : '')).join(', '),
+    (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | ')
+  ]);
+  return xlTable(bk, tr('shReq'), cols, rows);
+}
+// first sheet of the statistics file: headline numbers, charts, then the small tables the charts are drawn from
+function xlSummary(bk, S) {
+  const NC = 6, sh = bk.sheet(tr('shSummary'), { grid: false, tab: XC.dark });
+  for (let i = 0; i < NC; i++) sh.widths[i] = 17;
+  // Arabic text mixed with digits in one cell: a right-to-left mark in front keeps the duration in reading order
+  const RLM = lang == 'ar' ? '\u200F' : '';
+  const hrs = m => Math.round(m / 6) / 10, fl = v => v == null ? tr('na') : RLM + dhm(v);
+  const ms = Object.values(S.M).sort((a, b) => b.c - a.c).slice(0, 10);
+  const ds = Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt);
+  const rcAll = Object.values(S.RC).reduce((a, b) => a + b, 0), rcs = Object.entries(S.RC).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const TY = {}, MO = {};
+  S.rs.forEach(r => {
+    const k = tl(r.pt) || '—'; TY[k] = (TY[k] || 0) + 1;
+    const o = MO[r.ra.slice(0, 7)] = MO[r.ra.slice(0, 7)] || { c: 0, dt: 0 };
+    o.c++; if (r.st == 'Yes' && r.fa) o.dt += Math.max(0, (new Date(r.fa) - new Date(r.ra)) / 60000);
+  });
+  let types = Object.entries(TY).sort((a, b) => b[1] - a[1]);
+  if (types.length > 8) types = [...types.slice(0, 7), [tr('other').replace(/[.…]+$/, ''), types.slice(7).reduce((a, x) => a + x[1], 0)]];
+  const months = Object.keys(MO).sort().slice(-24), trend = months.length > 1;
+  const stops = S.rs.filter(r => r.st == 'Yes').length, totalDt = Object.values(S.M).reduce((a, m) => a + m.dt, 0);
+
+  // title + period
+  sh.merge(0, 0, 0, NC - 1, tr('app') + ' — ' + tr('xlTitle'), { b: 1, sz: 18, c: 'FFFFFF', bg: XC.dark, h: 'center', v: 'center' }); sh.heights[0] = 40;
+  const sub = { c: '374151', bg: 'F0FDFA', h: 'center', v: 'center' };   // period and date go in their own cells so Arabic text never scrambles the digits
+  sh.merge(1, 0, 1, 1, tr('xlPeriod'), sub).set(1, 2, period == 'all' ? tr('all') : period, { ...sub, b: 1 });
+  sh.merge(1, 3, 1, 4, tr('xlGen'), sub).set(1, 5, XW.date(loc(new Date())), { ...sub, b: 1, nf: 'yyyy-mm-dd hh:mm' }); sh.heights[1] = 22;
+  sh.heights[2] = 8;
+  // nine headline cards, three per row, each two columns wide
+  [[tr('total'), S.rs.length, XC.blue, '#,##0'], [tr('stops'), stops, XC.blue, '#,##0'], [tr('dHrs'), hrs(totalDt), XC.orange, '0.0'],
+   [tr('mttr'), fl(S.mttr), XC.dark], [tr('mtbf'), fl(S.mtbf), XC.dark], [tr('stoppedMach'), Object.keys(S.SN).length, Object.keys(S.SN).length ? 'DC2626' : XC.dark, '#,##0'],
+   [tr('kClosed'), S.rs.filter(r => r.s == 'done').length, XC.dark, '#,##0'], [tr('kOpenN'), S.rs.filter(r => r.s != 'done').length, XC.dark, '#,##0'], [tr('parts2'), Object.values(S.P).reduce((a, x) => a + x.c, 0), XC.dark, '#,##0']
+  ].forEach(([l, v, c, nf], i) => {
+    const r = 3 + Math.floor(i / 3) * 3, cc = i % 3 * 2;
+    sh.merge(r, cc, r, cc + 1, l, { c: XC.mute, sz: 10, bg: 'F3F4F6', bd: 'FFFFFF', h: 'center', v: 'center', w: 1 });
+    sh.merge(r + 1, cc, r + 1, cc + 1, v, { b: 1, sz: 16, c, bg: 'F3F4F6', bd: 'FFFFFF', h: 'center', v: 'center', nf });
+    sh.heights[r] = 20; sh.heights[r + 1] = 32; sh.heights[r + 2] = 6;
+  });
+  // room for the charts (16 rows each band), then the tables
+  const have = { mach: ms.length > 0, dept: ds.length > 0, type: types.length > 0, rc: rcs.length > 0 };
+  const halves = (have.dept ? 1 : 0) + (have.type ? 1 : 0) + (have.rc ? 1 : 0) + (trend ? 2 : 0), top = have.mach ? 1 : 0, bands = top + Math.ceil(halves / 2);
+  let r = 12 + bands * 16;
+  const sect = t => { sh.merge(r, 0, r, NC - 1, t, { b: 1, sz: 13, c: XC.dark, bb: XC.teal, v: 'center' }); sh.heights[r++] = 24; };
+  const table = (title, hs, rows, nf) => {
+    sect(title);
+    hs.forEach((h, i) => i ? sh.set(r, i + 1, h, XHEAD) : sh.merge(r, 0, r, 1, h, XHEAD)); sh.heights[r++] = 30;
+    const r1 = r;
+    rows.forEach(x => { sh.merge(r, 0, r, 1, x[0], { bd: XC.line, v: 'center', w: 1 }); x.slice(1).forEach((v, i) => sh.set(r, i + 2, v, { bd: XC.line, v: 'center', h: 'center', nf: nf[i] })); r++; });
+    const t = { r1, r2: r - 1, rows }; r++; return t;
+  };
+  const T = {};
+  if (have.mach) T.mach = table(tr('topMach'), [tr('machine'), tr('total'), tr('stops'), tr('dHrs'), 'MTTR (' + tr('min') + ')'], ms.map(m => [m.n, m.c, m.s, hrs(m.dt), m.mttr == null ? '' : Math.round(m.mttr)]), ['#,##0', '#,##0', '0.0', '#,##0']);
+  if (have.dept) T.dept = table(tr('deptTable'), [tr('dept'), tr('dMach'), tr('total'), tr('dHrs'), tr('dNow')], ds.map(([k, o]) => [k, o.m, o.c, hrs(o.dt), o.now]), ['#,##0', '#,##0', '0.0', '#,##0']);
+  if (have.type) T.type = table(tr('xlTypes'), [tr('ptype'), tr('total'), tr('xlShare')], types.map(([k, v]) => [k, v, v / S.rs.length]), ['#,##0', '0%']);
+  if (have.rc) T.rc = table(tr('topRC'), [tr('rootCause'), tr('total'), tr('xlShare')], rcs.map(([k, v]) => [rl(k), v, v / rcAll]), ['#,##0', '0%']);
+  if (trend) T.mo = table(tr('xlTrend'), [tr('month'), tr('total'), tr('dHrs')], months.map(k => [k, MO[k].c, hrs(MO[k].dt)]), ['#,##0', '0.0']);
+  [tr('kpiNote'), tr('deptNote')].forEach(t => { sh.merge(r, 0, r, NC - 1, t, { c: XC.mute, sz: 9, i: 1, w: 1, v: 'top' }); sh.heights[r++] = 28; });
+
+  // native Excel charts, drawn from the tables above (edit a number there and the chart follows)
+  let j = 0;
+  const chart = (key, full, kind, title, name, color, vi, fmt, whole, cap) => {
+    const t = T[key]; if (!t) return;
+    const rows = t.rows.slice(0, cap || 10), band = full ? 0 : top + Math.floor(j / 2), half = full ? 0 : j % 2;
+    if (!full) j++;
+    sh.charts.push({ kind, title, name, color, r1: t.r1, r2: t.r1 + rows.length - 1, cc: 0, vc: vi + 1, cats: rows.map(x => x[0]), vals: rows.map(x => x[vi]), fmt, whole, c: half * 3, r: 12 + band * 16, w: full ? 744 : 366, h: 300 });
+  };
+  chart('mach', true, 'bar', tr('topMach'), tr('total'), XC.blue, 1, '0', true);
+  chart('dept', false, 'bar', tr('deptHours'), tr('dHrs'), XC.orange, 3, '0.0');
+  chart('type', false, 'bar', tr('xlTypes'), tr('total'), XC.blue, 1, '0', true);
+  chart('rc', false, 'bar', tr('topRC'), tr('total'), XC.blue, 1, '0', true);
+  chart('mo', false, 'col', tr('xlTrend') + ' — ' + tr('total'), tr('total'), XC.blue, 1, '0', true, 24);
+  chart('mo', false, 'col', tr('xlTrend') + ' — ' + tr('dHrs'), tr('dHrs'), XC.orange, 2, '0.0', false, 24);
+  return sh;
+}
+async function saveXl(bk, name) {
+  const blob = await bk.build(), url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 const av = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
 // how long a request has waited, and whether it is overdue (counted from when it was submitted)
@@ -867,15 +1155,10 @@ function printSel() {
   window.onafterprint = () => { document.body.classList.remove('p1'); document.querySelectorAll('.only').forEach(x => x.classList.remove('only')); };
   window.print();
 }
-function exportPrev() {
+async function exportPrev() {
   const l = prevList(), rs = sel.size ? l.filter(r => sel.has(r.id)) : l;
   if (!rs.length) return alert(tr('none'));
-  withXL(() => {
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(reqRows(rs)), tr('shReq').slice(0, 31));
-    try { wb.Workbook = { Views: [{ RTL: lang == 'ar' }] }; } catch (e) { /* optional */ }
-    XLSX.writeFile(wb, 'napco-requests-' + ymd(new Date()) + '.xlsx');
-  });
+  try { const bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); } catch (err) { alert(tr('xlErr')); }
 }
 function aPrev() {
   const rs = prevList(), ms = [...new Map(db.requests.filter(r => r.s == 'done').map(r => [String(r.mid), r.mn]))];
@@ -1048,26 +1331,32 @@ ${box(tr('topParts'), pt.length ? bars(pt.slice(0, 8).map(x => [x.n + (x.p ? ' (
 ${box(tr('partsByMonth'), pm.length ? pmtab : none)}
 ${me.r == 'admin' ? box(tr('statsTech'), techs) : ''}`;
 }
-function exportXl() {
-  const go = () => {
-    const S = calc(), dt = s => s ? s.replace('T', ' ') : '', y = v => v ? tr(v == 'Yes' ? 'yes' : 'no') : '';
-    const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
-    const wb = XLSX.utils.book_new();
-    const add = (n, rows) => { if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), n.slice(0, 31)); };
-    add(tr('shReq'), reqRows(S.rs));
-    add(tr('shMach'), Object.values(S.M).sort((a, b) => b.c - a.c).map(m => ({
-      [tr('machine')]: m.n, [tr('dept')]: m.d, [tr('total')]: m.c, [tr('stops')]: m.s, [tr('stopMin')]: Math.round(m.dt), [tr('mttr') + ' (' + tr('min') + ')']: m.mttr == null ? '' : Math.round(m.mttr), [tr('mtbf') + ' (' + tr('min') + ')']: m.mtbf == null ? '' : Math.round(m.mtbf), [tr('lastFault')]: dt(m.last),
-      [tr('ptype')]: Object.entries(m.t).map(([k, v]) => tl(k) + ': ' + v).join(', ')
-    })));
-    add(tr('shDept'), Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => ({ [tr('dept')]: k, [tr('dMach')]: o.m, [tr('dNow')]: o.now, [tr('total')]: o.c, [tr('stops')]: o.s, [tr('dHrs')]: Math.round(o.dt / 6) / 10 })));
-    add(tr('shParts'), Object.values(S.P).sort((a, b) => b.c - a.c).map(x => ({ [tr('partName')]: x.n, [tr('partNo')]: x.p, [tr('timesUsed')]: x.c, [tr('usedIn')]: [...x.m].join(', ') })));
-    add(tr('shPM'), Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => ({ [tr('month')]: x.mo, [tr('machine')]: x.m, [tr('partName')]: x.n, [tr('partNo')]: x.p, [tr('timesUsed')]: x.c })));
-    if (me.r == 'admin') add(tr('shTech'), Object.entries(S.T).map(([e, t]) => ({ [tr('tech')]: stf(e), [tr('taken')]: t.n, [tr('closedN')]: t.d, [tr('repMin')]: t.d ? Math.round(t.ms / t.d / 60000) : '' })));
-    if (!wb.SheetNames.length) return alert(tr('none'));
-    try { wb.Workbook = { Views: [{ RTL: lang == 'ar' }] }; } catch (e) { /* optional */ }
-    XLSX.writeFile(wb, 'napco-' + (period == 'all' ? 'all' : period) + '.xlsx');
-  };
-  withXL(go);
+async function exportXl() {
+  try {
+    const S = calc(), stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
+    if (!S.rs.length && !Object.keys(S.P).length && !Object.keys(S.T).length) return alert(tr('none'));
+    const bk = XW.Book(lang == 'ar'), I = n => ({ v: n });
+    xlSummary(bk, S);
+    if (S.rs.length) reqTable(bk, S.rs);
+    const add = (n, cols, rows) => { if (rows.length) xlTable(bk, n, cols, rows); };
+    add(tr('shMach'), [
+      { h: tr('machine'), w: 24 }, { h: tr('dept'), w: 16 }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('stopMin'), w: 14, t: 'int' },
+      { h: tr('mttr') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('mtbf') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('lastFault'), w: 18, t: 'date' }, { h: tr('ptype'), w: 40, t: 'wrap' }
+    ], Object.values(S.M).sort((a, b) => b.c - a.c).map(m => [m.n, m.d, m.c, m.s, Math.round(m.dt), m.mttr == null ? '' : Math.round(m.mttr), m.mtbf == null ? '' : Math.round(m.mtbf), XW.date(m.last), Object.entries(m.t).map(([k, v]) => tl(k) + ': ' + v).join(', ')]));
+    add(tr('shDept'), [
+      { h: tr('dept'), w: 22 }, { h: tr('dMach'), w: 14, t: 'int' }, { h: tr('dNow'), w: 14, t: 'int' }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('dHrs'), w: 14, t: 'dec' }
+    ], Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => [k, o.m, { v: o.now, s: o.now ? { c: 'B91C1C', b: 1 } : {} }, o.c, o.s, Math.round(o.dt / 6) / 10]));
+    add(tr('shParts'), [
+      { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('timesUsed'), w: 12, t: 'int' }, { h: tr('usedIn'), w: 44, t: 'wrap' }
+    ], Object.values(S.P).sort((a, b) => b.c - a.c).map(x => [x.n, x.p, x.c, [...x.m].join(', ')]));
+    add(tr('shPM'), [
+      { h: tr('month'), w: 12, t: 'mid' }, { h: tr('machine'), w: 24 }, { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('timesUsed'), w: 12, t: 'int' }
+    ], Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => [x.mo, x.m, x.n, x.p, x.c]));
+    if (me.r == 'admin') add(tr('shTech'), [
+      { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repMin'), w: 16, t: 'int' }
+    ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? Math.round(t.ms / t.d / 60000) : '']));
+    await saveXl(bk, 'napco-' + (period == 'all' ? 'all' : period) + '.xlsx');
+  } catch (err) { alert(tr('xlErr')); }
 }
 
 /* ---------- MACHINES + QR ---------- */
