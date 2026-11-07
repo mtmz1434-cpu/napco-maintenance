@@ -371,8 +371,11 @@ async function api(path, method = 'GET', body, prefer) {
   const r = await fetch(SUPABASE_URL + '/rest/v1/' + path, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) });
   const t = await r.text();
   if (!r.ok) throw new Error(t);
-  return t ? JSON.parse(t) : null;
+  if (!t) return null;
+  try { return JSON.parse(t); } catch (e) { return t; }   // a plain-text reply is returned as is
 }
+// short reason from a failed call, shown only on the hidden sign-in/settings screens
+const errTxt = err => { let m; try { const j = JSON.parse(err.message); m = j.message || j.code; } catch (e) { m = err && err.message; } return m ? '\n' + String(m).slice(0, 140) : ''; };
 const rpc = (fn, args) => api('rpc/' + fn, 'POST', args);
 async function pages(q) {
   let all = [], o = 0;
@@ -483,7 +486,7 @@ async function doSx(e) {
     me = { e: '', r: 'admin', h: t, sx: true }; tab = ''; mview = null;
     try { sessionStorage.setItem('napco_s', t); } catch (err) { /* optional */ }
     render();
-  } catch (err) { alert(tr('netErr')); }
+  } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 function sxToggle() { sxPanel = !sxPanel; render(); }
 function sxView() {
@@ -501,7 +504,7 @@ async function sxSave(e) {
     if (r == 'ok') { sxPanel = false; alert(tr('saved')); render(); }
     else if (r == 'denied') { alert(tr('wrongPw')); logout(); }
     else alert(tr(r == 'locked' ? 'tryLater' : r == 'format' ? 'badEmp' : 'wrongPw'));
-  } catch (err) { alert(tr('netErr')); }
+  } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 function doEmp(e) {
   e.preventDefault();
