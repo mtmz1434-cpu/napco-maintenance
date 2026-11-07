@@ -21,7 +21,9 @@ input[type=checkbox]{width:auto;padding:0}
 const SUPABASE_URL = 'https://nkrhntuswynyqwcgzzsm.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KHOEk1POW43tUKgh7nPLIw_aA-uIPTA';
 // Employee numbers of the two special accounts. Their passwords live in the database (see supabase-setup.sql), not here.
-const ADMIN_ID = '1072210', WORKSHOP_ID = '9999';
+// the admin number is read from the server (he can change it); this is only the starting value
+let ADMIN_ID = '1072210';
+const WORKSHOP_ID = '9999';
 // Minutes a new request may wait before it counts as overdue (by priority). Change freely.
 const SLA = { critical: 15, high: 30, medium: 60, low: 120 };
 // Preventive tasks that fall due within this many days are flagged as "due soon" in the alerts. Change freely.
@@ -287,6 +289,10 @@ newPw|كلمة مرور جديدة (اختياري، ١٠ خانات فأكثر)
 pwLong10|كلمة المرور لا تقل عن ١٠ خانات|Password must be at least 10 characters
 tryLater|حاول بعد قليل|Please try again in a little while
 sxSaveBtn|حفظ|Save
+admAcct|حساب المدير|Admin account
+newPw8|كلمة مرور جديدة (اختياري، ٨ خانات فأكثر)|New password (optional, 8+ characters)
+pwLong8|كلمة المرور لا تقل عن ٨ خانات|Password must be at least 8 characters
+empTaken|هذا الرقم مستخدم لموظف آخر|This number is already used by another employee
 deptNote|عدد الآلات = الآلات التي سُجّل عليها عطل في الفترة المختارة. ساعات التوقف = من وقت البلاغ إلى الإغلاق للأعطال التي أوقفت الآلة (نفس حساب ملف الآلة)، ولا يدخل فيها المتوقف حاليًا إلا بعد إغلاقه. «متوقفة الآن» لا تتأثر باختيار الفترة.|Machines = machines with a breakdown in the selected period. Downtime hours = report time to close time for breakdowns that stopped the machine (same as the machine file); a machine still stopped counts only after it is closed. "Stopped now" ignores the period filter.`;
 const L = { ar: {}, en: {} };
 D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k] = e; });
@@ -388,6 +394,7 @@ async function load(full) {
   const [m, u, c, pp] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => [])]);
   let n = 0;
   if (full || !lastSync) {
+    try { const ae = await rpc('admin_emp'); if (/^\d{3,12}$/.test(ae || '')) ADMIN_ID = ae; } catch (e) { /* older database: keep the starting value */ }
     const rs = await pages('requests?select=*&order=id');
     db.requests = rs.map(fromReq);
     lastSync = rs.reduce((a, x) => x.updated_at > a ? x.updated_at : a, '1970-01-01T00:00:00Z');
@@ -442,9 +449,9 @@ function render() {
   dirty = false;
   document.documentElement.lang = lang;
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e)}</span>${me.sx ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4 w-full flex-1${tv ? ' text-lg' : ''}">`;
+  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e)}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
-  h += !me ? loginView() : (me.sx && sxPanel) ? sxView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
+  h += !me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
   $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
   if (me && me.r == 'operator') {
     const q = new URLSearchParams(location.search), qn = q.get('m');
@@ -489,8 +496,32 @@ async function doSx(e) {
   } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 function sxToggle() { sxPanel = !sxPanel; render(); }
+const credForm = (k, fn, pwKey) => `<form onsubmit="${fn}" class="space-y-3" autocomplete="off"><label class="block font-semibold">${tr('curPw')}</label><input id="${k}_o" type="password" autocomplete="off" required><label class="block font-semibold">${tr('newEmp')}</label><input id="${k}_e" inputmode="numeric" autocomplete="off"><label class="block font-semibold">${tr(pwKey)}</label><input id="${k}_p" type="password" autocomplete="new-password"><input id="${k}_q" type="password" placeholder="${tr('confirmPw')}" autocomplete="new-password"><div class="flex gap-2"><button class="${btn}">${tr('sxSaveBtn')}</button>${k == 'ga' ? `<button type="button" onclick="sxToggle()" class="w-full border rounded-lg py-3 font-bold">${tr('back')}</button>` : ''}</div></form>`;
 function sxView() {
-  return `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-4"><h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><form onsubmit="sxSave(event)" class="space-y-3" autocomplete="off"><label class="block font-semibold">${tr('curPw')}</label><input id="xo" type="password" autocomplete="off" required><label class="block font-semibold">${tr('newEmp')}</label><input id="xn" inputmode="numeric" autocomplete="off"><label class="block font-semibold">${tr('newPw')}</label><input id="xq" type="password" autocomplete="new-password"><input id="xr" type="password" placeholder="${tr('confirmPw')}" autocomplete="new-password"><div class="flex gap-2"><button class="${btn}">${tr('sxSaveBtn')}</button><button type="button" onclick="sxToggle()" class="w-full border rounded-lg py-3 font-bold">${tr('back')}</button></div></form></div>`;
+  const card = b => `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-4">${b}</div>`;
+  if (!me.sx) return card(`<h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><p class="text-sm text-gray-500 mb-3">${tr('empNo')}: <b>${esc(me.e)}</b></p>${credForm('ga', 'admSave(event,true)', 'newPw8')}`);
+  return card(`<h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><form onsubmit="sxSave(event)" class="space-y-3" autocomplete="off"><label class="block font-semibold">${tr('curPw')}</label><input id="xo" type="password" autocomplete="off" required><label class="block font-semibold">${tr('newEmp')}</label><input id="xn" inputmode="numeric" autocomplete="off"><label class="block font-semibold">${tr('newPw')}</label><input id="xq" type="password" autocomplete="new-password"><input id="xr" type="password" placeholder="${tr('confirmPw')}" autocomplete="new-password"><div class="flex gap-2"><button class="${btn}">${tr('sxSaveBtn')}</button><button type="button" onclick="sxToggle()" class="w-full border rounded-lg py-3 font-bold">${tr('back')}</button></div></form>`)
+    + card(`<h3 class="font-bold text-teal-800 mb-1">👤 ${tr('admAcct')}</h3><p class="text-sm text-gray-500 mb-3">${tr('empNo')}: <b>${esc(ADMIN_ID)}</b></p>${credForm('gb', 'admSave(event,false)', 'newPw8')}`);
+}
+// change the admin's number / password: from his own page (own = true) or reset by the owner (own = false)
+async function admSave(e, own) {
+  e.preventDefault();
+  const k = own ? 'ga' : 'gb', o = $(k + '_o').value, ne = $(k + '_e').value.trim(), np = $(k + '_p').value;
+  if (ne && !/^\d{3,12}$/.test(ne)) return alert(tr('badEmp'));
+  if (np && np.length < 8) return alert(tr('pwLong8'));
+  if (np !== $(k + '_q').value) return alert(tr('pwMismatch'));
+  if (!ne && !np) return;
+  try {
+    const nh = np ? await sha(np) : '', oh = await sha(o);
+    const r = own ? await rpc('admin_update_self', { p_old_h: oh, p_emp: ne, p_new_h: nh })
+      : await rpc('sx_reset_admin', { p_tok: me.h, p_old_h: oh, p_emp: ne, p_new_h: nh });
+    if (r == 'ok') {
+      if (ne) ADMIN_ID = ne;
+      if (own) { if (ne) me.e = ne; if (nh) me.h = nh; save(); }
+      sxPanel = false; alert(tr('saved')); render();
+    } else if (r == 'denied') { alert(tr('wrongPw')); logout(); }
+    else alert(tr(r == 'locked' ? 'tryLater' : r == 'taken' ? 'empTaken' : r == 'format' ? 'badEmp' : 'wrongPw'));
+  } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 async function sxSave(e) {
   e.preventDefault();
