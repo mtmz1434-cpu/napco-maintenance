@@ -271,7 +271,23 @@ pmOldest|الأقدم|oldest
 pmUpcoming|الصيانة الوقائية القادمة والمتأخرة|Upcoming and overdue preventive maintenance
 pmInD|بعد {n} يوم|in {n} days
 pmOnMach|الصيانة الوقائية لهذه الآلة|Preventive maintenance on this machine
-pmNoPlan|لا توجد خطط وقائية لهذه الآلة|No preventive plans for this machine`;
+pmNoPlan|لا توجد خطط وقائية لهذه الآلة|No preventive plans for this machine
+deptMach|عدد الآلات المعطّلة لكل قسم|Broken-down machines per department
+deptHours|ساعات التوقف لكل قسم|Downtime hours per department
+deptTable|ملخص الأقسام|Department summary
+dMach|آلات تعطّلت|Machines affected
+dNow|متوقفة الآن|Stopped now
+dHrs|ساعات التوقف|Downtime (h)
+shDept|الأقسام|Departments
+adminT|المدير|Admin
+acct|إعدادات الحساب|Account settings
+curPw|كلمة المرور الحالية|Current password
+newEmp|رقم وظيفي جديد (اختياري)|New employee number (optional)
+newPw|كلمة مرور جديدة (اختياري، ١٠ خانات فأكثر)|New password (optional, 10+ characters)
+pwLong10|كلمة المرور لا تقل عن ١٠ خانات|Password must be at least 10 characters
+tryLater|حاول بعد قليل|Please try again in a little while
+sxSaveBtn|حفظ|Save
+deptNote|عدد الآلات = الآلات التي سُجّل عليها عطل في الفترة المختارة. ساعات التوقف = من وقت البلاغ إلى الإغلاق للأعطال التي أوقفت الآلة (نفس حساب ملف الآلة)، ولا يدخل فيها المتوقف حاليًا إلا بعد إغلاقه. «متوقفة الآن» لا تتأثر باختيار الفترة.|Machines = machines with a breakdown in the selected period. Downtime hours = report time to close time for breakdowns that stopped the machine (same as the machine file); a machine still stopped counts only after it is closed. "Stopped now" ignores the period filter.`;
 const L = { ar: {}, en: {} };
 D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k] = e; });
 
@@ -279,14 +295,14 @@ let lang = localStorage.getItem('lang') || 'ar';
 const tr = k => L[lang][k] ?? k;
 let db = { machines: [], requests: [], techs: [], ops: [], custom: {}, plans: [] };
 let me = JSON.parse(localStorage.getItem('napco_me') || 'null');
-let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, pf = { r: 'all', from: '', to: '', m: '', k: '' }, sel = new Set();
+let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, sxPanel = false, sxTaps = [], pf = { r: 'all', from: '', to: '', m: '', k: '' }, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
 const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
 
 const $ = id => document.getElementById(id);
-const save = () => localStorage.setItem('napco_me', JSON.stringify(me));
+const save = () => { if (!(me && me.sx)) localStorage.setItem('napco_me', JSON.stringify(me)); };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const loc = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 16); };
 const now = () => loc(new Date());
@@ -412,7 +428,10 @@ document.addEventListener('input', () => { dirty = true; });
 document.addEventListener('change', () => { dirty = true; });
 
 function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; localStorage.setItem('lang', lang); render(); }
-function logout() { me = null; step = { s: 'emp', e: '' }; save(); render(); }
+function logout() {
+  if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
+  me = null; sxPanel = false; step = { s: 'emp', e: '' }; save(); render();
+}
 function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; render(); }
 function setPeriod(v) { period = v; render(); }
 
@@ -420,10 +439,10 @@ function render() {
   dirty = false;
   document.documentElement.lang = lang;
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">#${esc(me.e)}</span><button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4 w-full flex-1${tv ? ' text-lg' : ''}">`;
+  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e)}</span>${me.sx ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-5xl mx-auto p-4 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
-  h += !me ? loginView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
-  $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b style="font-family:Georgia,serif">A</b></footer>`;
+  h += !me ? loginView() : (me.sx && sxPanel) ? sxView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techView() : adminView();
+  $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
   if (me && me.r == 'operator') {
     const q = new URLSearchParams(location.search), qn = q.get('m');
     if (qn) {
@@ -446,7 +465,43 @@ function loginView() {
   if (s == 'pass') return wrap(`<form onsubmit="doPass(event)" class="space-y-3"><b>#${step.e}</b><label class="block font-semibold">${tr('password')}</label><input id="pw" type="password" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
   if (s == 'role') return wrap(`<b>#${step.e}</b><p class="my-3">${tr('roleQ')}</p><div class="grid gap-3"><button onclick="pickRole('operator')" class="${btn}">${tr('operator')}</button><button onclick="pickRole('tech')" class="${btn}">${tr('technician')}</button><button onclick="pickRole('sup')" class="${btn}">${tr('supervisor')}</button></div>${bk}`);
   if (s == 'newpw') return wrap(`<form onsubmit="doNew(event)" class="space-y-3"><b>#${step.e}</b><p>${tr('createPw')}</p><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><input id="pw" type="password" placeholder="${tr('password')}" required><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
+  if (s == 'sx') return wrap(`<form onsubmit="doSx(event)" class="space-y-3" autocomplete="off"><label class="font-semibold">${tr('empNo')}</label><input id="xe" inputmode="numeric" autocomplete="off" required><label class="block font-semibold">${tr('password')}</label><input id="xp" type="password" autocomplete="off" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
   return wrap(`<p class="text-center py-4">⏳ ${tr('waiting')}</p>${bk}`);
+}
+// hidden entry: tap the small mark in the footer 7 times within 4 seconds while signed out
+function fx() {
+  if (me) return;
+  const t = Date.now(); sxTaps = sxTaps.filter(x => t - x < 4000); sxTaps.push(t);
+  if (sxTaps.length >= 7) { sxTaps = []; step = { s: 'sx', e: '' }; render(); }
+}
+async function doSx(e) {
+  e.preventDefault();
+  try {
+    const t = await rpc('sx_login', { p_emp: $('xe').value.trim(), p_h: await sha($('xp').value) });
+    if (t == 'locked') return alert(tr('tryLater'));
+    if (!/^[0-9a-f]{64}$/.test(t || '')) return alert(tr('wrongPw'));
+    me = { e: '', r: 'admin', h: t, sx: true }; tab = ''; mview = null;
+    try { sessionStorage.setItem('napco_s', t); } catch (err) { /* optional */ }
+    render();
+  } catch (err) { alert(tr('netErr')); }
+}
+function sxToggle() { sxPanel = !sxPanel; render(); }
+function sxView() {
+  return `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-4"><h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><form onsubmit="sxSave(event)" class="space-y-3" autocomplete="off"><label class="block font-semibold">${tr('curPw')}</label><input id="xo" type="password" autocomplete="off" required><label class="block font-semibold">${tr('newEmp')}</label><input id="xn" inputmode="numeric" autocomplete="off"><label class="block font-semibold">${tr('newPw')}</label><input id="xq" type="password" autocomplete="new-password"><input id="xr" type="password" placeholder="${tr('confirmPw')}" autocomplete="new-password"><div class="flex gap-2"><button class="${btn}">${tr('sxSaveBtn')}</button><button type="button" onclick="sxToggle()" class="w-full border rounded-lg py-3 font-bold">${tr('back')}</button></div></form></div>`;
+}
+async function sxSave(e) {
+  e.preventDefault();
+  const o = $('xo').value, ne = $('xn').value.trim(), np = $('xq').value;
+  if (ne && !/^\d{3,12}$/.test(ne)) return alert(tr('badEmp'));
+  if (np && np.length < 10) return alert(tr('pwLong10'));
+  if (np !== $('xr').value) return alert(tr('pwMismatch'));
+  if (!ne && !np) return;
+  try {
+    const r = await rpc('sx_update', { p_tok: me.h, p_old_h: await sha(o), p_emp: ne, p_new_h: np ? await sha(np) : '' });
+    if (r == 'ok') { sxPanel = false; alert(tr('saved')); render(); }
+    else if (r == 'denied') { alert(tr('wrongPw')); logout(); }
+    else alert(tr(r == 'locked' ? 'tryLater' : r == 'format' ? 'badEmp' : 'wrongPw'));
+  } catch (err) { alert(tr('netErr')); }
 }
 function doEmp(e) {
   e.preventDefault();
@@ -801,8 +856,13 @@ function calc() {
     if (r.k == 'pm') { t.p++; return; }
     t.n++; if (r.fa) { t.d++; t.ms += new Date(r.fa) - new Date(r.ta); }
   });
+  // per department: machines that broke down in the period, breakdowns, stops, downtime (same definition as the machine file), machines stopped right now
+  const D = {}, dk = d => (d || '').trim() || '—', dz = k => D[k] = D[k] || { m: 0, c: 0, s: 0, dt: 0, now: 0 };
+  Object.values(M).forEach(m => { const o = dz(dk(m.d)); o.m++; o.c += m.c; o.s += m.s; o.dt += m.dt; });
+  const stopped = {}; db.requests.filter(r => r.k != 'pm' && r.s != 'done' && r.st == 'Yes').forEach(r => { stopped[r.mid] = dk(r.d); });
+  Object.values(stopped).forEach(k => { dz(k).now++; });
   const all = Object.values(M);
-  return { rs, M, SN, P, PM, T, RC: RCc, mttr: av([].concat(...all.map(m => m.rep))), mtbf: av([].concat(...all.map(m => m.gap))) };
+  return { rs, M, SN, P, PM, T, D, RC: RCc, mttr: av([].concat(...all.map(m => m.rep))), mtbf: av([].concat(...all.map(m => m.gap))) };
 }
 function openM(id) { mview = id; medit = false; render(); window.scrollTo(0, 0); }
 function goM(id) { tab = 'stats'; openM(id); }
@@ -844,6 +904,11 @@ function aStats() {
   const tk = Object.entries(S.T), rcs = Object.entries(S.RC).sort((a, b) => b[1] - a[1]);
   const none = `<p class="text-gray-500">${tr('none')}</p>`;
   const th = k => `<th class="p-2 text-start">${tr(k)}</th>`;
+  const ds = Object.entries(S.D), hrs = o => Math.round(o.dt / 6) / 10;
+  const deptSec = ds.length ? box(tr('deptMach'), bars(ds.slice().sort((a, b) => b[1].m - a[1].m || b[1].c - a[1].c).map(([k, o]) => [k, o.m]), 'bg-orange-600'))
+    + box(tr('deptHours'), bars(ds.slice().sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => [k, hrs(o)]), 'bg-red-600'))
+    + box(tr('deptTable'), `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('dept')}${th('dMach')}${th('dNow')}${th('total')}${th('stops')}${th('dHrs')}</tr></thead><tbody>${ds.sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => `<tr class="border-b"><td class="p-2 font-semibold">${esc(k)}</td><td class="p-2 font-bold text-orange-600">${o.m}</td><td class="p-2 ${o.now ? 'font-bold text-red-600' : ''}">${o.now}</td><td class="p-2">${o.c}</td><td class="p-2">${o.s}</td><td class="p-2 font-bold text-red-600">${hrs(o)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-3">${tr('deptNote')}</p>`)
+    : box(tr('deptMach'), none);
   const ptab = `<div class="overflow-x-auto mt-4"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('partName')}${th('partNo')}${th('timesUsed')}${th('usedIn')}</tr></thead><tbody>${pt.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(x.n)}</td><td class="p-2 font-mono text-xs">${esc(x.p)}</td><td class="p-2 font-bold text-blue-700">${x.c}</td><td class="p-2 text-gray-500">${[...x.m].map(esc).join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
   const pmtab = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('month')}${th('machine')}${th('partName')}${th('timesUsed')}</tr></thead><tbody>${pm.map(x => `<tr class="border-b"><td class="p-2">${esc(x.mo)}</td><td class="p-2">${esc(x.m)}</td><td class="p-2">${esc(x.n)}${x.p ? ' <span class="font-mono text-xs text-gray-500">(' + esc(x.p) + ')</span>' : ''}</td><td class="p-2 font-bold text-blue-700">${x.c}</td></tr>`).join('')}</tbody></table></div>`;
   const mcards = ms.map(([id, m], i) => `<div class="bg-white rounded-xl shadow p-4 cursor-pointer" onclick="openM('${esc(id)}')"><div class="flex justify-between gap-3"><div><span class="text-xs text-gray-400">#${i + 1}</span><div class="font-bold text-lg">${esc(m.n)}</div><div class="text-sm text-gray-500">${esc(m.d)}</div></div><div class="text-center"><div class="text-3xl font-bold text-orange-600">${m.c}</div><div class="text-xs text-gray-500">${tr('total')}</div></div></div>
@@ -856,6 +921,7 @@ ${S.SN[id] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red
   return `<div class="np flex gap-2 mb-4"><select class="flex-1" onchange="setPeriod(this.value)">${['all', ...[...ps].sort()].map(p => `<option value="${p}" ${p == period ? 'selected' : ''}>${p == 'all' ? tr('all') : p}</option>`).join('')}</select><button onclick="exportXl()" class="bg-green-700 text-white px-3 rounded-lg whitespace-nowrap font-semibold">⬇ ${tr('exportXl')}</button></div>
 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-2">${kpi(S.rs.length, tr('total'))}${kpi(S.rs.filter(r => r.st == 'Yes').length, tr('stops'))}${kpi(pt.reduce((a, x) => a + x.c, 0), tr('parts2'))}${kpi(S.mttr == null ? tr('na') : dhm(S.mttr), 'MTTR')}${kpi(S.mtbf == null ? tr('na') : dhm(S.mtbf), 'MTBF')}</div>
 <p class="text-xs text-gray-500 mb-5">${tr('kpiNote')}</p>
+${deptSec}
 ${box(tr('topMach'), ms.length ? bars(ms.slice(0, 8).map(([, m]) => [m.n, m.c]), 'bg-orange-600') : none)}
 <div class="grid md:grid-cols-2 gap-3 mb-5">${mcards}</div>
 ${box(tr('topRC'), rcs.length ? bars(rcs.slice(0, 8).map(([k, v]) => [rl(k), v]), 'bg-purple-600') : none)}
@@ -874,6 +940,7 @@ function exportXl() {
       [tr('machine')]: m.n, [tr('dept')]: m.d, [tr('total')]: m.c, [tr('stops')]: m.s, [tr('stopMin')]: Math.round(m.dt), [tr('mttr') + ' (' + tr('min') + ')']: m.mttr == null ? '' : Math.round(m.mttr), [tr('mtbf') + ' (' + tr('min') + ')']: m.mtbf == null ? '' : Math.round(m.mtbf), [tr('lastFault')]: dt(m.last),
       [tr('ptype')]: Object.entries(m.t).map(([k, v]) => tl(k) + ': ' + v).join(', ')
     })));
+    add(tr('shDept'), Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => ({ [tr('dept')]: k, [tr('dMach')]: o.m, [tr('dNow')]: o.now, [tr('total')]: o.c, [tr('stops')]: o.s, [tr('dHrs')]: Math.round(o.dt / 6) / 10 })));
     add(tr('shParts'), Object.values(S.P).sort((a, b) => b.c - a.c).map(x => ({ [tr('partName')]: x.n, [tr('partNo')]: x.p, [tr('timesUsed')]: x.c, [tr('usedIn')]: [...x.m].join(', ') })));
     add(tr('shPM'), Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => ({ [tr('month')]: x.mo, [tr('machine')]: x.m, [tr('partName')]: x.n, [tr('partNo')]: x.p, [tr('timesUsed')]: x.c })));
     if (me.r == 'admin') add(tr('shTech'), Object.entries(S.T).map(([e, t]) => ({ [tr('tech')]: stf(e), [tr('taken')]: t.n, [tr('closedN')]: t.d, [tr('repMin')]: t.d ? Math.round(t.ms / t.d / 60000) : '' })));
@@ -1015,7 +1082,8 @@ document.addEventListener('fullscreenchange', () => { if (tv && document.fullscr
   try {
     await load(true);
     await genPM();
-    if (me && me.r == 'admin' && !(await rpc('admin_login', { p_h: me.h }))) me = null;
+    if (me && me.r == 'admin' && !me.sx && !(await rpc('admin_login', { p_h: me.h }))) me = null;
+    if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (t && await rpc('sx_check', { p_tok: t })) me = { e: '', r: 'admin', h: t, sx: true }; }
     if (me && (me.r == 'technician' || me.r == 'supervisor') && !db.techs.some(t => t.e == me.e && t.st == 'approved')) me = null;
     save();
   } catch (e) {
