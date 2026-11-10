@@ -78,7 +78,6 @@ createPw|أنشئ كلمة مرور خاصة بك|Create your own password
 waiting|تم تسجيلك. بانتظار الموافقة (مشغل: رئيس قسمك، فني أو مشرف: أدمن الصيانة)|You are registered. Waiting for approval (operator: your section admin; technician or supervisor: the maintenance admin)
 report|تسجيل عطل جديد|Report a machine fault
 machine|الآلة|Machine
-newMachine|+ إضافة آلة جديدة|+ Add new machine
 machineName|اسم الآلة الجديدة|New machine name
 dept|القسم|Section
 ptype|نوع المشكلة|Problem type
@@ -339,6 +338,8 @@ nameShort|اكتب اسمك الكامل|Enter your full name
 noDepts|لا توجد أقسام بعد، تواصل مع أدمن الصيانة|No sections yet, contact the maintenance admin
 sentHold|تم إرسال الطلب. ينتظر موافقة مسؤول قسمك قبل أن يصل للفنيين|Sent. It is waiting for your section admin's approval before it reaches the technicians
 otherDept|هذه الآلة تتبع قسماً آخر|This machine belongs to another section
+noMachOp|لا توجد آلات مسجلة في قسمك بعد. اطلب من الأدمن إضافتها ثم افتح الصفحة من جديد|No machines are registered in your department yet. Ask the admin to add them, then reload the page
+qrUnknown|هذه الآلة غير مسجلة في النظام. اختر الآلة من القائمة، أو اطلب من الأدمن إضافتها|This machine is not registered. Pick it from the list, or ask the admin to add it
 holdWait|بانتظار موافقة القسم|Waiting for section approval
 holdAuto|يُحوَّل تلقائياً بعد {n} دقيقة|released automatically in {n} min
 tabHold|بانتظار الموافقة|Waiting for approval
@@ -1003,8 +1004,8 @@ function renderNow() {
     const qn = new URLSearchParams(location.search).get('m');
     const m = qn ? db.machines.find(x => x.n.toLowerCase() == qn.toLowerCase()) : null;
     if (m && m.d && m.d != me.dp) { mchg(); if (!qrWarned) { qrWarned = true; alert(tr('otherDept')); } }   // a QR code of another department's machine
-    else if (qn) { $('m').value = m ? m.id : 'new'; mchg(); if (!m) $('mn').value = qn; }
-    else mchg();
+    else if (qn && m) { $('m').value = m.id; mchg(); }
+    else { mchg(); if (qn && !qrWarned) { qrWarned = true; alert(tr('qrUnknown')); } }   // a QR code of a machine that is not registered: the operator cannot add machines
   }
   document.querySelectorAll('#app textarea:not([maxlength]), #app input:not([maxlength]):not([type=checkbox]):not([type=number]):not([type=date]):not([type=datetime-local]):not([type=password])')
     .forEach(el => { el.maxLength = el.id == 'pmc' ? 3500 : el.id == 'nm' ? 100 : el.tagName == 'TEXTAREA' ? 2000 : 200; });
@@ -1134,23 +1135,21 @@ function opView() {
 <p class="text-sm text-gray-500">${tr('opNote')}</p>
 <label class="font-semibold">${tr('dept')}</label><input id="dp" value="${esc(me.dp)}" readonly class="bg-gray-100">
 <label class="font-semibold">${tr('machine')}</label>
-<select id="m" onchange="mchg()">${opMachines().map(m => `<option value="${m.id}">${esc(m.n)}</option>`).join('')}<option value="new">${tr('newMachine')}</option></select>
-<div id="nm" class="hidden"><input id="mn" placeholder="${tr('machineName')}"></div>
+<select id="m" onchange="mchg()" required>${opMachines().map(m => `<option value="${m.id}">${esc(m.n)}</option>`).join('')}</select>
+${opMachines().length ? '' : `<div class="bg-amber-50 border border-amber-400 text-amber-900 rounded-lg p-2 text-sm">${tr('noMachOp')}</div>`}
 <div id="dup" class="hidden bg-amber-50 border border-amber-400 text-amber-900 rounded-lg p-2 text-sm"></div>
 <label class="font-semibold">${tr('desc')}</label><textarea id="ds" rows="4" required></textarea>
 <label class="font-semibold">${tr('stopped')}</label><select id="st">${yn()}</select>
-<button class="${btn}">${tr('send')}</button></form>`;
+<button class="${btn}"${opMachines().length ? '' : ' disabled'}>${tr('send')}</button></form>`;
 }
 function mchg() {
-  const v = $('m').value, nw = v == 'new';
-  $('nm').classList.toggle('hidden', !nw);
-  $('mn').required = nw;
-  $('dp').value = nw ? me.dp : (db.machines.find(x => x.id == v).d || me.dp);
+  const m = db.machines.find(x => String(x.id) == $('m').value);
+  $('dp').value = m ? m.d || me.dp : me.dp;
   dupchk();
 }
 const dupFind = mid => db.requests.find(r => r.k != 'pm' && r.s != 'done' && String(r.mid) == String(mid));
 function dupchk() {
-  const mv = $('m').value, el = $('dup'), r = mv != 'new' ? dupFind(mv) : null;
+  const mv = $('m').value, el = $('dup'), r = mv ? dupFind(mv) : null;
   el.classList.toggle('hidden', !r);
   el.innerHTML = r ? `⚠ ${tr('dupWarn')}: ${tr('reqNo')} ${r.no} — ${tr(r.s == 'open' ? 'sOpen' : 'sProg')} (${fd(r.ra)})` : '';
 }
@@ -1217,14 +1216,13 @@ const actHtml = r => { const en = lang == 'en' ? r.ae || trAc[r.id] || '' : ''; 
 async function sendReq(e) {
   e.preventDefault();
   try {
-    const mv = $('m').value, nn = mv == 'new' ? $('mn').value.trim() : '';
-    if (mv == 'new' && !nn) return;
-    const known = mv == 'new' ? db.machines.find(x => x.n.toLowerCase() == nn.toLowerCase()) : db.machines.find(x => x.id == mv);
-    if (known && dupFind(known.id) && !confirm(tr('dupConfirm'))) return;
+    const known = db.machines.find(x => String(x.id) == $('m').value);
+    if (!known) return;   // machines are added by the admin only
+    if (dupFind(known.id) && !confirm(tr('dupConfirm'))) return;
     const ds = $('ds').value.trim(), stp = $('st').value, de = await translateAr(ds);
     // the operator sends only the machine, the description and whether it is stopped; the server works out the priority, the technician sets the real one
     // (the old-style fields are sent too, so the page still works on a database that has not had update 9 yet)
-    const res = await rpc('submit_request', { p_tok: me.t, p_data: { machine_id: known ? known.id : null, new_machine: nn, problem_type: 'unspec', description: ds, ...(de ? { description_en: de } : {}), priority: stp == 'Yes' ? 'high' : 'medium', stopped: stp, reported_at: now() } });
+    const res = await rpc('submit_request', { p_tok: me.t, p_data: { machine_id: known.id, problem_type: 'unspec', description: ds, ...(de ? { description_en: de } : {}), priority: stp == 'Yes' ? 'high' : 'medium', stopped: stp, reported_at: now() } });
     await load(); render(); window.scrollTo(0, 0); alert(tr(res.hold ? 'sentHold' : 'sent'));
   } catch (err) {
     if (isDenied(err)) { alert(tr('sessExp')); logout(); }
@@ -1954,9 +1952,12 @@ async function addMach(e) {
   e.preventDefault();
   const n = $('an').value.trim(), d = $('ad').value.trim();
   try {
-    if (!db.machines.some(m => m.n.toLowerCase() == n.toLowerCase())) await api('machines', 'POST', { name: n, dept: d });
+    if (!db.machines.some(m => m.n.toLowerCase() == n.toLowerCase())) {
+      try { await rpc('admin_machine_add', { p_tok: me.h, p_name: n, p_dept: d }); }
+      catch (err) { if (!noFn(err)) throw err; await api('machines', 'POST', { name: n, dept: d }); }   // a database without update 12 yet
+    }
     await refresh();
-  } catch (err) { alert(tr('netErr')); }
+  } catch (err) { if (isDenied(err)) { alert(tr('sessExp')); logout(); } else alert(tr('netErr')); }
 }
 function delMach(id) { if (confirm(tr('confirmDel'))) adm('admin_delete', { p_kind: 'machine', p_id: String(id) }); }
 
