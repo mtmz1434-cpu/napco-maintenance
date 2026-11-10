@@ -36,6 +36,10 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .bd td.tx{min-width:7rem}
 @media(min-width:1024px){.cols2{column-count:2;column-gap:1rem}.cols2>*{break-inside:avoid}}
 @media print{.cols2{column-count:1}}
+.cbar,.hbar,.cdon{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cbar{transform-origin:bottom}.hbar{transform-origin:left}[dir=rtl] .hbar{transform-origin:right}
+@media(prefers-reduced-motion:no-preference){.anim .cbar{animation:cgrow .6s cubic-bezier(.2,.8,.2,1) both}.anim .hbar{animation:hgrow .7s cubic-bezier(.2,.8,.2,1) both}.anim .cdon{animation:cfade .8s ease both}}
+@keyframes cgrow{from{transform:scaleY(0)}}@keyframes hgrow{from{transform:scaleX(0)}}@keyframes cfade{from{opacity:0;transform:scale(.8) rotate(-60deg)}}
 @media print{.bdw{max-height:none;overflow:visible;box-shadow:none}.bd{font-size:8px}.bd th{position:static;padding:2px 3px}.bd td{padding:1px 3px}}
 </style>
 </head>
@@ -124,6 +128,29 @@ tabOpen|الطلبات المفتوحة|Open requests
 tabPrev|سجل الأعطال|Breakdown log
 tabTech|الحسابات|Accounts
 tabStats|الإحصائيات|Statistics
+stTables|📋 الجداول|📋 Tables
+stCharts|📊 الرسوم البيانية|📊 Charts
+last30|آخر 30 يوم|Last 30 days
+last90|آخر 3 أشهر|Last 3 months
+thisYear|هذه السنة|This year
+chPerHour|لكل ساعة|per hour
+chPerDay|لكل يوم|per day
+chPerWeek|لكل أسبوع (يبدأ الأحد)|per week (starts Sunday)
+chPerMonth|لكل شهر|per month
+chPerYear|لكل سنة|per year
+chWeekOf|أسبوع يبدأ|Week of
+chTrend|الأعطال عبر الزمن|Breakdowns over time
+chTrendH|ساعات التوقف عبر الزمن|Downtime hours over time
+chSecCnt|الأعطال لكل قسم|Breakdowns per section
+chMachHrs|الآلات الأكثر توقفاً (ساعات)|Machines with the most downtime (hours)
+chMttr|الآلات الأبطأ في الإصلاح (MTTR)|Slowest machines to repair (MTTR)
+chPrio|توزيع الأولويات|Priority mix
+chStopped|هل كانت الآلة متوقفة عند البلاغ؟|Was the machine stopped at the report?
+chTech|الأعمال المغلقة لكل فني|Jobs closed per technician
+chOther|أخرى|Other
+chNone|لا توجد أعطال في هذه الفترة|No breakdowns in this period
+chRange|الفترة المعروضة|Showing
+chNote|الرسوم من نفس أرقام الجداول، وتُحسب الأعطال بتاريخ البلاغ. للفترة والقسم والآلة اختيارها الخاص هنا، ولا يغيّر اختيار الجداول.|The charts use the same figures as the tables; breakdowns are counted by their report date. The period, section and machine chosen here are separate from the tables.
 tabMach|الآلات والباركود|Machines & QR
 tabShift|تسليم الشفت|Shift handover
 sOpen|مفتوح|Open
@@ -390,7 +417,7 @@ bdHint|نفس أعمدة جدول Breakdowns في ملف الإكسل. تنزي�
 bdTotalN|عدد الأعطال|Breakdowns
 bkAll|نسخة كاملة من البيانات (Excel)|Full data backup (Excel)
 bkBusy|جارٍ تجهيز الملف...|Preparing the file...
-bkHint|ينزّل كل بيانات الموقع في ملف إكسل واحد: الطلبات والأعطال (ورقة لكل شهر) وقطع الغيار والآلات والأقسام والصيانة الوقائية والموظفين. بدون كلمات السر|Downloads all the site's data in one Excel file: requests and breakdowns (one sheet per month), spare parts, machines, sections, preventive plans and staff. No passwords
+bkHint|ينزّل كل بيانات الموقع في ملف إكسل واحد: الطلبات والأعطال (ورقة لكل شهر) وقطع الغيار والآلات والأقسام والصيانة الوقائية وملاحظات التسليم والموافقات والموظفين. كل النصوص العربية تُترجم إلى الإنجليزية داخل الملف (قد تحتاج أكثر من ضغطة بسبب حد الترجمة المجانية). بدون كلمات السر|Downloads all the site's data in one Excel file: requests and breakdowns (one sheet per month), spare parts, machines, sections, preventive plans, shift notes, approvals and staff. Every Arabic text is translated to English in the file (it may take more than one click because of the free translation limit). No passwords
 unspec|غير محدد|Not specified
 opNote|اكتب وصف العطل فقط، والفني يكمل باقي التفاصيل|Write the problem only, the technician fills in the rest
 origText|النص الأصلي|Original text
@@ -436,7 +463,7 @@ wsNone|لا يوجد|Nothing recorded
 noSec|بدون قسم|No section
 secOf2|القسم|Section
 xlTrBusy|جارٍ ترجمة النصوص إلى الإنجليزية…|Translating the texts to English…
-xlTrLeft|بقيت نصوص عربية لم تُترجم بسبب حد الترجمة المجانية. اضغط تصدير مرة أخرى لاحقاً لإكمالها. عدد الطلبات المتبقية:|Some Arabic texts are not translated yet (limit of the free translation service). Press export again later to finish them. Requests left:
+xlTrLeft|بقيت نصوص عربية لم تُترجم بسبب حد الترجمة المجانية. اضغط تصدير مرة أخرى لاحقاً لإكمالها. عدد النصوص المتبقية:|Some Arabic texts are not translated yet (limit of the free translation service). Press export again later to finish them. Texts left:
 pickType|اختر نوع العطل|Select the problem type
 morePartsOpt|… جزء آخر (عرض كل الأجزاء)|… Another part (show all parts)
 urgentT|عاجل / متأخر|Urgent / late
@@ -469,7 +496,7 @@ const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'dep
 let me = (() => { try { const v = JSON.parse(LS.get('napco_me') || 'null'); return v && typeof v === 'object' && [...STAFF, 'admin', 'workshop'].includes(v.r) && (!STAFF.includes(v.r) || /^[0-9a-f]{64}$/.test(v.t || '')) ? v : null; } catch (e) { return null; } })();
 let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, sxPanel = false, pwPanel = false, qrWarned = false, rpEmp = null, sfR = '', sfD = '', sxTaps = [], pf = { r: 'all', from: '', to: '', m: '', k: '', bm: 'last', bs: '' }, showResp = false, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
-let tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), sf = { d: '', m: '', from: '', to: '' }, trCache = {}, trAc = {}, trStr = new Map(), snReq = '', snKind = 'done', snText = '';
+let sv = 'tables', cf = { r: '30d', from: '', to: '', d: '', m: '' }, chartAnim = false, tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), sf = { d: '', m: '', from: '', to: '' }, trCache = {}, trAc = {}, trStr = new Map(), snReq = '', snKind = 'done', snText = '';
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
 const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
@@ -490,7 +517,7 @@ const oneOf = (v, list, d) => list.includes(v) ? v : d;
 const arr = v => Array.isArray(v) ? v : [];
 const yesNo = v => v == 'Yes' ? 'Yes' : v == 'No' ? 'No' : null;
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
-const tl = v => DT.includes(v) || v == 'pm' || v == 'unspec' ? tr(v) : v;
+const tl = v => DT.includes(v) || v == 'pm' || v == 'unspec' ? tr(v) : enx(v);
 const yn = () => `<option value="No">${tr('no')}</option><option value="Yes">${tr('yes')}</option>`;
 const hm = m => m >= 60 ? Math.floor(m / 60) + tr('hr') + ' ' + (m % 60) + tr('min') : m + tr('min');
 const dhm = m => { m = Math.round(m); const d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + tr('day') + ' ' : '') + h + tr('hr') + ' ' + (m % 60) + tr('min'); };
@@ -498,7 +525,7 @@ const who = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? e
 const cw = r => [].concat(r.tw || []).filter(Boolean);
 const crewTxt = r => cw(r).length ? ' + ' + cw(r).map(who).join(', ') : '';
 const RC = ['rc_elec', 'rc_mech', 'rc_misuse', 'rc_wear', 'rc_maint', 'rc_sw', 'rc_mat'];
-const rl = v => RC.includes(v) ? tr(v) : (v || '');
+const rl = v => RC.includes(v) ? tr(v) : enx(v || '');
 const BDPARTS = {"Extrusion": ["Main motor (EXT)", "Gearbox (EXT)", "Hopper (Dosing)", "Feeder motor", "Extruder A (EXT)", "Extruder B (EXT)", "Extruder C (EXT)", "Hopper cooling", "Die (EXT)", "IBC", "Heat exchanger (EXT)", "Air ring", "Basket", "Profile Scanner", "Collapsing unit", "Feeding pump", "Hopper (Feeding)", "Niproller (EXT)", "Oscillation", "Track rollers (EXT)", "Web-guider", "Treatment unit", "In-line printer", "Post-gusset unit", "Haul-off", "Winder (EXT)", "Rotary blade", "NGR", "Other (EXT)"], "Cutting": ["Unwinder main (CUT)", "Unwinder for handle roll", "Single roller motor", "Niproller (CUT)", "Arc sealer", "Folding assembly", "Cross-handle unit", "Round bottom unit", "Presealer unit", "Main sealing unit", "Draw roller (CUT)", "Wicket arms", "Conveyor unit", "Web-guider (CUT)", "winder (CUT)", "Dancer unit (CUT)", "shoulder cut unit", "Perforation unit", "Wicket punch unit", "griphole punch unit", "aeration hole punch unit", "Vacuum pump (CUT)", "Drive (CUT)", "Photocell", "Other (CUT)"], "Printing": ["Unwinder (PRNT)", "Unwinder dancer (PRNT)", "Winder web-guide (PRNT)", "Web-cleaner", "Draw unit (PRNT)", "Squeeze roller", "Supply pump", "Return pump", "Drum", "Station #1", "Station #2", "Station #3", "Station #4", "Station #5", "Station #6", "Station #7", "Station #8", "Station Dryer", "Drying tunnel", "Chilled roller (PRNT)", "Web camera", "winder dancer (PRNT)", "winder (PRNT)", "Other (PRNT)"], "Thermoforming": ["Main motor (THERMO)", "Gearbox (THERMO)", "Hopper (THERMO)", "Dosing unit (THERMO)", "Extruder A (THERMO)", "Extruder B (THERMO)", "Melt pump", "Die (THERMO)", "Calender", "Calender cooling unit", "Niproller (THERMO)", "Recycling unit", "Dancer (THERMO)", "Winder (THERMO)", "unwinder (THERMO)", "conveyor", "preheating unit (THERMO)", "mold unit", "stacker unit", "scrap winder", "Other (THERMO)"]};
 const BDMACH = {"kiefel_2": "Extrusion", "kiefel_3": "Extrusion", "coexshrink": "Extrusion", "kiefel_8": "Extrusion", "wh_4": "Extrusion", "wh_3": "Extrusion", "macchi": "Extrusion", "kiefel_9": "Extrusion", "kiefel_4": "Extrusion", "kiefel_1": "Extrusion", "kiefel_5": "Extrusion", "kiefel_6": "Extrusion", "wh_1": "Extrusion", "kiefel_7": "Extrusion", "erema": "Extrusion", "k60_2": "Extrusion", "wh_5": "Extrusion", "lemo_5": "Cutting", "lemo_4": "Cutting", "fmc_3": "Cutting", "fmc_2": "Cutting", "fmc_1": "Cutting", "fmc_4750": "Cutting", "lemo_intermat": "Cutting", "kampf": "Cutting", "proslit": "Cutting", "elba_1": "Cutting", "soma": "Cutting", "fmc_jumbo": "Cutting", "mamata": "Cutting", "polytex": "Cutting", "miraflex_1": "Printing", "miraflex_2": "Printing", "s_16": "Printing", "amut_1": "Thermoforming", "amut_2": "Thermoforming", "cmg": "Thermoforming", "ftv_1": "Thermoforming", "ftv_2": "Thermoforming"};
 // the breakdown log keeps the maintenance workbook's own words: section / machine part / Mechanical or Electrical BD / Machine stopped
@@ -739,7 +766,7 @@ function reqTable(bk, list) {
     r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', lang == 'en' ? enx(actOut(r)) : r.ac || '', enx(rl(r.rc)), y(r.cl),
     (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
     (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '),
-    r.mp || '', r.bc ? tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''
+    enx(r.mp) || '', r.bc ? tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''
   ]);
   return xlTable(bk, tr('shReq'), cols, rows);
 }
@@ -893,6 +920,7 @@ const fromReq = x => {
     ae: txt(x.action_en), ok: oneOf(x.ok_state, ['pending', 'approved', 'rejected'], null), okn: txt(x.ok_name), oka: (() => { try { return x.ok_at ? loc(x.ok_at) : null; } catch (e) { return null; } })(), okt: txt(x.ok_note), rf: x.reopened_from == null ? null : Number(x.reopened_from) };
 };
 
+const mapNote = x => ({ id: Number(x.id), rid: x.request_id == null ? null : Number(x.request_id), k: oneOf(x.kind, ['done', 'watch', 'info'], 'info'), t: txt(x.note) || '', e: txt(x.by_emp), n: txt(x.by_name) || '', at: (() => { try { return loc(x.created_at); } catch (e) { return ''; } })() });
 // full = reload everything; otherwise only fetch what changed since the last sync
 async function load(full) {
   const [m, u, c, pp, dpt, sn] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => []), api('departments?select=name&order=name').catch(() => []), api('shift_notes?select=*&order=created_at.desc&limit=300').catch(() => [])]);
@@ -921,7 +949,7 @@ async function load(full) {
   db.machines = m.map(x => ({ id: String(x.id), n: txt(x.name) || '', d: txt(x.dept) || '', sn: txt(x.serial), md: txt(x.model), lc: txt(x.location), ins: txt(x.installed), nt: txt(x.notes) }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: String(x.emp), nm: txt(x.name) || '', st: x.status == 'approved' ? 'approved' : 'pending', r: x.role == 'sup' ? 'sup' : 'tech' }));
   db.depts = dpt.map(x => txt(x.name)).filter(Boolean);
-  db.notes = (Array.isArray(sn) ? sn : []).map(x => ({ id: Number(x.id), rid: x.request_id == null ? null : Number(x.request_id), k: oneOf(x.kind, ['done', 'watch', 'info'], 'info'), t: txt(x.note) || '', e: txt(x.by_emp), n: txt(x.by_name) || '', at: (() => { try { return loc(x.created_at); } catch (e) { return ''; } })() }));
+  db.notes = (Array.isArray(sn) ? sn : []).map(mapNote);
   if (Array.isArray(sl)) db.staff = sl.map(x => ({ e: String(x.emp), nm: txt(x.name) || '', r: oneOf(x.role, ['op', 'tech', 'sup', 'dadm'], 'op'), st: x.status == 'approved' ? 'approved' : 'pending', d: txt(x.dept) || '' }));
   else if (!me || !(me.r == 'admin' || me.r == 'deptadmin')) db.staff = [];
   db.custom = Object.fromEntries(c.map(x => [String(x.k), { m: txt(x.machine_id), l: txt(x.label) || '', n: Number(x.n) || 0 }]));
@@ -966,7 +994,7 @@ document.addEventListener('submit', e => {
 document.addEventListener('input', () => { dirty = true; });
 document.addEventListener('change', () => { dirty = true; });
 
-function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; LS.set('lang', lang); render(); }
+function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; LS.set('lang', lang); render(); if (lang == 'en' && !dictOn) loadDict().then(() => { if (!dirty) render(); }); }
 function logout() {
   if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
   else if (me && me.r == 'admin') rpc('admin_sign_out', { p_tok: me.h }).catch(() => {});
@@ -1183,35 +1211,62 @@ async function trNow(id) {
   const t = await translateAr(r.ds);
   if (t) { trCache[id] = t; rpc('save_translations', { p_tok: stTok(), p_data: [{ id: +id, d: t }] }).catch(() => {}); render(); } else alert(tr('trFail'));
 }
-// Before an English file: translate the Arabic texts that have no English yet. The free service allows only a few thousand characters a day, so at most 60 requests
-// per click; what is translated is saved, and the next click continues where this one stopped. Returns how many requests are still untranslated.
+// Before an English file: translate the Arabic texts that have no English yet. The free service allows only a few thousand characters a day, so a click translates a limited
+// number of texts and stops at the first refusal; what is translated is saved (requests keep their own English columns, every other text goes to the shared dictionary,
+// update 13), and the next click continues where this one stopped. Returns how many texts are still untranslated.
 const needEn = r => (hasAr(r.ds) && !r.de && !trCache[r.id]) || (hasAr(r.ac) && !r.ae && !trAc[r.id]);
-async function ensureEnglish(list, force) {
+// the typed texts of a request that have no English column of their own: problem type, root cause, machine part, approval note, spare parts, checklist items and notes
+const reqStrs = r => [r.pt, r.rc, r.mp, r.okt, ...(r.sp || []).map(p => p.n), ...(r.ck || []).flatMap(c => [c.t, c.n])];
+// and the rest of the site: plan titles and checklists, machine details, problem types added, shift notes
+const siteStrs = () => [...db.plans.flatMap(p => [p.t, ...p.ck]), ...db.machines.flatMap(m => [m.nt, m.lc, m.md]), ...Object.values(db.custom).map(c => c.l), ...db.notes.map(n => n.t)];
+let dictOn = false;
+const dictQ = new Map();
+// the shared English dictionary (a database without update 13 simply has none)
+async function loadDict(force) {
+  if (dictOn && !force) return;
+  dictOn = true;
+  try { (await pages('text_translations?select=src,en&order=created_at,src')).forEach(x => { if (x.src && x.en) trStr.set(String(x.src), String(x.en)); }); } catch (e) { /* no dictionary yet */ }
+}
+async function saveDict() {
+  const items = [...dictQ].map(([s, e]) => ({ s, e })); dictQ.clear();
+  for (let i = 0; i < items.length; i += 200) await rpc('save_text_translations', { p_tok: stTok(), p_data: items.slice(i, i + 200) }).catch(() => {});
+}
+async function ensureEnglish(list, force, opt = {}) {
   if (lang != 'en' && !force) return 0;
-  const need = list.filter(needEn), strs = new Set();
-  list.forEach(r => [r.pt, r.rc, ...(r.sp || []).map(p => p.n), ...(r.ck || []).flatMap(c => [c.t, c.n])].forEach(t => { if (t && hasAr(t) && !trStr.has(t)) strs.add(t); }));
+  await loadDict(force);
+  const need = list.filter(needEn), strs = new Set(), add = t => { t = String(t || '').trim(); if (t && t.length <= 1000 && hasAr(t) && !trStr.has(t)) strs.add(t); };
+  list.forEach(r => reqStrs(r).forEach(add));
+  if (opt.all) siteStrs().forEach(add);
   if (!need.length && !strs.size) return 0;
   const bar = document.createElement('div'); bar.className = 'np fixed bottom-4 inset-x-4 z-50 mx-auto max-w-md bg-gray-900 text-white rounded-lg px-4 py-3 text-sm text-center'; document.body.appendChild(bar);
-  const out = [], CAP = 60; let n = 0, stop = false;
+  const out = [], CAP = opt.cap || 60, SCAP = opt.strCap || 80, todo = Math.min(need.length, CAP) + Math.min(strs.size, SCAP); let n = 0, stop = false;
   try {
     for (const r of need.slice(0, CAP)) {
-      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + Math.min(need.length, CAP);
+      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + todo;
       const rec = { id: r.id };
       if (hasAr(r.ds) && !r.de && !trCache[r.id]) { const t = await translateAr(r.ds); if (t) { trCache[r.id] = t; rec.d = t; } else stop = true; }
       if (!stop && hasAr(r.ac) && !r.ae && !trAc[r.id]) { const t = await translateAr(r.ac); if (t) { trAc[r.id] = t; rec.a = t; } else stop = true; }
       if (rec.d || rec.a) out.push(rec);
       if (stop) break;
     }
-    for (const t of [...strs].slice(0, 80)) { if (stop) break; const x = await translateAr(t); if (!x) break; trStr.set(t, x); }
+    for (const t of [...strs].slice(0, SCAP)) {
+      if (stop) break;
+      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + todo;
+      const x = await translateAr(t); if (!x) break;
+      trStr.set(t, x); dictQ.set(t, x);
+    }
     if (out.length) await rpc('save_translations', { p_tok: stTok(), p_data: out }).catch(() => {});
+    await saveDict();
   } finally { bar.remove(); }
-  return list.filter(needEn).length;
+  return list.filter(needEn).length + [...strs].filter(t => !trStr.has(t)).length;
 }
 // the English text of a request (translated and saved earlier, or translated in this session); the original when there is none
 const descOut = r => (lang == 'en' ? r.de || trCache[r.id] : '') || r.ds || '';
 const actOut = r => (lang == 'en' ? r.ae || trAc[r.id] : '') || r.ac || '';
 // any other typed text (custom problem types, parts, checklist notes ...): English in an English file when it was translated
-const enx = t => lang == 'en' && t && hasAr(t) && trStr.has(t) ? trStr.get(t) : t;
+const enx = t => { if (lang != 'en' || !t || !hasAr(t)) return t; return trStr.get(t) || trStr.get(String(t).trim()) || t; };
+// the English text only when there is one (for the paired "original / English" columns)
+const enOnly = t => { const e = enx(t); return e && e !== t ? e : ''; };
 const actHtml = r => { const en = lang == 'en' ? r.ae || trAc[r.id] || '' : ''; return en && en != r.ac ? `${esc(en)}<div class="text-xs text-gray-500 border-t mt-1 pt-1" dir="auto">${tr('origText')}: ${esc(r.ac)}</div>` : esc(r.ac); };
 async function sendReq(e) {
   e.preventDefault();
@@ -1525,7 +1580,7 @@ const secOf = r => bdSec(r.mn, r.d) || r.d || '';
 const nmOf = e => { const t = db.techs.find(x => x.e == e); return t && t.nm ? t.nm : '#' + e; };
 const bdRow = r => {
   const l = [r.ts, ...cw(r)].filter(Boolean).map(nmOf);
-  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), r.mp || '', lang == 'en' ? enx(descOut(r)) : r.de || r.ds || '', l[0] || '', l[1] || '', l.slice(2).join(', '), lang == 'en' ? enx(actOut(r)) : r.ac || '',
+  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), enx(r.mp) || '', lang == 'en' ? enx(descOut(r)) : r.de || r.ds || '', l[0] || '', l[1] || '', l.slice(2).join(', '), lang == 'en' ? enx(actOut(r)) : r.ac || '',
     (r.sp || []).length ? r.sp.map(p => enx(p.n) + (p.q ? '-' + p.q : '') + (p.p ? ' (' + p.p + ')' : '')).join(',') : 'Nil',
     ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2 || r.st] || '', r.ra, r.ta, r.fa, mins(r.ta, r.fa), mins(r.ra, r.ta)];
 };
@@ -1600,7 +1655,7 @@ async function exportBd() {
   const { rows, mo } = bdList();
   if (!rows.length) return alert(tr('none'));
   try {
-    const left = await ensureEnglish(rows, true), keep = lang;   // the workbook is always English
+    const left = await ensureEnglish(rows, true, { cap: 100 }), keep = lang;   // the workbook is always English
     let bk; lang = 'en';
     try { bk = XW.Book(false); bdSheet(bk, mo ? 'Breakdowns (' + MON[+mo.slice(5) - 1] + ')' : 'Breakdowns', rows, showResp); } finally { lang = keep; }
     await saveXl(bk, 'Breakdowns-' + (mo || 'all') + '.xlsx');
@@ -1614,11 +1669,14 @@ async function exportAll(btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ ' + tr('bkBusy'); }
   try {
     await load(true);                                   // a fresh copy of everything, straight from the database
+    try { db.notes = (await pages('shift_notes?select=*&order=created_at.desc,id')).map(mapNote); } catch (e) { /* a database without update 11 has no notes */ }
+    const left = await ensureEnglish(db.requests, true, { all: true, cap: 150, strCap: 300 });   // every Arabic text in every sheet gets its English
     const now = new Date();
     lang = 'en';                                        // the file is always in English, like the maintenance workbook; the page language is put back before anything else runs
     let bk;
     try { bk = backupBook(now); } finally { lang = keep; }
     await saveXl(bk, 'napco-full-backup-' + ymd(now) + '.xlsx');
+    if (left) alert(tr('xlTrLeft') + ' ' + left);
   } catch (err) { alert(tr('xlErr')); }
   finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
 }
@@ -1638,14 +1696,16 @@ function backupBook(now) {
     { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 42, t: 'wrap' }, { h: 'Description (English)', w: 42, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' }, { h: 'Saved on server', w: 18, t: 'date' }, { h: 'Released by section head', w: 18, t: 'date' },
     { h: 'Taken by', w: 20 }, { h: 'With him', w: 22, t: 'wrap' }, { h: 'Taken at', w: 18, t: 'date' }, { h: 'Finished at', w: 18, t: 'date' }, { h: 'Repair (min)', w: 11, t: 'int' }, { h: 'Response (min)', w: 11, t: 'int' },
     { h: 'Action(s) taken', w: 42, t: 'wrap' }, { h: 'Action(s) taken (English)', w: 42, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
-    { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' }, { h: 'Plan ID', w: 9, t: 'int' }
+    { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' }, { h: 'Plan ID', w: 9, t: 'int' },
+    { h: 'Approval', w: 12, t: 'mid' }, { h: 'Approved / sent back by', w: 20 }, { h: 'Approval date', w: 18, t: 'date' }, { h: 'Approval note', w: 34, t: 'wrap' }, { h: 'Approval note (English)', w: 34, t: 'wrap' }, { h: 'Re-opened from request', w: 12, t: 'int' }
   ], reqs.map(r => [
     r.no, r.k == 'pm' ? 'Preventive' : 'Breakdown', r.s == 'done' ? 'Closed' : r.s == 'open' ? 'Open' : 'In progress', r.mid, r.mn, r.d, enx(tl(r.pt)), tr(r.pr),
     yn(r.st), r.ds, r.de || trCache[r.id] || '', r.by, dt(r.ra), dt(r.cr), dt(r.ap),
     stf(r.ts), cw(r).map(stf).join(', '), dt(r.ta), dt(r.fa), mins(r.ta, r.fa) ?? '', mins(r.ra, r.ta) ?? '',
-    r.ac || '', r.ae || trAc[r.id] || '', enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', r.mp || '',
+    r.ac || '', r.ae || trAc[r.id] || '', enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', enx(r.mp) || '',
     (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
-    (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | '), r.pl == null ? '' : r.pl
+    (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '), r.pl == null ? '' : r.pl,
+    r.ok ? ({ pending: 'Waiting', approved: 'Approved', rejected: 'Sent back' })[r.ok] : '', r.okn || '', dt(r.oka), r.okt || '', enOnly(r.okt), r.rf == null ? '' : r.rf
   ]));
 
   // the breakdown log: one sheet per month, exactly the layout of the workbook's "Breakdowns (JAN)" sheet
@@ -1654,22 +1714,22 @@ function backupBook(now) {
   ks.forEach(k => { const sh = bdSheet(bk, 'Breakdowns (' + MON[+k.slice(5) - 1] + (multi ? ' ' + k.slice(0, 4) : '') + ')', by[k].sort(bdSort), true); toc.push([sh.name, by[k].length, 'Closed breakdowns of ' + MON[+k.slice(5) - 1] + ' ' + k.slice(0, 4) + ', same columns as the workbook']); });
 
   // spare parts: one row per part used
-  const parts = []; reqs.forEach(r => (r.sp || []).forEach(p => parts.push([r.no, dt(r.fa || r.ra), r.mn, r.d, p.n, p.p, p.q == null ? '' : p.q])));
+  const parts = []; reqs.forEach(r => (r.sp || []).forEach(p => parts.push([r.no, dt(r.fa || r.ra), r.mn, r.d, enx(p.n), p.p, p.q == null ? '' : p.q])));
   table('Spare parts used', 'One row for every spare part used in a request', [{ h: 'Request ID', w: 11, t: 'int' }, { h: 'Date', w: 18, t: 'date' }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Qty', w: 8, t: 'int' }], parts);
 
   table('Spare parts life', 'Average life of a spare part: the time between two replacements of the same part on the same machine', [{ h: 'Machine', w: 24 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Times replaced', w: 14, t: 'int' }, { h: 'Average life (days)', w: 18, t: 'int' }, { h: 'Last replaced', w: 18, t: 'date' }],
-    partLife().map(x => [x.m, x.n, x.p, x.c, Math.round(x.avg), dt(x.last)]));
+    partLife().map(x => [x.m, enx(x.n), x.p, x.c, Math.round(x.avg), dt(x.last)]));
 
   table('Machines', 'Every machine with its section, details and number of requests', [
     { h: 'ID', w: 8 }, { h: 'Machine', w: 24 }, { h: 'Section', w: 18 }, { h: 'Serial no.', w: 16 }, { h: 'Model', w: 16 }, { h: 'Location', w: 16 }, { h: 'Installed', w: 14 }, { h: 'Notes', w: 34, t: 'wrap' }, { h: 'Requests', w: 10, t: 'int' }
-  ], db.machines.map(m => [m.id, m.n, m.d || bdSec(m.n, m.d), m.sn || '', m.md || '', m.lc || '', m.ins || '', m.nt || '', cnt[m.id] || 0]));
+  ], db.machines.map(m => [m.id, m.n, m.d || bdSec(m.n, m.d), m.sn || '', enx(m.md) || '', enx(m.lc) || '', m.ins || '', enx(m.nt) || '', cnt[m.id] || 0]));
 
   table('Sections', 'The sections (departments) and how many machines each has', [{ h: 'Section', w: 24 }, { h: 'Machines', w: 11, t: 'int' }],
     [...new Set([...db.depts, ...db.machines.map(m => m.d).filter(Boolean)])].sort().map(d => [d, db.machines.filter(m => m.d == d).length]));
 
   table('Preventive plans', 'The preventive maintenance plans with their checklists and next due dates', [
     { h: 'Plan ID', w: 9, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Task', w: 28 }, { h: 'Every (days)', w: 11, t: 'int' }, { h: 'Priority', w: 10, t: 'mid' }, { h: 'Checklist', w: 50, t: 'wrap' }, { h: 'Next due', w: 12, t: 'mid' }, { h: 'Last done', w: 12, t: 'mid' }, { h: 'Active', w: 8, t: 'mid' }
-  ], db.plans.map(p => [p.id, p.mn, p.d || '', p.t, p.iv, tr(p.pr), p.ck.join(' | '), day(p.nd), day(p.ld), p.ac ? 'Yes' : 'No']));
+  ], db.plans.map(p => [p.id, p.mn, p.d || '', enx(p.t), p.iv, tr(p.pr), p.ck.map(enx).join(' | '), day(p.nd), day(p.ld), p.ac ? 'Yes' : 'No']));
 
   const RO = { op: 'Operator', tech: 'Technician', sup: 'Supervisor', dadm: 'Section head' };
   table('Staff', 'Employees and their roles (no passwords)', [{ h: 'Employee no.', w: 13 }, { h: 'Name', w: 26 }, { h: 'Role', w: 16, t: 'mid' }, { h: 'Status', w: 11, t: 'mid' }, { h: 'Section', w: 18 }],
@@ -1677,7 +1737,14 @@ function backupBook(now) {
 
   const cu = Object.entries(db.custom);
   if (cu.length) table('Problem types added', 'Problem types typed by operators that were added to the lists', [{ h: 'Machine', w: 24 }, { h: 'Problem type', w: 30 }, { h: 'Times', w: 8, t: 'int' }],
-    cu.map(([, c]) => [(db.machines.find(m => m.id == c.m) || {}).n || c.m, c.l, c.n]));
+    cu.map(([, c]) => [(db.machines.find(m => m.id == c.m) || {}).n || c.m, enx(c.l), c.n]));
+
+  // shift handover notes (what was fixed, what to watch): original text and its English
+  if (db.notes.length) {
+    const KN = { done: 'Fixed this shift', watch: 'Watch', info: 'Info' };
+    table('Shift notes', 'Handover notes written by technicians and supervisors (kept 90 days)', [{ h: 'ID', w: 8, t: 'int' }, { h: 'Written at', w: 18, t: 'date' }, { h: 'Request ID', w: 11, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Type', w: 16, t: 'mid' }, { h: 'Note', w: 44, t: 'wrap' }, { h: 'Note (English)', w: 44, t: 'wrap' }, { h: 'By', w: 24 }],
+      db.notes.slice().sort((a, b) => a.id - b.id).map(n => { const r = n.rid == null ? null : db.requests.find(x => x.id == n.rid); return [n.id, dt(n.at), n.rid == null ? '' : n.rid, r ? r.mn : '', KN[n.k] || n.k, n.t, enOnly(n.t), (n.n ? n.n + ' ' : '') + (n.e ? '#' + n.e : '')]; }));
+  }
 
   // the first sheet: what is inside
   const O = { bd: XC.line, v: 'center' };
@@ -1802,10 +1869,10 @@ function partLife() {
   }).filter(o => o.avg != null).sort((a, b) => a.avg - b.avg);
 }
 const lifeTxt = d => d == null ? '' : d < 60 ? Math.round(d) + ' ' + tr('days') : (d / 30.4).toFixed(1) + ' ' + tr('lifeMo');
-const lifeTable = (l, withM) => `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b"><th class="p-2 text-start">${tr('partName')}</th>${withM ? `<th class="p-2 text-start">${tr('machine')}</th>` : ''}<th class="p-2 text-start">${tr('replaced')}</th><th class="p-2 text-start">${tr('lifeAvg')}</th><th class="p-2 text-start">${tr('lastRepl')}</th></tr></thead><tbody>${l.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(x.n)}${x.p ? ` <span class="font-mono text-xs text-gray-500">(${esc(x.p)})</span>` : ''}</td>${withM ? `<td class="p-2">${esc(x.m)}</td>` : ''}<td class="p-2">${x.c}</td><td class="p-2 font-bold text-blue-700">${lifeTxt(x.avg)}</td><td class="p-2 text-gray-500">${fd(x.last)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-2">${tr('lifeNote')}</p>`;
-function calc() {
-  const inP = s => sfRange() ? ((s || '').slice(0, 10) >= (sf.from || '') && (!sf.to || (s || '').slice(0, 10) <= sf.to)) : (period == 'all' || (s || '').startsWith(period));
-  const okR = r => (!sf.d || r.d == sf.d) && (!sf.m || String(r.mid) == sf.m);
+const lifeTable = (l, withM) => `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b"><th class="p-2 text-start">${tr('partName')}</th>${withM ? `<th class="p-2 text-start">${tr('machine')}</th>` : ''}<th class="p-2 text-start">${tr('replaced')}</th><th class="p-2 text-start">${tr('lifeAvg')}</th><th class="p-2 text-start">${tr('lastRepl')}</th></tr></thead><tbody>${l.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(enx(x.n))}${x.p ? ` <span class="font-mono text-xs text-gray-500">(${esc(x.p)})</span>` : ''}</td>${withM ? `<td class="p-2">${esc(x.m)}</td>` : ''}<td class="p-2">${x.c}</td><td class="p-2 font-bold text-blue-700">${lifeTxt(x.avg)}</td><td class="p-2 text-gray-500">${fd(x.last)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-2">${tr('lifeNote')}</p>`;
+function calc(fl) {
+  const inP = fl ? fl.inP : s => sfRange() ? ((s || '').slice(0, 10) >= (sf.from || '') && (!sf.to || (s || '').slice(0, 10) <= sf.to)) : (period == 'all' || (s || '').startsWith(period));
+  const okR = fl ? fl.okR : r => (!sf.d || r.d == sf.d) && (!sf.m || String(r.mid) == sf.m);
   const rs = db.requests.filter(r => r.k != 'pm' && inP(r.ra) && okR(r));
   const G = {}, M = {}, SN = {}, P = {}, PM = {}, T = {}, RCc = {};
   rs.forEach(r => (G[r.mid] = G[r.mid] || []).push(r));
@@ -1851,7 +1918,7 @@ function machView(S) {
   const lb = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
   const details = me.r == 'admin' && medit && mc.id
     ? `<form onsubmit="saveMach(event,${js(mc.id)})" class="space-y-2 np">${lb('dept')}<select id="mfd" required>${deptOpts(mc.d)}</select>${lb('serial')}<input id="mfs" value="${esc(mc.sn)}">${lb('model')}<input id="mfm" value="${esc(mc.md)}">${lb('locationT')}<input id="mfl" value="${esc(mc.lc)}">${lb('installedT')}<input type="date" id="mfi" value="${esc(mc.ins)}">${lb('notesT')}<textarea id="mfn" rows="2">${esc(mc.nt)}</textarea><div class="flex gap-2"><button class="${btn}">${tr('saveDetails')}</button><button type="button" onclick="editM(false)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`
-    : `${row('dept', dp)}${row('serial', mc.sn)}${row('model', mc.md)}${row('locationT', mc.lc)}${row('installedT', mc.ins)}${row('notesT', mc.nt)}`;
+    : `${row('dept', dp)}${row('serial', mc.sn)}${row('model', mc.md)}${row('locationT', enx(mc.lc))}${row('installedT', mc.ins)}${row('notesT', enx(mc.nt))}`;
   return `<div class="req"><div class="np flex justify-between mb-3"><button onclick="openM(null)" class="text-sm text-gray-600">← ${tr('back')}</button><span class="flex gap-3">${me.r == 'admin' && mc.id && !medit ? `<button onclick="editM(true)" class="text-sm text-teal-700 font-semibold">✏ ${tr('editDetails')}</button>` : ''}<button onclick="pr()" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button></span></div>
 <div class="flex justify-between items-start gap-3 mb-2"><div><h3 class="text-xl font-bold text-teal-800">${esc(nm)}</h3><div class="text-sm text-gray-500">${tr('mfile')}</div>${S.SN[mview] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red-600 rounded-full px-3 py-1">${tr('stoppedNow')} ${dhm((Date.now() - new Date(S.SN[mview])) / 60000)}</span>` : `<span class="inline-block mt-2 text-xs font-bold text-green-800 bg-green-100 rounded-full px-3 py-1">✅ ${tr('noStop')}</span>`}</div><div data-qr="${esc(base + '?m=' + encodeURIComponent(nm) + '&d=' + encodeURIComponent(dp))}" class="shrink-0"></div></div>
 <div class="bg-white rounded-xl shadow p-4 mb-3"><h4 class="font-bold text-teal-800 mb-2">${tr('mdetails')}</h4>${details}</div>
@@ -1864,9 +1931,108 @@ ${(() => { const l = partLife().filter(x => String(x.mid) == String(mview)); ret
 <h4 class="font-bold text-teal-800 mb-2">${tr('timeline')}</h4>
 ${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 border-s-4 ${r.s == 'done' ? 'border-green-500' : 'border-red-500'}" style="break-inside:avoid">${card(r)}${r.s == 'done' ? done(r) : `<span class="text-xs font-bold text-red-700">${tr(r.s == 'open' ? 'sOpen' : 'sProg')}</span>`}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
 }
+/* ---------- STATISTICS: CHARTS (a separate view from the tables, with its own period) ---------- */
+const CC = { cnt: '#2563eb', hrs: '#ea580c', pal: ['#2563eb', '#ea580c', '#0f766e', '#7c3aed', '#db2777', '#ca8a04', '#0891b2', '#6b7280'], pr: { critical: '#dc2626', high: '#ea580c', medium: '#ca8a04', low: '#16a34a' } };
+const CPER = [['today', 'today'], ['yesterday', 'yesterday'], ['7d', 'last7'], ['30d', 'last30'], ['month', 'thisMonth'], ['90d', 'last90'], ['year', 'thisYear'], ['all', 'all'], ['custom', 'custom']];
+const CUNIT = { hour: 'chPerHour', day: 'chPerDay', week: 'chPerWeek', month: 'chPerMonth', year: 'chPerYear' };
+function setSV(v) { sv = v; chartAnim = v == 'charts'; render(); }
+function setCF(k, v) {
+  cf[k] = v;
+  if (k == 'd') cf.m = '';
+  if (k == 'from' || k == 'to') cf.r = 'custom';
+  if (k == 'r' && v != 'custom') { cf.from = ''; cf.to = ''; }
+  chartAnim = true; render();
+}
+const dAdd = (d, n) => { const x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() + n); return ymd(x); };
+const sunOf = d => dAdd(d, -new Date(d + 'T12:00:00').getDay());
+// [from, to] of the chosen period ('' = open end)
+function cRange() {
+  const td = ymd(new Date()), r = cf.r;
+  return r == 'today' ? [td, td] : r == 'yesterday' ? [dAdd(td, -1), dAdd(td, -1)] : r == '7d' ? [dAdd(td, -6), td] : r == '30d' ? [dAdd(td, -29), td] : r == 'month' ? [td.slice(0, 8) + '01', td]
+    : r == '90d' ? [dAdd(td, -89), td] : r == 'year' ? [td.slice(0, 5) + '01-01', td] : r == 'all' ? ['', ''] : [cf.from, cf.to];
+}
+// the time axis: one day = 24 hours, up to a month = days, up to 20 weeks = weeks, up to 3 years = months, then years
+function cBuckets(rs, f, t) {
+  const td = ymd(new Date()), first = f || (rs.length ? rs.reduce((a, r) => r.ra < a ? r.ra : a, rs[0].ra).slice(0, 10) : td), last = t || td;
+  const days = Math.max(1, Math.round((new Date(last) - new Date(first)) / 864e5) + 1);
+  const unit = first == last ? 'hour' : days <= 31 ? 'day' : days <= 140 ? 'week' : days <= 1100 ? 'month' : 'year', keys = [], p2 = n => String(n).padStart(2, '0');
+  if (unit == 'hour') for (let h = 0; h < 24; h++) keys.push(first + 'T' + p2(h));
+  else if (unit == 'day') for (let d = first, i = 0; d <= last && i < 400; d = dAdd(d, 1), i++) keys.push(d);
+  else if (unit == 'week') for (let d = sunOf(first), i = 0; d <= last && i < 400; d = dAdd(d, 7), i++) keys.push(d);
+  else if (unit == 'month') for (let y = +first.slice(0, 4), m = +first.slice(5, 7), i = 0; y + '-' + p2(m) <= last.slice(0, 7) && i < 400; i++) { keys.push(y + '-' + p2(m)); if (++m > 12) { m = 1; y++; } }
+  else for (let y = +first.slice(0, 4); y <= +last.slice(0, 4) && y < 3000; y++) keys.push(String(y));
+  const keyOf = ra => unit == 'hour' ? ra.slice(0, 13) : unit == 'day' ? ra.slice(0, 10) : unit == 'week' ? sunOf(ra.slice(0, 10)) : unit == 'month' ? ra.slice(0, 7) : ra.slice(0, 4);
+  const multiY = first.slice(0, 4) != last.slice(0, 4), multiM = first.slice(0, 7) != last.slice(0, 7);
+  const lab = k => unit == 'hour' ? k.slice(11) : unit == 'day' ? (multiM ? +k.slice(8) + '/' + +k.slice(5, 7) : String(+k.slice(8))) : unit == 'week' ? +k.slice(8, 10) + '/' + +k.slice(5, 7)
+    : unit == 'month' ? MON[+k.slice(5, 7) - 1] + (multiY ? " '" + k.slice(2, 4) : '') : k;
+  const tip = k => unit == 'hour' ? k.slice(0, 10) + ' ' + k.slice(11) + ':00' : unit == 'week' ? tr('chWeekOf') + ' ' + k : k;
+  const items = keys.map(k => ({ k, l: lab(k), t: tip(k), c: 0, h: 0 })), idx = new Map(items.map((i, j) => [i.k, j]));
+  rs.forEach(r => {
+    const j = idx.get(keyOf(r.ra)); if (j == null) return;
+    items[j].c++;
+    if (r.st == 'Yes' && r.fa) items[j].h += Math.max(0, (new Date(r.fa) - new Date(r.ra)) / 3600000);
+  });
+  items.forEach(i => { i.h = Math.round(i.h * 10) / 10; });
+  return { unit, items };
+}
+// the top of the scale: 1, 2 or 5 times a power of ten
+const niceTop = mx => { if (mx <= 0) return 1; const g = 10 ** Math.floor(Math.log10(mx)), n = mx / g; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * g; };
+// columns over time (time always runs left to right, in Arabic pages too)
+function colChart(items, color) {
+  const mx = Math.max(0, ...items.map(i => i.v)), top = niceTop(mx), step = Math.ceil(items.length / 12), showV = items.length <= 16, H = 150;
+  return `<div dir="ltr" class="flex gap-2" role="img" aria-label="${esc(items.map(i => i.t + ': ' + i.v).join(', '))}"><div class="flex flex-col justify-between text-xs text-gray-400 text-end" style="height:${H}px"><span>${top}</span><span>0</span></div>
+<div class="flex-1 min-w-0"><div class="relative" style="height:${H}px;border-bottom:1px solid #d1d5db"><div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none"><i style="border-top:1px dashed #e5e7eb"></i><i style="border-top:1px dashed #e5e7eb"></i><i></i></div>
+<div class="flex items-end gap-1 relative" style="height:100%">${items.map(i => `<div class="flex-1 min-w-0 flex flex-col justify-end items-center" style="height:100%" title="${esc(i.t)}: ${i.v}">${showV && i.v ? `<span class="text-[10px] text-gray-600">${i.v}</span>` : ''}<div class="cbar w-full rounded-t" style="height:${i.v / top * 100}%;min-height:${i.v ? 3 : 0}px;background:${color}"></div></div>`).join('')}</div></div>
+<div class="flex gap-1 text-[10px] text-gray-500 mt-1">${items.map((i, j) => `<span class="flex-1 min-w-0 relative" style="height:1rem">${j % step == 0 ? `<b class="font-normal" style="position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap">${esc(i.l)}</b>` : ''}</span>`).join('')}</div></div></div>`;
+}
+// horizontal bars, biggest first
+const hbars = (arr, color, fmt = v => v) => { const mx = Math.max(0, ...arr.map(x => x[1])) || 1; return arr.length ? arr.map(([l, v]) => `<div class="flex items-center gap-2 text-sm mb-1.5" title="${esc(l)}: ${esc(fmt(v))}"><span class="w-32 sm:w-44 shrink-0 truncate" dir="auto">${esc(l)}</span><div class="flex-1 bg-gray-100 rounded" style="height:1.25rem"><div class="hbar rounded" style="height:100%;width:${Math.max(v ? 2 : 0, v / mx * 100)}%;background:${color}"></div></div><b class="w-16 shrink-0 text-end whitespace-nowrap">${esc(fmt(v))}</b></div>`).join('') : `<p class="text-gray-500 text-sm">${tr('none')}</p>`; };
+// a ring with the total in the middle and a legend: arr = [[label, value, colour?]]
+function donut(arr) {
+  arr = arr.filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  if (arr.length > 8) arr = [...arr.slice(0, 7), [tr('chOther'), arr.slice(7).reduce((a, x) => a + x[1], 0)]];
+  const tot = arr.reduce((a, x) => a + x[1], 0); if (!tot) return `<p class="text-gray-500 text-sm">${tr('none')}</p>`;
+  let at = 0; const col = (x, i) => x[2] || CC.pal[i % CC.pal.length], stops = arr.map((x, i) => { const a = at / tot * 360; at += x[1]; return `${col(x, i)} ${a}deg ${at / tot * 360}deg`; }).join(',');
+  return `<div class="flex flex-wrap items-center gap-4"><div class="cdon relative shrink-0" style="width:130px;height:130px;border-radius:50%;background:conic-gradient(${stops})" role="img" aria-label="${esc(arr.map(x => x[0] + ': ' + x[1]).join(', '))}"><div style="position:absolute;inset:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center" class="text-xl font-bold text-gray-700">${tot}</div></div>
+<ul class="text-sm space-y-1 flex-1" style="min-width:11rem">${arr.map((x, i) => `<li class="flex items-center gap-2"><i style="width:.75rem;height:.75rem;border-radius:3px;background:${col(x, i)};flex:none"></i><span class="truncate flex-1">${esc(x[0])}</span><b>${x[1]}</b><span class="text-gray-400 w-10 text-end">${Math.round(x[1] / tot * 100)}%</span></li>`).join('')}</ul></div>`;
+}
+const topN = (arr, fn, n = 8) => arr.map(fn).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, n);
+function chartsView() {
+  const [f, t] = cRange(), anim = chartAnim; chartAnim = false;
+  const S = calc({ inP: s => { const d = (s || '').slice(0, 10); return (!f || d >= f) && (!t || d <= t); }, okR: r => (!cf.d || r.d == cf.d) && (!cf.m || String(r.mid) == cf.m) });
+  const B = cBuckets(S.rs, f, t), ms = Object.values(S.M), ds = Object.entries(S.D), pt = Object.values(S.P), h1 = m => Math.round(m / 6) / 10;
+  const stops = S.rs.filter(r => r.st == 'Yes').length, dtH = h1(ms.reduce((a, m) => a + m.dt, 0));
+  const cnt = (list, fn) => { const o = {}; list.forEach(r => { const k = fn(r); o[k] = (o[k] || 0) + 1; }); return Object.entries(o); };
+  const tname = e => { const x = db.techs.find(y => y.e == e); return (x && x.nm ? x.nm : '#' + e); };
+  const sdepts = [...new Set(db.requests.map(r => r.d).filter(Boolean))].sort(), smach = [...new Map(db.requests.filter(r => r.k != 'pm' && (!cf.d || r.d == cf.d)).map(r => [String(r.mid), r.mn]))].sort((a, b) => a[1].localeCompare(b[1]));
+  const so = (v, l, cur) => `<option value="${esc(v)}" ${v == cur ? 'selected' : ''}>${esc(l)}</option>`;
+  const controls = `<div class="np bg-white rounded-xl shadow p-3 mb-4"><div class="flex flex-wrap gap-2 mb-2">${CPER.map(([k, l]) => `<button onclick="setCF('r','${k}')" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${cf.r == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2"><select onchange="setCF('d',this.value)">${so('', tr('allDepts'), cf.d)}${sdepts.map(d => so(d, d, cf.d)).join('')}</select><select onchange="setCF('m',this.value)">${so('', tr('allMach'), cf.m)}${smach.map(([id, n]) => so(id, n, cf.m)).join('')}</select>
+${cf.r == 'custom' ? `<label class="text-xs">${tr('from')}<input type="date" value="${esc(cf.from)}" onchange="setCF('from',this.value)"></label><label class="text-xs">${tr('to')}<input type="date" value="${esc(cf.to)}" onchange="setCF('to',this.value)"></label>` : ''}</div>
+<div class="text-sm text-gray-600 mt-2">${tr('chRange')}: <b><bdi dir="ltr">${f || '…'} → ${t || '…'}</bdi></b> · ${tr(CUNIT[B.unit])}</div></div>`;
+  const kp = `<div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-2">${kpi(S.rs.length, tr('total'))}${kpi(stops, tr('stops'))}${kpi(dtH, tr('dHrs'), 'text-orange-600')}${kpi(S.mttr == null ? tr('na') : dhm(S.mttr), 'MTTR')}${kpi(S.mtbf == null ? tr('na') : dhm(S.mtbf), 'MTBF')}</div><p class="text-xs text-gray-500 mb-5">${tr('chNote')}</p>`;
+  const body = !S.rs.length && !pt.length ? box(tr('chNone'), `<p class="text-gray-500 text-sm">${tr('none')}</p>`) : `<div class="cols2">
+${box(tr('chTrend') + ' · ' + tr(CUNIT[B.unit]), colChart(B.items.map(i => ({ l: i.l, t: i.t, v: i.c })), CC.cnt))}
+${box(tr('chTrendH') + ' · ' + tr(CUNIT[B.unit]), colChart(B.items.map(i => ({ l: i.l, t: i.t, v: i.h })), CC.hrs))}
+${box(tr('chSecCnt'), hbars(topN(ds, ([k, o]) => [k, o.c]), CC.cnt))}
+${box(tr('deptHours'), hbars(topN(ds, ([k, o]) => [k, h1(o.dt)]), CC.hrs, v => v + tr('hr')))}
+${box(tr('deptMach'), hbars(topN(ds, ([k, o]) => [k, o.m]), CC.pal[3]))}
+${box(tr('topMach'), hbars(topN(ms, m => [m.n, m.c]), CC.cnt))}
+${box(tr('chMachHrs'), hbars(topN(ms, m => [m.n, h1(m.dt)]), CC.hrs, v => v + tr('hr')))}
+${box(tr('chMttr'), hbars(topN(ms.filter(m => m.mttr != null), m => [m.n, m.mttr]), CC.pal[3], v => hm(Math.round(v))))}
+${box(tr('xlTypes'), donut(cnt(S.rs, r => enx(tl(r.pt)) || '—')))}
+${box(tr('topRC'), hbars(topN(Object.entries(S.RC), ([k, v]) => [rl(k), v]), CC.pal[2]))}
+${box(tr('chPrio'), donut(['critical', 'high', 'medium', 'low'].map(k => [tr(k), S.rs.filter(r => r.pr == k).length, CC.pr[k]])))}
+${box(tr('chStopped'), donut([[tr('yes'), stops, '#dc2626'], [tr('no'), S.rs.length - stops, '#16a34a']]))}
+${box(tr('topParts'), hbars(topN(pt, x => [enx(x.n) + (x.p ? ' (' + x.p + ')' : ''), x.c]), CC.pal[4]))}
+${me.r == 'admin' ? box(tr('chTech'), hbars(topN(Object.entries(S.T), ([e, x]) => [tname(e), x.d]), CC.pal[2])) : ''}</div>`;
+  return `<div class="${anim ? 'anim' : ''}">${controls}${kp}${body}</div>`;
+}
+const svSwitch = () => `<div class="np flex gap-2 mb-3">${[['tables', 'stTables'], ['charts', 'stCharts']].map(([k, l]) => `<button onclick="setSV('${k}')" class="px-4 py-2 rounded-lg font-bold text-sm ${sv == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
 function aStats() {
   const S = calc();
   if (mview != null) return machView(S);
+  if (sv == 'charts') return svSwitch() + chartsView();
   const ps = new Set(); db.requests.forEach(r => { ps.add(r.ra.slice(0, 4)); ps.add(r.ra.slice(0, 7)); });
   const ms = Object.entries(S.M).sort((a, b) => b[1].c - a[1].c);
   const pt = Object.values(S.P).sort((a, b) => b.c - a.c);
@@ -1879,8 +2045,8 @@ function aStats() {
     + box(tr('deptHours'), bars(ds.slice().sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => [k, hrs(o)]), 'bg-red-600'))
     + box(tr('deptTable'), `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('dept')}${th('dMach')}${th('dNow')}${th('total')}${th('stops')}${th('dHrs')}</tr></thead><tbody>${ds.sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => `<tr class="border-b"><td class="p-2 font-semibold">${esc(k)}</td><td class="p-2 font-bold text-orange-600">${o.m}</td><td class="p-2 ${o.now ? 'font-bold text-red-600' : ''}">${o.now}</td><td class="p-2">${o.c}</td><td class="p-2">${o.s}</td><td class="p-2 font-bold text-red-600">${hrs(o)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-3">${tr('deptNote')}</p>`)
     : box(tr('deptMach'), none);
-  const ptab = `<div class="overflow-x-auto mt-4"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('partName')}${th('partNo')}${th('timesUsed')}${th('usedIn')}</tr></thead><tbody>${pt.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(x.n)}</td><td class="p-2 font-mono text-xs">${esc(x.p)}</td><td class="p-2 font-bold text-blue-700">${x.c}</td><td class="p-2 text-gray-500">${[...x.m].map(esc).join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
-  const pmtab = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('month')}${th('machine')}${th('partName')}${th('timesUsed')}</tr></thead><tbody>${pm.map(x => `<tr class="border-b"><td class="p-2">${esc(x.mo)}</td><td class="p-2">${esc(x.m)}</td><td class="p-2">${esc(x.n)}${x.p ? ' <span class="font-mono text-xs text-gray-500">(' + esc(x.p) + ')</span>' : ''}</td><td class="p-2 font-bold text-blue-700">${x.c}</td></tr>`).join('')}</tbody></table></div>`;
+  const ptab = `<div class="overflow-x-auto mt-4"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('partName')}${th('partNo')}${th('timesUsed')}${th('usedIn')}</tr></thead><tbody>${pt.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(enx(x.n))}</td><td class="p-2 font-mono text-xs">${esc(x.p)}</td><td class="p-2 font-bold text-blue-700">${x.c}</td><td class="p-2 text-gray-500">${[...x.m].map(esc).join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
+  const pmtab = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('month')}${th('machine')}${th('partName')}${th('timesUsed')}</tr></thead><tbody>${pm.map(x => `<tr class="border-b"><td class="p-2">${esc(x.mo)}</td><td class="p-2">${esc(x.m)}</td><td class="p-2">${esc(enx(x.n))}${x.p ? ' <span class="font-mono text-xs text-gray-500">(' + esc(x.p) + ')</span>' : ''}</td><td class="p-2 font-bold text-blue-700">${x.c}</td></tr>`).join('')}</tbody></table></div>`;
   const mcards = ms.map(([id, m], i) => `<div class="bg-white rounded-xl shadow p-4 cursor-pointer" onclick="openM(${js(id)})"><div class="flex justify-between gap-3"><div><span class="text-xs text-gray-400">#${i + 1}</span><div class="font-bold text-lg">${esc(m.n)}</div><div class="text-sm text-gray-500">${esc(m.d)}</div></div><div class="text-center"><div class="text-3xl font-bold text-orange-600">${m.c}</div><div class="text-xs text-gray-500">${tr('total')}</div></div></div>
 <div class="text-sm text-red-700 mt-2">${tr('stops')}: <b>${m.s}</b> · ${tr('stopDur')}: <b>${dhm(m.dt)}</b></div>
 <div class="text-xs text-gray-500 mt-1">${tr('lastFault')}: ${fd(m.last)}</div>
@@ -1890,7 +2056,7 @@ ${S.SN[id] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red
   const techs = tk.length ? `<div class="grid md:grid-cols-2 gap-3">${tk.map(([e, t]) => `<div class="border rounded-lg p-3"><b>${who(e)}</b><div class="text-sm text-gray-600">${tr('taken')}: ${t.n} · ${tr('closedN')}: ${t.d}${t.d ? ' · ' + tr('avg') + ': ' + hm(Math.round(t.ms / t.d / 60000)) : ''}${t.p ? ' · PM: ' + t.p : ''}</div></div>`).join('')}</div>` : none;
   const sdepts = [...new Set(db.requests.map(r => r.d).filter(Boolean))].sort(), smach = [...new Map(db.requests.filter(r => !sf.d || r.d == sf.d).map(r => [String(r.mid), r.mn]))].sort((a, b) => a[1].localeCompare(b[1]));
   const so = (v, l, cur) => `<option value="${esc(v)}" ${v == cur ? 'selected' : ''}>${esc(l)}</option>`;
-  return `<div class="np bg-white rounded-xl shadow p-3 mb-4"><div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
+  return svSwitch() + `<div class="np bg-white rounded-xl shadow p-3 mb-4"><div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
 <select onchange="setSF('d',this.value)">${so('', tr('allDepts'), sf.d)}${sdepts.map(d => so(d, d, sf.d)).join('')}</select>
 <select onchange="setSF('m',this.value)">${so('', tr('allMach'), sf.m)}${smach.map(([id, n]) => so(id, n, sf.m)).join('')}</select>
 <select onchange="setPeriod(this.value)" ${sfRange() ? 'disabled' : ''}>${['all', ...[...ps].sort()].map(p => `<option value="${p}" ${p == period ? 'selected' : ''}>${p == 'all' ? tr('all') : p}</option>`).join('')}</select>
@@ -1902,7 +2068,7 @@ ${S.SN[id] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red
 ${box(tr('topMach'), ms.length ? bars(ms.slice(0, 8).map(([, m]) => [m.n, m.c]), 'bg-orange-600') : none)}
 <div class="grid sm:grid-cols-2 gap-3 mb-5">${mcards}</div>
 ${box(tr('topRC'), rcs.length ? bars(rcs.slice(0, 8).map(([k, v]) => [rl(k), v]), 'bg-purple-600') : none)}
-${box(tr('topParts'), pt.length ? bars(pt.slice(0, 8).map(x => [x.n + (x.p ? ' (' + x.p + ')' : ''), x.c]), 'bg-blue-600') + ptab : none)}
+${box(tr('topParts'), pt.length ? bars(pt.slice(0, 8).map(x => [enx(x.n) + (x.p ? ' (' + x.p + ')' : ''), x.c]), 'bg-blue-600') + ptab : none)}
 ${box(tr('lifeT'), (() => { const l = partLife(); return l.length ? lifeTable(l, true) : `<p class="text-gray-500">${tr('lifeNote')}</p>`; })())}
 ${box(tr('partsByMonth'), pm.length ? pmtab : none)}
 ${me.r == 'admin' ? box(tr('statsTech'), techs) : ''}</div>`;
@@ -2204,6 +2370,7 @@ document.addEventListener('fullscreenchange', () => { if (tv && document.fullscr
   $('app').innerHTML = `<p class="p-8 text-center text-gray-500">${tr('loading')}</p>`;
   try {
     await load(true);
+    if (lang == 'en') await loadDict();
     await genPM();
     if (me && me.r == 'admin' && !me.sx && !(await adminOk(me.h))) me = null;
     if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (t && await rpc('sx_check', { p_tok: t })) me = { e: '', r: 'admin', h: t, sx: true }; }
