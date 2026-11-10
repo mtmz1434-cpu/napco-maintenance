@@ -344,7 +344,7 @@ holdAuto|يُحوَّل تلقائياً بعد {n} دقيقة|released automati
 tabHold|بانتظار الموافقة|Waiting for approval
 tabDOpen|طلبات القسم|Section requests
 tabDPrev|سجل الأعطال|Breakdown log
-tabDStaff|مشغلو القسم|Section operators
+tabDStaff|موظفو القسم|Section staff
 tabDMach|الآلات والباركود|Machines & QR
 tabDept|الأقسام|Sections
 deptadmin|رئيس القسم|Section head
@@ -395,6 +395,47 @@ opNote|اكتب وصف العطل فقط، والفني يكمل باقي الت
 origText|النص الأصلي|Original text
 trBtn|🌐 ترجمة|🌐 Translate
 trFail|تعذرت الترجمة الآن، حاول لاحقاً|Translation is not available right now
+tabMine|طلباتي|My requests
+tabAppr|اعتماد الصيانة|Maintenance approval
+mineProg|قيد التنفيذ عندي|In progress with me
+mineDone|أنجزتها (آخر 60 يوم)|Finished by me (last 60 days)
+mineNone|ما عندك طلبات قيد التنفيذ. خذ طلباً من تبويب استلام الطلبات|You have nothing in progress. Take a request from the Take requests tab
+apprHint|الأعمال المنتهية على مكائن القسم تنتظر اعتمادك. اعتمدها، أو أعدها للصيانة إذا لم يُصلح العطل (يُفتح طلب جديد على نفس المكينة)|Finished jobs on your section's machines wait for your approval. Approve them, or send them back if the fault is not fixed (a new request opens on the machine)
+apprNone|لا توجد أعمال بانتظار الاعتماد|No jobs waiting for approval
+apprOk|اعتماد العمل|Approve work
+apprBack|لم يُصلح: إعادة للصيانة|Not fixed: send back
+apprNote|ملاحظة (إجبارية عند الإرجاع)|Note (required when sending back)
+apprNeedNote|اكتب سبب الإرجاع|Write why it is not fixed
+apprWait|بانتظار الاعتماد|Waiting for approval
+apprApproved|معتمد|Approved
+apprRejected|أُعيد للصيانة|Sent back
+apprBy|بواسطة|by
+apprRecent|آخر الأعمال التي تمت مراجعتها|Recently reviewed jobs
+apprSent|أُعيد فتح الطلب برقم|Re-opened as request no.
+apprNoSec|حسابك غير مرتبط بقسم. اطلب من مدير الصيانة ربطه بقسم حتى تستطيع الاعتماد|Your account has no section yet. Ask the maintenance admin to set it so you can approve jobs
+reopenedFrom|إعادة فتح للطلب|Re-opened from request
+shNotes|ملاحظات الهاند أوفر|Handover notes
+shHint|اكتب ما تم إصلاحه في هذا الشفت أو ما يجب أن ينتبه له الشفت القادم. يمكنك ربط الملاحظة بطلب معيّن|Write what was fixed in this shift, or what the next shift must watch out for. You can attach the note to a request
+shKDone|تم إصلاحه|Fixed
+shKWatch|انتبهوا|Watch out
+shKInfo|ملاحظة عامة|General note
+shNoReq|ملاحظة عامة (بدون طلب)|General (no request)
+shNoteTxt|اكتب الملاحظة…|Write the note…
+shSave|حفظ الملاحظة|Save note
+shAdd|+ ملاحظة|+ note
+shNoteDel|حذف هذه الملاحظة؟|Delete this note?
+shNoNotes|لا توجد ملاحظات في هذا الشفت|No notes in this shift
+shSavedMsg|تم حفظ الملاحظة|Note saved
+shErr|تعذر حفظ الملاحظة. تأكد من تنفيذ تحديث 11 في قاعدة البيانات|Could not save the note. Make sure update 11 was run on the database
+wsTitle|ملخص الشفت السابق|Previous shift summary
+wsFixed|ما تم إصلاحه|What was fixed
+wsOther|ملاحظات|Notes
+wsWatch|انتبهوا لهذه الأمور (آخر 24 ساعة)|Watch out for (last 24 hours)
+wsNone|لا يوجد|Nothing recorded
+noSec|بدون قسم|No section
+secOf2|القسم|Section
+xlTrBusy|جارٍ ترجمة النصوص إلى الإنجليزية…|Translating the texts to English…
+xlTrLeft|بقيت نصوص عربية لم تُترجم بسبب حد الترجمة المجانية. اضغط تصدير مرة أخرى لاحقاً لإكمالها. عدد الطلبات المتبقية:|Some Arabic texts are not translated yet (limit of the free translation service). Press export again later to finish them. Requests left:
 pickType|اختر نوع العطل|Select the problem type
 morePartsOpt|… جزء آخر (عرض كل الأجزاء)|… Another part (show all parts)
 urgentT|عاجل / متأخر|Urgent / late
@@ -420,14 +461,14 @@ D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k
 const LS = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: the app still works, it just will not remember */ } } };
 let lang = LS.get('lang') == 'en' ? 'en' : 'ar';
 const tr = k => L[lang][k] ?? esc(k);
-let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [] };
+let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [] };
 // signed-in staff (operator, technician, supervisor, department admin) carry a session token; an old saved sign-in without one is dropped
 const STAFF = ['operator', 'technician', 'supervisor', 'deptadmin'];
 const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'deptadmin' };
 let me = (() => { try { const v = JSON.parse(LS.get('napco_me') || 'null'); return v && typeof v === 'object' && [...STAFF, 'admin', 'workshop'].includes(v.r) && (!STAFF.includes(v.r) || /^[0-9a-f]{64}$/.test(v.t || '')) ? v : null; } catch (e) { return null; } })();
 let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, sxPanel = false, pwPanel = false, qrWarned = false, rpEmp = null, sfR = '', sfD = '', sxTaps = [], pf = { r: 'all', from: '', to: '', m: '', k: '', bm: 'last', bs: '' }, showResp = false, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
-let tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), sf = { d: '', m: '', from: '', to: '' }, trCache = {};
+let tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), sf = { d: '', m: '', from: '', to: '' }, trCache = {}, trAc = {}, trStr = new Map(), snReq = '', snKind = 'done', snText = '';
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
 const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
@@ -686,17 +727,17 @@ function reqTable(bk, list) {
   const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
   const cols = [
     { h: tr('reqNo'), w: 10, t: 'int' }, { h: tr('kindCol'), w: 13, t: 'mid' }, { h: tr('machine'), w: 22 }, { h: tr('dept'), w: 16 }, { h: tr('ptype'), w: 15 }, { h: tr('priority'), w: 11, t: 'mid' }, { h: tr('stopped'), w: 12, t: 'mid' },
-    { h: tr('desc'), w: 42, t: 'wrap' }, { h: tr('descEn'), w: 42, t: 'wrap' }, { h: tr('reporter'), w: 16 }, { h: tr('reportedAt'), w: 18, t: 'date' }, { h: tr('tech'), w: 18 }, { h: tr('withMe2'), w: 20, t: 'wrap' },
+    { h: tr('desc'), w: 42, t: 'wrap' }, ...(lang == 'en' ? [] : [{ h: tr('descEn'), w: 42, t: 'wrap' }]), { h: tr('reporter'), w: 16 }, { h: tr('reportedAt'), w: 18, t: 'date' }, { h: tr('tech'), w: 18 }, { h: tr('withMe2'), w: 20, t: 'wrap' },
     { h: tr('takenAt'), w: 18, t: 'date' }, { h: tr('finishedAt'), w: 18, t: 'date' }, { h: tr('status'), w: 13, t: 'mid' }, { h: tr('repMin'), w: 12, t: 'int' },
     { h: tr('action'), w: 42, t: 'wrap' }, { h: tr('rootCause'), w: 18 }, { h: tr('clean'), w: 10, t: 'mid' }, { h: tr('parts2'), w: 30, t: 'wrap' }, { h: tr('ckCol'), w: 44, t: 'wrap' }, { h: tr('mpart'), w: 22 }, { h: tr('bdClass'), w: 16, t: 'mid' }
   ];
   const rows = list.map(r => [
-    r.no, { v: r.k == 'pm' ? tr('pm') : tr('bdKind'), s: r.k == 'pm' ? { bg: 'DBEAFE', c: '1E40AF' } : {} }, r.mn, r.d, tl(r.pt), { v: tr(r.pr), s: xTint(XPRIO[r.pr]) },
-    { v: y(r.st), s: r.st == 'Yes' ? { c: 'B91C1C', b: 1 } : {} }, r.ds, r.de || '', r.by, dt(r.ra), r.ts ? stf(r.ts) : '', cw(r).map(stf).join(', '),
+    r.no, { v: r.k == 'pm' ? tr('pm') : tr('bdKind'), s: r.k == 'pm' ? { bg: 'DBEAFE', c: '1E40AF' } : {} }, r.mn, r.d, enx(tl(r.pt)), { v: tr(r.pr), s: xTint(XPRIO[r.pr]) },
+    { v: y(r.st), s: r.st == 'Yes' ? { c: 'B91C1C', b: 1 } : {} }, lang == 'en' ? enx(descOut(r)) : r.ds, ...(lang == 'en' ? [] : [r.de || '']), r.by, dt(r.ra), r.ts ? stf(r.ts) : '', cw(r).map(stf).join(', '),
     dt(r.ta), dt(r.fa), { v: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'), s: xTint(XSTAT[r.s]) },
-    r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', r.ac || '', rl(r.rc), y(r.cl),
-    (r.sp || []).map(x => x.n + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
-    (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | '),
+    r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', lang == 'en' ? enx(actOut(r)) : r.ac || '', enx(rl(r.rc)), y(r.cl),
+    (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
+    (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '),
     r.mp || '', r.bc ? tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''
   ]);
   return xlTable(bk, tr('shReq'), cols, rows);
@@ -713,7 +754,7 @@ function xlSummary(bk, S) {
   const rcAll = Object.values(S.RC).reduce((a, b) => a + b, 0), rcs = Object.entries(S.RC).sort((a, b) => b[1] - a[1]).slice(0, 8);
   const TY = {}, MO = {};
   S.rs.forEach(r => {
-    const k = tl(r.pt) || '—'; TY[k] = (TY[k] || 0) + 1;
+    const k = enx(tl(r.pt)) || '—'; TY[k] = (TY[k] || 0) + 1;
     const o = MO[r.ra.slice(0, 7)] = MO[r.ra.slice(0, 7)] || { c: 0, dt: 0 };
     o.c++; if (r.st == 'Yes' && r.fa) o.dt += Math.max(0, (new Date(r.fa) - new Date(r.ra)) / 60000);
   });
@@ -754,7 +795,7 @@ function xlSummary(bk, S) {
   if (have.mach) T.mach = table(tr('topMach'), [tr('machine'), tr('total'), tr('stops'), tr('dHrs'), 'MTTR (' + tr('min') + ')'], ms.map(m => [m.n, m.c, m.s, hrs(m.dt), m.mttr == null ? '' : Math.round(m.mttr)]), ['#,##0', '#,##0', '0.0', '#,##0']);
   if (have.dept) T.dept = table(tr('deptTable'), [tr('dept'), tr('dMach'), tr('total'), tr('dHrs'), tr('dNow')], ds.map(([k, o]) => [k, o.m, o.c, hrs(o.dt), o.now]), ['#,##0', '#,##0', '0.0', '#,##0']);
   if (have.type) T.type = table(tr('xlTypes'), [tr('ptype'), tr('total'), tr('xlShare')], types.map(([k, v]) => [k, v, v / S.rs.length]), ['#,##0', '0%']);
-  if (have.rc) T.rc = table(tr('topRC'), [tr('rootCause'), tr('total'), tr('xlShare')], rcs.map(([k, v]) => [rl(k), v, v / rcAll]), ['#,##0', '0%']);
+  if (have.rc) T.rc = table(tr('topRC'), [tr('rootCause'), tr('total'), tr('xlShare')], rcs.map(([k, v]) => [enx(rl(k)), v, v / rcAll]), ['#,##0', '0%']);
   if (trend) T.mo = table(tr('xlTrend'), [tr('month'), tr('total'), tr('dHrs')], months.map(k => [k, MO[k].c, hrs(MO[k].dt)]), ['#,##0', '0.0']);
   [tr('kpiNote'), tr('deptNote')].forEach(t => { sh.merge(r, 0, r, NC - 1, t, { c: XC.mute, sz: 9, i: 1, w: 1, v: 'top' }); sh.heights[r++] = 28; });
 
@@ -847,12 +888,13 @@ const fromReq = x => {
   const s = oneOf(x.status, ['open', 'prog', 'done'], 'open'), ta = dts(x.taken_at);
   let ra = dts(x.reported_at); if (!ra) { try { ra = loc(x.created_at); } catch (e) { ra = '1970-01-01T00:00'; } }
   const fa = dts(x.finished_at) || (s == 'done' ? (ta || ra) : null);
-  return { id: Number(x.id), no: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), pt: txt(x.problem_type), ds: txt(x.description), de: txt(x.description_en), pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), st: x.stopped == 'Yes' ? 'Yes' : 'No', ra, by: txt(x.reported_by), s, ts: txt(x.taken_by), ta, tw: arr(x.companions).map(txt).filter(Boolean), fa, ac: txt(x.action), cl: yesNo(x.cleaning), s2: stop3(x.stopped_after), bc: oneOf(x.bd_class, BDCLS, null), mp: txt(x.machine_part), sp: arr(x.parts).map(p => ({ n: txt(p && p.n) || '', p: txt(p && p.p) || '', q: Number(p && p.q) > 0 ? Math.min(9999, Math.round(Number(p.q))) : null })), rc: txt(x.root_cause), cr: txt(x.created_at), hd: x.hold === true, ap: txt(x.approved_at), k: x.kind == 'pm' ? 'pm' : 'bd', pl: x.plan_id == null ? null : Number(x.plan_id), ck: arr(x.checklist).map(c => ({ t: txt(c && c.t) || '', r: oneOf(c && c.r, ['ok', 'bad', 'na'], null), n: txt(c && c.n) || '' })) };
+  return { id: Number(x.id), no: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), pt: txt(x.problem_type), ds: txt(x.description), de: txt(x.description_en), pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), st: x.stopped == 'Yes' ? 'Yes' : 'No', ra, by: txt(x.reported_by), s, ts: txt(x.taken_by), ta, tw: arr(x.companions).map(txt).filter(Boolean), fa, ac: txt(x.action), cl: yesNo(x.cleaning), s2: stop3(x.stopped_after), bc: oneOf(x.bd_class, BDCLS, null), mp: txt(x.machine_part), sp: arr(x.parts).map(p => ({ n: txt(p && p.n) || '', p: txt(p && p.p) || '', q: Number(p && p.q) > 0 ? Math.min(9999, Math.round(Number(p.q))) : null })), rc: txt(x.root_cause), cr: txt(x.created_at), hd: x.hold === true, ap: txt(x.approved_at), k: x.kind == 'pm' ? 'pm' : 'bd', pl: x.plan_id == null ? null : Number(x.plan_id), ck: arr(x.checklist).map(c => ({ t: txt(c && c.t) || '', r: oneOf(c && c.r, ['ok', 'bad', 'na'], null), n: txt(c && c.n) || '' })),
+    ae: txt(x.action_en), ok: oneOf(x.ok_state, ['pending', 'approved', 'rejected'], null), okn: txt(x.ok_name), oka: (() => { try { return x.ok_at ? loc(x.ok_at) : null; } catch (e) { return null; } })(), okt: txt(x.ok_note), rf: x.reopened_from == null ? null : Number(x.reopened_from) };
 };
 
 // full = reload everything; otherwise only fetch what changed since the last sync
 async function load(full) {
-  const [m, u, c, pp, dpt] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => []), api('departments?select=name&order=name').catch(() => [])]);
+  const [m, u, c, pp, dpt, sn] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => []), api('departments?select=name&order=name').catch(() => []), api('shift_notes?select=*&order=created_at.desc&limit=300').catch(() => [])]);
   const sl = me && (me.r == 'admin' || me.r == 'deptadmin') ? await rpc('staff_list', { p_tok: stTok() }).catch(() => null) : null;
   let n = 0;
   if (full || !lastSync) {
@@ -878,11 +920,12 @@ async function load(full) {
   db.machines = m.map(x => ({ id: String(x.id), n: txt(x.name) || '', d: txt(x.dept) || '', sn: txt(x.serial), md: txt(x.model), lc: txt(x.location), ins: txt(x.installed), nt: txt(x.notes) }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: String(x.emp), nm: txt(x.name) || '', st: x.status == 'approved' ? 'approved' : 'pending', r: x.role == 'sup' ? 'sup' : 'tech' }));
   db.depts = dpt.map(x => txt(x.name)).filter(Boolean);
+  db.notes = (Array.isArray(sn) ? sn : []).map(x => ({ id: Number(x.id), rid: x.request_id == null ? null : Number(x.request_id), k: oneOf(x.kind, ['done', 'watch', 'info'], 'info'), t: txt(x.note) || '', e: txt(x.by_emp), n: txt(x.by_name) || '', at: (() => { try { return loc(x.created_at); } catch (e) { return ''; } })() }));
   if (Array.isArray(sl)) db.staff = sl.map(x => ({ e: String(x.emp), nm: txt(x.name) || '', r: oneOf(x.role, ['op', 'tech', 'sup', 'dadm'], 'op'), st: x.status == 'approved' ? 'approved' : 'pending', d: txt(x.dept) || '' }));
   else if (!me || !(me.r == 'admin' || me.r == 'deptadmin')) db.staff = [];
   db.custom = Object.fromEntries(c.map(x => [String(x.k), { m: txt(x.machine_id), l: txt(x.label) || '', n: Number(x.n) || 0 }]));
   db.plans = pp.map(x => ({ id: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), t: txt(x.title) || '', iv: Number(x.interval_days) || 1, pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), ck: arr(x.checklist).map(txt).filter(Boolean), nd: dts(x.next_due) || '1970-01-01', ac: !!x.active, ld: dts(x.last_done) }));
-  const sig = JSON.stringify([m, u, c, pp, dpt, sl]);
+  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]);
   const changed = n > 0 || sig !== smallSig;
   smallSig = sig;
   return changed;
@@ -894,12 +937,14 @@ let polling = false, pollFails = 0;
 async function poll() {
   if (document.hidden || polling) return;
   polling = true;
-  try { polls++; if (polls % 30 == 0 && me && me.r == 'admin' && !(me.sx ? await rpc('sx_check', { p_tok: me.h }) : await adminOk(me.h))) return logout(); if (polls % 30 == 0 && me && STAFF.includes(me.r) && !((await rpc('staff_check', { p_tok: me.t })).ok)) { alert(tr('sessExp')); return logout(); } if (polls % 30 == 0) await genPM(); const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || ((me.r == 'admin' || me.r == 'supervisor') && (tab == 'open' || tab == 'dash')) || (me.r == 'deptadmin' && (tab == 'hold' || tab == 'dopen'))); if ((ch || tick) && !dirty) render(); pollFails = 0; $('nb').style.display = 'none'; }
+  try { polls++; if (polls % 30 == 0 && me && me.r == 'admin' && !(me.sx ? await rpc('sx_check', { p_tok: me.h }) : await adminOk(me.h))) return logout(); if (polls % 30 == 0 && me && STAFF.includes(me.r) && !(await chkStaff())) { alert(tr('sessExp')); return logout(); } if (polls % 30 == 0) await genPM(); const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || ((me.r == 'admin' || me.r == 'supervisor') && (tab == 'open' || tab == 'dash')) || (me.r == 'deptadmin' && (tab == 'hold' || tab == 'dopen'))); if ((ch || tick) && !dirty) render(); pollFails = 0; $('nb').style.display = 'none'; }
   catch (e) { if (++pollFails >= 2) { $('nb').textContent = tr('offline'); $('nb').style.display = 'block'; } }   // try again next time
   finally { polling = false; }
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
 const stTok = () => me.r == 'admin' ? me.h : me.t;
+// the session is still valid; the section may have been set by the admin since the sign-in
+async function chkStaff() { const c = await rpc('staff_check', { p_tok: me.t }); if (c && c.ok && (c.dept || '') != (me.dp || '')) { me.dp = c.dept || ''; save(); } return !!(c && c.ok); }
 // account / department / request-approval functions: the admin's token or a staff token
 const act = async (fn, args) => {
   try { await rpc(fn, { p_tok: stTok(), ...args }); await refresh(); return true; }
@@ -925,7 +970,7 @@ function logout() {
   if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
   else if (me && me.r == 'admin') rpc('admin_sign_out', { p_tok: me.h }).catch(() => {});
   else if (me && me.t) rpc('staff_sign_out', { p_tok: me.t }).catch(() => {});
-  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; step = { s: 'emp', e: '' }; save(); render();
+  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; step = { s: 'emp', e: '' }; save(); render();
 }
 function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; render(); }
 function setPeriod(v) { period = v; render(); }
@@ -973,7 +1018,7 @@ function loginView() {
   const bk = `<button type="button" onclick="step={s:'emp',e:''};render()" class="text-sm text-gray-500 mt-3">← ${tr('back')}</button>`;
   const wrap = b => `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-8">${b}</div>`;
   if (s == 'emp') return wrap(`<form onsubmit="doLogin(event)" class="space-y-3"><label class="font-semibold">${tr('empNo')}</label><input id="emp" inputmode="numeric" autocomplete="username" required><label class="block font-semibold">${tr('password')}</label><input id="pw" type="password" autocomplete="current-password" required><button class="${btn}">${tr('login')}</button></form><button type="button" onclick="step={s:'reg',e:''};render()" class="w-full border rounded-lg py-3 font-bold mt-3">${tr('newAccount')}</button>`);
-  if (s == 'reg') return wrap(`<form onsubmit="doReg(event)" class="space-y-3"><b>${tr('newAccount')}</b><input id="emp" inputmode="numeric" placeholder="${tr('empNo')}" autocomplete="off" required><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><select id="rr" onchange="$('rdw').classList.toggle('hidden',this.value!='op')"><option value="op">${tr('operator')}</option><option value="tech">${tr('technician')}</option><option value="sup">${tr('supervisor')}</option></select><div id="rdw"><label class="block font-semibold">${tr('dept')}</label><select id="rd">${db.depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('') || `<option value="">${tr('noDepts')}</option>`}</select></div><input id="pw" type="password" placeholder="${tr('password')}" required autocomplete="new-password"><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required autocomplete="new-password"><button class="${btn}">${tr('register')}</button></form>${bk}`);
+  if (s == 'reg') return wrap(`<form onsubmit="doReg(event)" class="space-y-3"><b>${tr('newAccount')}</b><input id="emp" inputmode="numeric" placeholder="${tr('empNo')}" autocomplete="off" required><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><select id="rr" onchange="$('rdw').classList.toggle('hidden',!['op','sup'].includes(this.value))"><option value="op">${tr('operator')}</option><option value="tech">${tr('technician')}</option><option value="sup">${tr('supervisor')}</option></select><div id="rdw"><label class="block font-semibold">${tr('dept')}</label><select id="rd">${db.depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('') || `<option value="">${tr('noDepts')}</option>`}</select></div><input id="pw" type="password" placeholder="${tr('password')}" required autocomplete="new-password"><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required autocomplete="new-password"><button class="${btn}">${tr('register')}</button></form>${bk}`);
   if (s == 'sx') return wrap(`<form onsubmit="doSx(event)" class="space-y-3" autocomplete="off"><label class="font-semibold">${tr('empNo')}</label><input id="xe" inputmode="numeric" autocomplete="off" required><label class="block font-semibold">${tr('password')}</label><input id="xp" type="password" autocomplete="off" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
   return wrap(`<p class="text-center py-4">⏳ ${tr('waiting')}</p>${bk}`);
 }
@@ -1073,9 +1118,9 @@ async function doReg(e) {
   if (nm.length < 2) return alert(tr('nameShort'));
   if (a.length < 4) return alert(tr('pwShort'));
   if (a !== $('pw2').value) return alert(tr('pwMismatch'));
-  if (role == 'op' && !$('rd').value) return alert(tr('noDepts'));
+  if ((role == 'op' || role == 'sup') && !$('rd').value) return alert(tr('noDepts'));
   try {
-    const ok = await rpc('register_staff', { p_emp: u, p_name: nm, p_hash: await sha(a), p_role: role, p_dept: role == 'op' ? $('rd').value : null });
+    const ok = await rpc('register_staff', { p_emp: u, p_name: nm, p_hash: await sha(a), p_role: role, p_dept: role == 'op' || role == 'sup' ? $('rd').value : null });
     if (!ok) return alert(tr('regExists'));
     step = { s: 'wait', e: u }; render();
   } catch (err) { alert(tr('netErr')); }
@@ -1137,8 +1182,38 @@ async function translateAr(text) {
 async function trNow(id) {
   const r = db.requests.find(x => x.id == id); if (!r) return;
   const t = await translateAr(r.ds);
-  if (t) { trCache[id] = t; render(); } else alert(tr('trFail'));
+  if (t) { trCache[id] = t; rpc('save_translations', { p_tok: stTok(), p_data: [{ id: +id, d: t }] }).catch(() => {}); render(); } else alert(tr('trFail'));
 }
+// Before an English file: translate the Arabic texts that have no English yet. The free service allows only a few thousand characters a day, so at most 60 requests
+// per click; what is translated is saved, and the next click continues where this one stopped. Returns how many requests are still untranslated.
+const needEn = r => (hasAr(r.ds) && !r.de && !trCache[r.id]) || (hasAr(r.ac) && !r.ae && !trAc[r.id]);
+async function ensureEnglish(list, force) {
+  if (lang != 'en' && !force) return 0;
+  const need = list.filter(needEn), strs = new Set();
+  list.forEach(r => [r.pt, r.rc, ...(r.sp || []).map(p => p.n), ...(r.ck || []).flatMap(c => [c.t, c.n])].forEach(t => { if (t && hasAr(t) && !trStr.has(t)) strs.add(t); }));
+  if (!need.length && !strs.size) return 0;
+  const bar = document.createElement('div'); bar.className = 'np fixed bottom-4 inset-x-4 z-50 mx-auto max-w-md bg-gray-900 text-white rounded-lg px-4 py-3 text-sm text-center'; document.body.appendChild(bar);
+  const out = [], CAP = 60; let n = 0, stop = false;
+  try {
+    for (const r of need.slice(0, CAP)) {
+      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + Math.min(need.length, CAP);
+      const rec = { id: r.id };
+      if (hasAr(r.ds) && !r.de && !trCache[r.id]) { const t = await translateAr(r.ds); if (t) { trCache[r.id] = t; rec.d = t; } else stop = true; }
+      if (!stop && hasAr(r.ac) && !r.ae && !trAc[r.id]) { const t = await translateAr(r.ac); if (t) { trAc[r.id] = t; rec.a = t; } else stop = true; }
+      if (rec.d || rec.a) out.push(rec);
+      if (stop) break;
+    }
+    for (const t of [...strs].slice(0, 80)) { if (stop) break; const x = await translateAr(t); if (!x) break; trStr.set(t, x); }
+    if (out.length) await rpc('save_translations', { p_tok: stTok(), p_data: out }).catch(() => {});
+  } finally { bar.remove(); }
+  return list.filter(needEn).length;
+}
+// the English text of a request (translated and saved earlier, or translated in this session); the original when there is none
+const descOut = r => (lang == 'en' ? r.de || trCache[r.id] : '') || r.ds || '';
+const actOut = r => (lang == 'en' ? r.ae || trAc[r.id] : '') || r.ac || '';
+// any other typed text (custom problem types, parts, checklist notes ...): English in an English file when it was translated
+const enx = t => lang == 'en' && t && hasAr(t) && trStr.has(t) ? trStr.get(t) : t;
+const actHtml = r => { const en = lang == 'en' ? r.ae || trAc[r.id] || '' : ''; return en && en != r.ac ? `${esc(en)}<div class="text-xs text-gray-500 border-t mt-1 pt-1" dir="auto">${tr('origText')}: ${esc(r.ac)}</div>` : esc(r.ac); };
 async function sendReq(e) {
   e.preventDefault();
   try {
@@ -1160,12 +1235,12 @@ async function sendReq(e) {
 /* ---------- SHARED CARDS ---------- */
 const maintSide = () => !!me && ['technician', 'supervisor', 'admin', 'workshop'].includes(me.r);
 const descBlock = r => {
-  const en = r.de || trCache[r.id] || '';
-  if (!maintSide() || !en) return `<p class="text-sm bg-gray-50 rounded p-2 my-2" dir="auto">${esc(r.ds)}${maintSide() && r.k != 'pm' && hasAr(r.ds) ? ` <button type="button" onclick="trNow(${r.id})" class="np text-xs text-teal-700 font-semibold">${tr('trBtn')}</button>` : ''}</p>`;
+  const en = r.de || trCache[r.id] || '', showEn = maintSide() || lang == 'en';
+  if (!showEn || !en) return `<p class="text-sm bg-gray-50 rounded p-2 my-2" dir="auto">${esc(r.ds)}${showEn && r.k != 'pm' && hasAr(r.ds) ? ` <button type="button" onclick="trNow(${r.id})" class="np text-xs text-teal-700 font-semibold">${tr('trBtn')}</button>` : ''}</p>`;
   return `<div class="text-sm bg-gray-50 rounded p-2 my-2"><p dir="auto">${esc(en)}</p><p class="text-xs text-gray-500 mt-1 border-t pt-1" dir="auto">${tr('origText')}: ${esc(r.ds)}</p></div>`;
 };
 const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${esc(r.mn)}${r.no ? ` <span class="text-xs font-normal text-gray-400">${tr('reqNo')} ${r.no}</span>` : ''}</b><span class="flex gap-1">${r.k == 'pm' ? `<span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-bold">🗓 PM</span>` : ''}<span class="text-xs px-2 py-1 rounded-full ${pcol[r.pr]}">${tr(r.pr)}</span></span></div>
-<div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))}${r.k == 'pm' ? '' : ' · ' + tr('stopped') + ' ' + tr(r.st == 'Yes' ? 'yes' : 'no')}</div>
+<div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))}${r.k == 'pm' ? '' : ' · ' + tr('stopped') + ' ' + tr(r.st == 'Yes' ? 'yes' : 'no')}</div>${r.rf ? `<div class="text-xs font-bold text-red-700">↩ ${tr('reopenedFrom')} #${r.rf}</div>` : ''}
 ${descBlock(r)}
 <div class="text-xs text-gray-500 space-y-0.5"><div>${r.k == 'pm' ? tr('pmDue') + ': ' + esc((r.ra || '').slice(0, 10)) : tr('reportedAt') + ': ' + fd(r.ra) + ' (#' + esc(r.by) + ')'}</div>${r.ta ? `<div>${tr('takenAt')}: ${fd(r.ta)} (${who(r.ts)}${crewTxt(r)})</div>` : ''}${r.fa ? `<div>${tr('finishedAt')}: ${fd(r.fa)}</div>` : ''}</div>`;
 const ckRes = r => (r.ck || []).some(c => c.r) ? `<div class="mt-1"><b>${tr('ckTitle')}:</b>${r.ck.map(c => `<div class="text-xs ${c.r == 'bad' ? 'text-red-700 font-semibold' : ''}">${c.r == 'ok' ? '✅' : c.r == 'bad' ? '⚠' : '—'} ${esc(c.t)}${c.n ? ' — ' + esc(c.n) : ''}</div>`).join('')}</div>` : '';
@@ -1188,12 +1263,12 @@ function pmAlerts() {
   return out;
 }
 const pmBanner = () => { const o = pmAlerts(); return o.length ? `<div class="np flex flex-wrap gap-2 mb-4 text-sm">${o.map(x => `<span class="bg-blue-50 border border-blue-300 text-blue-900 rounded-lg px-3 py-1">${x}</span>`).join('')}</div>` : ''; };
-const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${esc(r.ac)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}${r.k != 'pm' && (r.mp || r.bc) ? `<div><b>${tr('mpart')}:</b> ${esc(r.mp || '—')}${r.bc ? ' · ' + tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''}</div>` : ''}${ckRes(r)}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${stopTxt(r.s2)}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.q ? ' ×' + p.q : '') + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
+const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${actHtml(r)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}${r.k != 'pm' && (r.mp || r.bc) ? `<div><b>${tr('mpart')}:</b> ${esc(r.mp || '—')}${r.bc ? ' · ' + tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''}</div>` : ''}${ckRes(r)}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${stopTxt(r.s2)}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.q ? ' ×' + p.q : '') + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
 
 // repair history of the same machine, shown under a request the technician / supervisor has taken
 function hist(r) {
   const all = db.requests.filter(x => x.s == 'done' && String(x.mid) == String(r.mid) && x.id != r.id).sort((a, b) => (b.fa || '').localeCompare(a.fa || '')), l = all.slice(0, 10);
-  const body = l.length ? l.map(x => `<div class="border-t border-gray-200 pt-2 mt-2"><div class="flex justify-between gap-2"><b>${tr('reqNo')} ${x.no} · ${esc(tl(x.pt))}</b><span class="text-xs text-gray-500">${fd(x.fa)}</span></div><div class="text-xs text-gray-500">${who(x.ts)}${crewTxt(x)} · ${fd(x.ta)} → ${fd(x.fa)}</div><div class="mt-1">${esc(x.ac)}</div>${x.rc ? `<div class="text-xs"><b>${tr('rootCause')}:</b> ${esc(rl(x.rc))}</div>` : ''}${x.sp.length ? `<div class="text-xs"><b>${tr('parts2')}:</b> ${x.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`).join('') + (all.length > 10 ? `<p class="text-xs text-gray-500 mt-2">${tr('machHistMore')} ${all.length}</p>` : '') : `<p class="text-gray-500 mt-2">${tr('none')}</p>`;
+  const body = l.length ? l.map(x => `<div class="border-t border-gray-200 pt-2 mt-2"><div class="flex justify-between gap-2"><b>${tr('reqNo')} ${x.no} · ${esc(tl(x.pt))}</b><span class="text-xs text-gray-500">${fd(x.fa)}</span></div><div class="text-xs text-gray-500">${who(x.ts)}${crewTxt(x)} · ${fd(x.ta)} → ${fd(x.fa)}</div><div class="mt-1">${esc(actOut(x))}</div>${x.rc ? `<div class="text-xs"><b>${tr('rootCause')}:</b> ${esc(rl(x.rc))}</div>` : ''}${x.sp.length ? `<div class="text-xs"><b>${tr('parts2')}:</b> ${x.sp.map(p => esc(p.n) + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`).join('') + (all.length > 10 ? `<p class="text-xs text-gray-500 mt-2">${tr('machHistMore')} ${all.length}</p>` : '') : `<p class="text-gray-500 mt-2">${tr('none')}</p>`;
   return `<details open class="mt-3 bg-gray-50 rounded-lg p-3 text-sm"><summary class="font-bold text-teal-800 cursor-pointer">🛠 ${tr('machHist')} — ${esc(r.mn)} (${all.length})</summary>${body}</details>`;
 }
 
@@ -1219,11 +1294,12 @@ const tfRange = () => {
   if (tf.r == 'custom') return [tf.from, tf.to];
   return ['', ''];
 };
-const mineOpen = r => (r.s == 'open' && !isHeld(r)) || (r.s == 'prog' && r.ts == me.e);
+const mineOpen = r => r.s == 'open' && !isHeld(r);   // the requests he can take; the ones he took are in "My requests"
 function tfList() {
   const [a, b] = tfRange();
   return db.requests.filter(r => {
-    if (tf.st == 'open' ? !mineOpen(r) : tf.st == 'done' ? r.s != 'done' : (r.s == 'open' && isHeld(r))) return false;
+    const st = me.r == 'technician' ? 'open' : tf.st;
+    if (st == 'open' ? !mineOpen(r) : st == 'done' ? r.s != 'done' : (r.s == 'open' && isHeld(r))) return false;
     if (tf.d.length && !tf.d.includes(r.d)) return false;
     const d = (r.ra || '').slice(0, 10);
     return !(a && d < a) && !(b && d > b);
@@ -1234,23 +1310,34 @@ function tfSet(k, v) { tf[k] = v; tsel.clear(); render(); }
 function tfSel(id, on) { if (on) tsel.add(id); else tsel.delete(id); const el = $('tselN'); if (el) el.textContent = tsel.size; }
 function tfSelAll(on) { if (on) tfList().forEach(r => tsel.add(r.id)); else tsel.clear(); render(); }
 async function exportList() {
+  if (me.r == 'technician') return;   // technicians do not export
   const l = tfList(), rs = tsel.size ? l.filter(r => tsel.has(r.id)) : l;
   if (!rs.length) return alert(tr('none'));
   try { const bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); } catch (err) { alert(tr('xlErr')); }
 }
 function techView() {
-  const all = tfList(), rs = all.slice(0, 150), depts = [...new Set([...db.depts, ...db.requests.map(r => r.d)].filter(Boolean))].sort();
+  const T = me.r == 'technician', all = tfList(), rs = all.slice(0, 150), depts = [...new Set([...db.depts, ...db.requests.map(r => r.d)].filter(Boolean))].sort();
   const chip = (on, label, fn) => `<button onclick="${fn}" class="px-3 py-1.5 rounded-full text-sm border ${on ? 'bg-teal-700 text-white border-teal-700' : 'bg-white'}">${label}</button>`;
   const opt = (v, l, cur) => `<option value="${v}" ${v == cur ? 'selected' : ''}>${l}</option>`;
   const bar = `<div class="np bg-white rounded-xl shadow p-3 mb-4 space-y-2">
 <div class="flex flex-wrap gap-2 items-center"><b class="text-sm">${tr('dept')}:</b>${chip(!tf.d.length, tr('allDepts'), "tfDept('')")}${depts.map(d => chip(tf.d.includes(d), esc(d), `tfDept(${js(d)})`)).join('')}</div>
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-2"><select onchange="tfSet('r',this.value)">${[['all', 'all'], ['today', 'today'], ['yday', 'yesterday'], ['w', 'last7'], ['d30', 'last30'], ['month', 'thisMonth'], ['lmonth', 'lastMonth'], ['year', 'thisYear'], ['custom', 'custom']].map(([k, l]) => opt(k, tr(l), tf.r)).join('')}</select>
-<select onchange="tfSet('st',this.value)">${[['open', 'tfOpen'], ['all', 'tfAllSt'], ['done', 'tfClosed']].map(([k, l]) => opt(k, tr(l), tf.st)).join('')}</select>
+${T ? '' : `<select onchange="tfSet('st',this.value)">${[['open', 'tfOpen'], ['all', 'tfAllSt'], ['done', 'tfClosed']].map(([k, l]) => opt(k, tr(l), tf.st)).join('')}</select>`}
 ${tf.r == 'custom' ? `<label class="text-xs">${tr('from')}<input type="date" value="${esc(tf.from)}" onchange="tfSet('from',this.value)"></label><label class="text-xs">${tr('to')}<input type="date" value="${esc(tf.to)}" onchange="tfSet('to',this.value)"></label>` : ''}</div>
-<div class="flex flex-wrap items-center gap-3 text-sm"><span>${tr('showing')} <b>${all.length}</b> · ${tr('selectedN')} <b id="tselN">${tsel.size}</b></span><button onclick="tfSelAll(true)" class="text-teal-700 font-semibold">${tr('selectAll')}</button><button onclick="tfSelAll(false)" class="text-gray-500">${tr('clearSel')}</button><span class="flex-1"></span><button onclick="exportList()" class="bg-green-700 text-white px-3 py-2 rounded-lg text-sm">⬇ ${tr('exportSel')}</button></div></div>`;
-  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : r.s == 'done' ? 'border-green-500' : 'border-teal-600'}"><label class="np flex items-center gap-2 mb-2 text-sm text-gray-600"><input type="checkbox" ${tsel.has(r.id) ? 'checked' : ''} onchange="tfSel(${r.id},this.checked)"> ${tr('select')}</label>${card(r)}${mineOpen(r) ? `${r.s == 'open' ? (r.k == 'pm' ? pmBadge(r) : slaBadge(r)) : ''}${sol(r)}${r.s == 'open' ? takeForm(r) : hist(r) + finForm(r)}` : r.s == 'done' ? done(r) : openBadge(r)}</div>`;
+${T ? `<div class="text-sm">${tr('showing')} <b>${all.length}</b></div>` : `<div class="flex flex-wrap items-center gap-3 text-sm"><span>${tr('showing')} <b>${all.length}</b> · ${tr('selectedN')} <b id="tselN">${tsel.size}</b></span><button onclick="tfSelAll(true)" class="text-teal-700 font-semibold">${tr('selectAll')}</button><button onclick="tfSelAll(false)" class="text-gray-500">${tr('clearSel')}</button><span class="flex-1"></span><button onclick="exportList()" class="bg-green-700 text-white px-3 py-2 rounded-lg text-sm">⬇ ${tr('exportSel')}</button></div>`}</div>`;
+  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : r.s == 'done' ? 'border-green-500' : 'border-teal-600'}">${T ? '' : `<label class="np flex items-center gap-2 mb-2 text-sm text-gray-600"><input type="checkbox" ${tsel.has(r.id) ? 'checked' : ''} onchange="tfSel(${r.id},this.checked)"> ${tr('select')}</label>`}${card(r)}${noteLines(r)}${mineOpen(r) ? `${r.k == 'pm' ? pmBadge(r) : slaBadge(r)}${sol(r)}${takeForm(r)}` : r.s == 'done' ? done(r) + apprBadge(r) : openBadge(r)}</div>`;
   return `${me.r == 'technician' ? pmBanner() : ''}<h2 class="text-xl font-bold text-teal-800 mb-3">🔔 ${tr('openReq')}</h2>${bar}${rs.length ? '' : `<p class="text-gray-500">${tr('none')}</p>`}
 ${urgGrid(rs, one)}${all.length > rs.length ? `<p class="text-xs text-gray-500 mt-3">${tr('tfMore')}</p>` : ''}`;
+}
+// "My requests": what he has taken. In progress (with the finish form) and finished (with the approval state)
+function techMine() {
+  const mine = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).sort(byUrg), lim = ymd(new Date(Date.now() - 60 * 864e5));
+  const fin = db.requests.filter(r => r.s == 'done' && (r.ts == me.e || cw(r).includes(me.e)) && (r.fa || '').slice(0, 10) >= lim).sort((a, b) => (b.fa || '').localeCompare(a.fa || '')).slice(0, 100);
+  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}${noteLines(r)}${sol(r)}${hist(r)}${finForm(r)}</div>`;
+  const dn = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.ok == 'rejected' ? 'border-red-500' : 'border-green-500'}">${card(r)}${noteLines(r)}${done(r)}${apprBadge(r)}</div>`;
+  const grid = (l, f) => `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(f).join('')}</div>`;
+  return `<h2 class="text-xl font-bold text-teal-800 mb-3">🔧 ${tr('mineProg')} (${mine.length})</h2>${mine.length ? grid(mine, one) : `<p class="text-gray-500">${tr('mineNone')}</p>`}
+<h2 class="text-xl font-bold text-teal-800 mt-6 mb-3">✅ ${tr('mineDone')} (${fin.length})</h2>${fin.length ? grid(fin, dn) : `<p class="text-gray-500">${tr('none')}</p>`}`;
 }
 // when a technician takes a request he fills in what the operator no longer writes: priority, problem type, electrical / mechanical, machine part
 const typeOptsT = (mid, cur) => {
@@ -1303,7 +1390,7 @@ async function take(e, id) {
     try { rows = await api(url, 'PATCH', body, 'return=representation'); }
     catch (err) { if (!bd || !/machine_part|bd_class|priority|problem_type|permission denied/i.test(String(err && err.message))) throw err; rows = await api(url, 'PATCH', base, 'return=representation'); }   // a database that has not had update 8 / 9 yet
     if (!rows.length) alert(tr('takenByOther'));
-    else if (custom) await rpc('bump_custom', { p_machine: r.mid, p_label: custom }).catch(() => {});
+    else { if (custom) await rpc('bump_custom', { p_machine: r.mid, p_label: custom }).catch(() => {}); if (me.r == 'technician') ttab = 'mine'; else tab = 'mine'; window.scrollTo(0, 0); }
     await load(); render();
   } catch (err) { alert(tr('netErr')); }
 }
@@ -1335,33 +1422,66 @@ async function fin(e, id) {
     if (!bd.machine_part || bd.machine_part == '__all') return alert(tr('pickPart'));
     if ($('ty' + id)) { let tt = $('ty' + id).value; if (!tt) return alert(tr('pickType')); if (tt == 'other') { tt = $('tyo' + id).value.trim(); if (!tt) return alert(tr('typeIt')); } else if (tt.startsWith('c:')) tt = tt.slice(2); bd.problem_type = tt; }
   }
-  const body = { status: 'done', root_cause: rc, ...(ck ? { checklist: ck } : {}), ...bd, finished_at: fa, action: $('ac' + id).value.trim(), cleaning: $('cl' + id).value, stopped_after: $('s2' + id).value, parts: sp };
+  const acT = $('ac' + id).value.trim(), ae = await translateAr(acT);   // an Arabic action also gets its English text (empty when the free service is not available)
+  const body = { status: 'done', root_cause: rc, ...(ck ? { checklist: ck } : {}), ...bd, finished_at: fa, action: acT, ...(ae ? { action_en: ae } : {}), cleaning: $('cl' + id).value, stopped_after: $('s2' + id).value, parts: sp };
   const url = 'requests?id=eq.' + id + '&taken_by=eq.' + me.e;
   try {
     try { await api(url, 'PATCH', body); }
-    catch (err) { if (!/machine_part|bd_class|problem_type|permission denied/i.test(String(err && err.message))) throw err; delete body.machine_part; delete body.bd_class; delete body.problem_type; if (body.stopped_after == 'Job') body.stopped_after = 'Yes'; await api(url, 'PATCH', body); }   // a database that has not had update 8 yet
+    catch (err) { if (!/machine_part|bd_class|problem_type|action_en|permission denied/i.test(String(err && err.message))) throw err; delete body.machine_part; delete body.bd_class; delete body.problem_type; delete body.action_en; if (body.stopped_after == 'Job') body.stopped_after = 'Yes'; await api(url, 'PATCH', body); }   // a database that has not had update 8 yet
     await load(); render(); window.scrollTo(0, 0); alert(tr('closedMsg'));
   } catch (err) { alert(tr('netErr')); }
 }
 
+/* ---------- APPROVAL of finished work: the section head, the section's supervisors and the admin ---------- */
+const apprPend = () => (me.r == 'admin' || me.r == 'deptadmin' || (me.r == 'supervisor' && me.dp)) ? db.requests.filter(r => r.s == 'done' && r.ok == 'pending' && (me.r == 'admin' || r.d == me.dp)).sort((a, b) => (a.fa || '').localeCompare(b.fa || '')) : [];
+const apprBadge = r => !r.ok ? '' : r.ok == 'pending' ? `<span class="inline-block text-xs font-bold text-amber-900 bg-amber-100 rounded-full px-2 py-1 mt-2">⏳ ${tr('apprWait')}</span>`
+  : `<div class="mt-2 text-xs rounded p-2 ${r.ok == 'approved' ? 'text-green-800 bg-green-50' : 'text-red-800 bg-red-50'}"><b>${r.ok == 'approved' ? '✔ ' + tr('apprApproved') : '↩ ' + tr('apprRejected')}</b> · ${tr('apprBy')} ${esc(r.okn || '')} · ${fd(r.oka)}${r.okt ? `<div dir="auto">${esc(r.okt)}</div>` : ''}</div>`;
+function aAppr() {
+  if (me.r == 'supervisor' && !me.dp) return `<p class="text-sm text-amber-800 bg-amber-50 border border-amber-300 rounded-lg p-3">${tr('apprNoSec')}</p>`;
+  const l = apprPend(), rec = db.requests.filter(r => r.ok && r.ok != 'pending' && (me.r == 'admin' || r.d == me.dp)).sort((a, b) => (b.oka || '').localeCompare(a.oka || '')).slice(0, 12);
+  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 border-amber-500">${card(r)}${done(r)}<textarea id="ao${r.id}" rows="2" class="mt-2" placeholder="${tr('apprNote')}"></textarea><div class="np flex gap-2 mt-2"><button onclick="apprGo(${r.id},true)" class="flex-1 bg-green-700 text-white font-bold py-2 rounded-lg">✔ ${tr('apprOk')}</button><button onclick="apprGo(${r.id},false)" class="flex-1 bg-red-600 text-white font-bold py-2 rounded-lg">↩ ${tr('apprBack')}</button></div></div>`;
+  return `<p class="text-sm text-gray-500 mb-3">${tr('apprHint')}</p>${l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(one).join('')}</div>` : `<p class="text-gray-500">${tr('apprNone')}</p>`}`
+    + (rec.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('apprRecent')}</h3><div class="grid md:grid-cols-2 xl:grid-cols-3 gap-3">${rec.map(r => `<div class="bg-white rounded-lg shadow p-3 text-sm"><b>${esc(r.mn)}</b> <span class="text-xs text-gray-400">#${r.no}</span><div class="text-xs text-gray-600" dir="auto">${esc(actOut(r))}</div>${apprBadge(r)}</div>`).join('')}</div>` : '');
+}
+async function apprGo(id, ok) {
+  const nt = ($('ao' + id).value || '').trim();
+  if (!ok && !nt) return alert(tr('apprNeedNote'));
+  try { const r = await rpc('work_approve', { p_tok: stTok(), p_id: id, p_ok: ok, p_note: nt }); await refresh(); if (!ok && r && r.new_id) alert(tr('apprSent') + ' ' + r.new_id); }
+  catch (e) { if (isDenied(e)) { alert(tr('sessExp')); logout(); } else { await refresh().catch(() => {}); alert(tr('netErr')); } }
+}
+
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['dash', 'open', 'prev', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'shift', 'pm', 'stats'], workshop: ['open', 'prev'] }[me.r];
+  const A = { admin: ['dash', 'open', 'prev', 'appr', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'shift', 'pm', ...(me.dp ? ['appr'] : []), 'stats'], workshop: ['open', 'prev'] }[me.r];
   if (tv) tab = 'open';
   if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
-  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length;
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<button onclick="exportAll(this)" title="${tr('bkHint')}" class="ms-auto bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button>` : ''}</div>` : '') + ({ pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  const N = { appr: 'tabAppr', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
+  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length;
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<button onclick="exportAll(this)" title="${tr('bkHint')}" class="ms-auto bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button>` : ''}</div>` : '') + ({ appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs text-teal-700 font-semibold">✔ ${tr('approve')}</button>` : ''}<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 // the badge under an open / in-progress request: waiting for the department, pickup timer, preventive due date, or who is working on it
 const openBadge = r => r.s == 'open' ? (isHeld(r) ? holdBadge(r) : r.k == 'pm' ? pmBadge(r) : slaBadge(r)) : `<span class="text-xs font-bold text-teal-800 bg-teal-100 rounded-full px-2 py-1">${tr('sProg')} · ${tr('byTech')} ${who(r.ts)}${crewTxt(r)}</span>`;
 function delReq(id) { if (confirm(tr('confirmReq'))) adm('admin_delete', { p_kind: 'request', p_id: String(id) }); }
+// what the previous shift did and fixed, and what the people on duty must watch out for (the notes written in the handover page)
+function wsSummary() {
+  const [ps, pe] = shiftWin(1), since = loc(new Date(Date.now() - 864e5)), nts = db.notes || [];
+  const dn = db.requests.filter(r => r.s == 'done' && r.fa >= ps && r.fa < pe).sort((a, b) => (a.fa || '').localeCompare(b.fa || ''));
+  const inPrev = n => n.at >= ps && n.at < pe, ids = new Set(dn.map(r => r.id)), att = n => n.rid != null && ids.has(n.rid);
+  const nline = n => { const r = n.rid != null ? db.requests.find(x => x.id == n.rid) : null; return `<li dir="auto">${r ? `<b>${esc(r.mn)}</b>: ` : ''}${esc(n.t)} <span class="text-gray-400">· ${esc(n.n)} ${fd(n.at)}</span></li>`; };
+  const fixed = dn.map(r => `<li dir="auto"><b>${esc(r.mn)}</b>: ${esc(actOut(r))} <span class="text-gray-400">· ${who(r.ts)}</span>${nts.filter(n => n.rid == r.id && n.k != 'watch' && inPrev(n)).map(n => `<div class="text-xs text-gray-600">↳ ${esc(n.t)}</div>`).join('')}</li>`)
+    .concat(nts.filter(n => inPrev(n) && n.k == 'done' && !att(n)).map(nline));
+  const other = nts.filter(n => inPrev(n) && n.k == 'info' && !att(n)).map(nline), watch = nts.filter(n => n.k == 'watch' && n.at >= since).map(nline);
+  const none = `<li class="list-none text-gray-500">${tr('wsNone')}</li>`;
+  return `<div id="wsum" class="bg-white rounded-xl shadow p-4 mb-4 border-2 border-teal-600"><div class="flex justify-between gap-2 flex-wrap"><h3 class="font-bold text-teal-800">📋 ${tr('wsTitle')}</h3><span class="text-xs text-gray-500">${fd(ps)} → ${fd(pe)}</span></div>
+<div class="grid md:grid-cols-2 gap-4 mt-2 text-sm"><div><h4 class="font-bold text-green-800 mb-1">✅ ${tr('wsFixed')} (${fixed.length})</h4><ul class="space-y-1 list-disc ps-5">${fixed.join('') || none}</ul>${other.length ? `<h4 class="font-bold mt-3 mb-1">📝 ${tr('wsOther')}</h4><ul class="space-y-1 list-disc ps-5">${other.join('')}</ul>` : ''}</div>
+<div><h4 class="font-bold text-amber-800 mb-1">⚠ ${tr('wsWatch')}</h4><ul class="space-y-1 list-disc ps-5">${watch.join('') || none}</ul></div></div></div>`;
+}
 function aOpen() {
-  const rs = db.requests.filter(r => r.s != 'done').sort(byUrg);
-  if (!rs.length) return `<p class="text-gray-500">${tr('none')}</p>`;
+  const rs = db.requests.filter(r => r.s != 'done').sort(byUrg), head = wsSummary();
+  if (!rs.length) return head + `<p class="text-gray-500">${tr('none')}</p>`;
   const badge = openBadge;
-  return urgGrid(rs, r => editId == r.id ? `<div class="bg-white rounded-xl shadow p-4 border-2 border-teal-600 md:col-span-2">${editForm(r)}</div>` : `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.s == 'open' ? 'ring-2 ring-red-400' : ''} ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="flex justify-between items-center mt-2 gap-2">${badge(r)}${delBtn(r)}</div></div>`);
+  return head + urgGrid(rs, r => editId == r.id ? `<div class="bg-white rounded-xl shadow p-4 border-2 border-teal-600 md:col-span-2">${editForm(r)}</div>` : `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.s == 'open' ? 'ring-2 ring-red-400' : ''} ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}${noteLines(r)}<div class="flex justify-between items-center mt-2 gap-2">${badge(r)}${delBtn(r)}</div></div>`);
 }
 function prevList() {
   const td = ymd(new Date()), yd = ymd(new Date(Date.now() - 864e5)), d7 = ymd(new Date(Date.now() - 6 * 864e5)), mo = td.slice(0, 7);
@@ -1391,7 +1511,7 @@ function printSel() {
 async function exportPrev() {
   const l = prevList(), rs = sel.size ? l.filter(r => sel.has(r.id)) : l;
   if (!rs.length) return alert(tr('none'));
-  try { const bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); } catch (err) { alert(tr('xlErr')); }
+  try { const left = await ensureEnglish(rs), bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); if (left) alert(tr('xlTrLeft') + ' ' + left); } catch (err) { alert(tr('xlErr')); }
 }
 /* ---------- BREAKDOWN LOG: the same table as the Breakdowns sheet of the maintenance workbook ---------- */
 const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -1407,8 +1527,8 @@ const secOf = r => bdSec(r.mn, r.d) || r.d || '';
 const nmOf = e => { const t = db.techs.find(x => x.e == e); return t && t.nm ? t.nm : '#' + e; };
 const bdRow = r => {
   const l = [r.ts, ...cw(r)].filter(Boolean).map(nmOf);
-  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), r.mp || '', r.de || r.ds || '', l[0] || '', l[1] || '', l.slice(2).join(', '), r.ac || '',
-    (r.sp || []).length ? r.sp.map(p => p.n + (p.q ? '-' + p.q : '') + (p.p ? ' (' + p.p + ')' : '')).join(',') : 'Nil',
+  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), r.mp || '', lang == 'en' ? enx(descOut(r)) : r.de || r.ds || '', l[0] || '', l[1] || '', l.slice(2).join(', '), lang == 'en' ? enx(actOut(r)) : r.ac || '',
+    (r.sp || []).length ? r.sp.map(p => enx(p.n) + (p.q ? '-' + p.q : '') + (p.p ? ' (' + p.p + ')' : '')).join(',') : 'Nil',
     ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2 || r.st] || '', r.ra, r.ta, r.fa, mins(r.ta, r.fa), mins(r.ra, r.ta)];
 };
 // the workbook's order: section, machine, electrical before mechanical, part, time
@@ -1421,7 +1541,6 @@ function bdList() {
 }
 const kindSwitch = () => me.r == 'deptadmin' ? '' : `<div class="np flex gap-2 mb-3">${[['', 'bdKind'], ['pm', 'pm']].map(([k, l]) => `<button onclick="setPF('k','${k}')" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${(pf.k == 'pm') == (k == 'pm') ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
 function aPrev() { return pf.k == 'pm' ? aPrevPm() : bdView(); }
-const dPrev = () => bdView();
 function bdView() {
   const { base, months, mo, rows } = bdList(), adm = me.r == 'admin', resp = showResp;
   const secs = [...new Set(base.map(r => r.d).filter(Boolean))].sort(), ms = [...new Map(base.filter(r => !pf.bs || r.d == pf.bs).map(r => [String(r.mid), r.mn]))].sort((a, b) => a[1].localeCompare(b[1]));
@@ -1482,7 +1601,13 @@ function bdSheet(bk, name, rows, resp) {
 async function exportBd() {
   const { rows, mo } = bdList();
   if (!rows.length) return alert(tr('none'));
-  try { const bk = XW.Book(false); bdSheet(bk, mo ? 'Breakdowns (' + MON[+mo.slice(5) - 1] + ')' : 'Breakdowns', rows, showResp); await saveXl(bk, 'Breakdowns-' + (mo || 'all') + '.xlsx'); } catch (err) { alert(tr('xlErr')); }
+  try {
+    const left = await ensureEnglish(rows, true), keep = lang;   // the workbook is always English
+    let bk; lang = 'en';
+    try { bk = XW.Book(false); bdSheet(bk, mo ? 'Breakdowns (' + MON[+mo.slice(5) - 1] + ')' : 'Breakdowns', rows, showResp); } finally { lang = keep; }
+    await saveXl(bk, 'Breakdowns-' + (mo || 'all') + '.xlsx');
+    if (left) alert(tr('xlTrLeft') + ' ' + left);
+  } catch (err) { alert(tr('xlErr')); }
 }
 /* ---------- FULL BACKUP: every table of the site in one Excel file (English headings, no passwords, no secrets) ---------- */
 async function exportAll(btn) {
@@ -1514,14 +1639,14 @@ function backupBook(now) {
     { h: 'ID', w: 8, t: 'int' }, { h: 'Type', w: 12, t: 'mid' }, { h: 'Status', w: 12, t: 'mid' }, { h: 'Machine ID', w: 11 }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Problem type', w: 18 }, { h: 'Priority', w: 10, t: 'mid' },
     { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 42, t: 'wrap' }, { h: 'Description (English)', w: 42, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' }, { h: 'Saved on server', w: 18, t: 'date' }, { h: 'Released by section head', w: 18, t: 'date' },
     { h: 'Taken by', w: 20 }, { h: 'With him', w: 22, t: 'wrap' }, { h: 'Taken at', w: 18, t: 'date' }, { h: 'Finished at', w: 18, t: 'date' }, { h: 'Repair (min)', w: 11, t: 'int' }, { h: 'Response (min)', w: 11, t: 'int' },
-    { h: 'Action(s) taken', w: 42, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
+    { h: 'Action(s) taken', w: 42, t: 'wrap' }, { h: 'Action(s) taken (English)', w: 42, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
     { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' }, { h: 'Plan ID', w: 9, t: 'int' }
   ], reqs.map(r => [
-    r.no, r.k == 'pm' ? 'Preventive' : 'Breakdown', r.s == 'done' ? 'Closed' : r.s == 'open' ? 'Open' : 'In progress', r.mid, r.mn, r.d, tl(r.pt), tr(r.pr),
-    yn(r.st), r.ds, r.de || '', r.by, dt(r.ra), dt(r.cr), dt(r.ap),
+    r.no, r.k == 'pm' ? 'Preventive' : 'Breakdown', r.s == 'done' ? 'Closed' : r.s == 'open' ? 'Open' : 'In progress', r.mid, r.mn, r.d, enx(tl(r.pt)), tr(r.pr),
+    yn(r.st), r.ds, r.de || trCache[r.id] || '', r.by, dt(r.ra), dt(r.cr), dt(r.ap),
     stf(r.ts), cw(r).map(stf).join(', '), dt(r.ta), dt(r.fa), mins(r.ta, r.fa) ?? '', mins(r.ra, r.ta) ?? '',
-    r.ac || '', rl(r.rc), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', r.mp || '',
-    (r.sp || []).map(x => x.n + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
+    r.ac || '', r.ae || trAc[r.id] || '', enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', r.mp || '',
+    (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
     (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + c.t + (c.n ? ' (' + c.n + ')' : '')).join(' | '), r.pl == null ? '' : r.pl
   ]));
 
@@ -1628,7 +1753,7 @@ const roleLbl = r => tr({ op: 'operator', tech: 'technician', sup: 'supervisor',
 const rpForm = e => `<form onsubmit="rpSave(event,${js(e)})" class="mt-2 flex gap-2 items-center"><input id="rpn" type="password" placeholder="${tr('newPwFor')}" autocomplete="new-password" required><button class="bg-teal-700 text-white px-3 py-2 rounded whitespace-nowrap">${tr('sxSaveBtn')}</button><button type="button" onclick="rpOpen(null)" class="border px-3 py-2 rounded">${tr('cancel')}</button></form>`;
 function staffRow(s) {
   const pend = s.st == 'pending';
-  return `<div class="bg-white rounded-lg shadow p-3 mb-2"><div class="flex justify-between items-center gap-2"><div class="min-w-0"><b>${esc(s.nm) || '—'}</b> <bdi dir="ltr" class="text-gray-500">#${esc(s.e)}</bdi><div class="text-xs text-gray-500">${roleLbl(s.r)}${s.d ? ' · ' + esc(s.d) : ''} · ${tr(pend ? 'sPending' : 'sApproved')}</div></div><div class="flex flex-wrap gap-2 justify-end">${pend ? `<button onclick="sAct(${js(s.e)},'approve')" class="bg-teal-700 text-white px-3 py-1 rounded">${tr('approve')}</button>` : `<button onclick="rpOpen(${js(s.e)})" class="border px-3 py-1 rounded text-sm">${tr('resetPw')}</button>`}<button onclick="sAct(${js(s.e)},'remove')" class="bg-red-600 text-white px-3 py-1 rounded">${tr(pend ? 'reject' : 'remove')}</button></div></div>${rpEmp == s.e ? rpForm(s.e) : ''}</div>`;
+  return `<div class="bg-white rounded-lg shadow p-3 mb-2"><div class="flex justify-between items-center gap-2"><div class="min-w-0"><b>${esc(s.nm) || '—'}</b> <bdi dir="ltr" class="text-gray-500">#${esc(s.e)}</bdi><div class="text-xs text-gray-500">${roleLbl(s.r)}${s.d ? ' · ' + esc(s.d) : s.r == 'sup' ? ' · <span class="text-amber-700 font-semibold">⚠ ' + tr('noSec') + '</span>' : ''} · ${tr(pend ? 'sPending' : 'sApproved')}</div>${me.r == 'admin' && s.r == 'sup' ? `<select class="!w-auto mt-1 text-sm np" onchange="supSec(${js(s.e)},this.value)"><option value="">${tr('noSec')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${d == s.d ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>` : ''}</div><div class="flex flex-wrap gap-2 justify-end">${pend ? `<button onclick="sAct(${js(s.e)},'approve')" class="bg-teal-700 text-white px-3 py-1 rounded">${tr('approve')}</button>` : `<button onclick="rpOpen(${js(s.e)})" class="border px-3 py-1 rounded text-sm">${tr('resetPw')}</button>`}<button onclick="sAct(${js(s.e)},'remove')" class="bg-red-600 text-white px-3 py-1 rounded">${tr(pend ? 'reject' : 'remove')}</button></div></div>${rpEmp == s.e ? rpForm(s.e) : ''}</div>`;
 }
 const staffSort = (a, b) => (a.st == 'pending' ? 0 : 1) - (b.st == 'pending' ? 0 : 1) || a.e.localeCompare(b.e);
 function aTech() {
@@ -1636,6 +1761,7 @@ function aTech() {
   return `<div class="np flex flex-wrap gap-2 mb-3"><select onchange="sfR=this.value;render()" class="!w-auto"><option value="">${tr('allRoles')}</option>${['op', 'tech', 'sup', 'dadm'].map(r => `<option value="${r}" ${sfR == r ? 'selected' : ''}>${roleLbl(r)}</option>`).join('')}</select><select onchange="sfD=this.value;render()" class="!w-auto"><option value="">${tr('allDepts')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${sfD == d ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div>`
     + (l.length ? `<div class="cols2">${l.map(staffRow).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`);
 }
+function supSec(e, d) { act('admin_staff_dept', { p_emp: e, p_dept: d }); }
 function sAct(e, a) {
   if (a == 'remove' && !confirm(tr('confirmUser'))) return;
   act('staff_manage', { p_emp: e, p_action: a });
@@ -1787,30 +1913,31 @@ async function exportXl() {
   try {
     const S = calc(), stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
     if (!S.rs.length && !Object.keys(S.P).length && !Object.keys(S.T).length) return alert(tr('none'));
-    const bk = XW.Book(lang == 'ar'), I = n => ({ v: n });
+    const left = await ensureEnglish(S.rs), bk = XW.Book(lang == 'ar');
     xlSummary(bk, S);
     if (S.rs.length) reqTable(bk, S.rs);
     const add = (n, cols, rows) => { if (rows.length) xlTable(bk, n, cols, rows); };
     add(tr('shMach'), [
       { h: tr('machine'), w: 24 }, { h: tr('dept'), w: 16 }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('stopMin'), w: 14, t: 'int' },
       { h: tr('mttr') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('mtbf') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('lastFault'), w: 18, t: 'date' }, { h: tr('ptype'), w: 40, t: 'wrap' }
-    ], Object.values(S.M).sort((a, b) => b.c - a.c).map(m => [m.n, m.d, m.c, m.s, Math.round(m.dt), m.mttr == null ? '' : Math.round(m.mttr), m.mtbf == null ? '' : Math.round(m.mtbf), XW.date(m.last), Object.entries(m.t).map(([k, v]) => tl(k) + ': ' + v).join(', ')]));
+    ], Object.values(S.M).sort((a, b) => b.c - a.c).map(m => [m.n, m.d, m.c, m.s, Math.round(m.dt), m.mttr == null ? '' : Math.round(m.mttr), m.mtbf == null ? '' : Math.round(m.mtbf), XW.date(m.last), Object.entries(m.t).map(([k, v]) => enx(tl(k)) + ': ' + v).join(', ')]));
     add(tr('shDept'), [
       { h: tr('dept'), w: 22 }, { h: tr('dMach'), w: 14, t: 'int' }, { h: tr('dNow'), w: 14, t: 'int' }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('dHrs'), w: 14, t: 'dec' }
     ], Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => [k, o.m, { v: o.now, s: o.now ? { c: 'B91C1C', b: 1 } : {} }, o.c, o.s, Math.round(o.dt / 6) / 10]));
     add(tr('shParts'), [
       { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('timesUsed'), w: 12, t: 'int' }, { h: tr('usedIn'), w: 44, t: 'wrap' }
-    ], Object.values(S.P).sort((a, b) => b.c - a.c).map(x => [x.n, x.p, x.c, [...x.m].join(', ')]));
+    ], Object.values(S.P).sort((a, b) => b.c - a.c).map(x => [enx(x.n), x.p, x.c, [...x.m].join(', ')]));
     add(tr('shLife'), [
       { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('machine'), w: 24 }, { h: tr('replaced'), w: 14, t: 'int' }, { h: tr('lifeAvg') + ' (' + tr('days') + ')', w: 20, t: 'int' }, { h: tr('lastRepl'), w: 18, t: 'date' }
-    ], partLife().map(x => [x.n, x.p, x.m, x.c, Math.round(x.avg), XW.date(x.last)]));
+    ], partLife().map(x => [enx(x.n), x.p, x.m, x.c, Math.round(x.avg), XW.date(x.last)]));
     add(tr('shPM'), [
       { h: tr('month'), w: 12, t: 'mid' }, { h: tr('machine'), w: 24 }, { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('timesUsed'), w: 12, t: 'int' }
-    ], Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => [x.mo, x.m, x.n, x.p, x.c]));
+    ], Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => [x.mo, x.m, enx(x.n), x.p, x.c]));
     if (me.r == 'admin') add(tr('shTech'), [
       { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repMin'), w: 16, t: 'int' }
     ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? Math.round(t.ms / t.d / 60000) : '']));
     await saveXl(bk, 'napco-' + (sfRange() ? (sf.from || 'start') + '_' + (sf.to || 'now') : period == 'all' ? 'all' : period) + (sf.m ? '-machine' : sf.d ? '-dept' : '') + '.xlsx');
+    if (left) alert(tr('xlTrLeft') + ' ' + left);
   } catch (err) { alert(tr('xlErr')); }
 }
 
@@ -1838,7 +1965,10 @@ function setShift(v) { shOff = +v; render(); }
 // the technician's page: his requests, and the shift handover (the supervisor and the admin have it in their own tab bar)
 let ttab = 'work';
 function setTT(k) { ttab = k; render(); }
-const techHome = () => `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork'], ['shift', 'tabShift']].map(([k, l]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : techView());
+const techHome = () => {
+  const w = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, n = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length;
+  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'mine' ? techMine() : techView());
+};
 function shiftWin(off) {
   const d = new Date(), h = d.getHours();
   let s = new Date(d); s.setMinutes(0, 0, 0);
@@ -1846,13 +1976,45 @@ function shiftWin(off) {
   s = new Date(s.getTime() - off * 43200000);
   return [loc(s), loc(new Date(s.getTime() + 43200000))];
 }
+// handover notes: what was fixed in the shift, what the next shift must watch for; they can be attached to a request
+const NK = { done: ['✅', 'shKDone', 'text-green-800 bg-green-50'], watch: ['⚠', 'shKWatch', 'text-amber-900 bg-amber-50'], info: ['📝', 'shKInfo', 'text-gray-800 bg-gray-100'] };
+const canNote = () => !!me && ['technician', 'supervisor', 'admin'].includes(me.r);
+const noteBox = n => {
+  const r = n.rid != null ? db.requests.find(x => x.id == n.rid) : null, k = NK[n.k] || NK.info;
+  return `<div class="text-xs rounded p-2 mt-1 ${k[2]}" dir="auto">${k[0]} <b>${tr(k[1])}</b>${r ? ' · ' + esc(r.mn) + ' #' + r.id : ''}: ${esc(n.t)}<div class="text-gray-500">${esc(n.n)} · ${fd(n.at)}${canNote() && (me.r == 'admin' || n.e == me.e) ? ` <button type="button" class="np text-red-600 font-semibold" onclick="snDel(${n.id})">${tr('remove')}</button>` : ''}</div></div>`;
+};
+const noteLines = r => (db.notes || []).filter(n => n.rid == r.id).slice(0, 5).map(noteBox).join('');
+function snPick(id, kind) {
+  snText = $('sn_t') ? $('sn_t').value : snText; snReq = String(id); snKind = kind; render();
+  const t = $('sn_t'); if (t) { t.focus(); t.scrollIntoView({ block: 'center' }); }
+}
+async function snSave(e) {
+  e.preventDefault();
+  const tx = $('sn_t').value.trim(); if (!tx) return;
+  try {
+    await rpc('shift_note_save', { p_tok: stTok(), p_req: $('sn_r').value ? +$('sn_r').value : null, p_kind: $('sn_k').value, p_text: tx });
+    snText = ''; snReq = ''; await refresh(); alert(tr('shSavedMsg'));
+  } catch (err) { if (isDenied(err)) { alert(tr('sessExp')); logout(); } else alert(tr('shErr')); }
+}
+async function snDel(id) {
+  if (!confirm(tr('shNoteDel'))) return;
+  try { await rpc('shift_note_delete', { p_tok: stTok(), p_id: id }); await refresh(); }
+  catch (err) { if (isDenied(err)) { alert(tr('sessExp')); logout(); } else alert(tr('netErr')); }
+}
 function aShift() {
   const [s, e] = shiftWin(shOff);
   const op = db.requests.filter(r => r.s != 'done'), dn = db.requests.filter(r => r.s == 'done' && r.fa >= s && r.fa < e);
-  const li = (r, x) => `<div class="text-sm bg-white rounded p-2 mb-1 border" style="break-inside:avoid"><b>${esc(r.mn)}</b> (${esc(r.d)}): ${esc(x)}<div class="text-xs text-gray-500">${fd(r.ra)}${r.ts ? ' · ' + who(r.ts) : ''}${r.fa ? ' → ' + fd(r.fa) : ''}</div></div>`;
+  const nts = (db.notes || []).filter(n => n.at >= s && n.at < e), can = canNote();
+  const add = (r, k) => can ? ` <button type="button" class="np text-xs text-teal-700 font-semibold" onclick="snPick(${r.id},'${k}')">${tr('shAdd')}</button>` : '';
+  const li = (r, x, k) => `<div class="text-sm bg-white rounded p-2 mb-1 border" style="break-inside:avoid"><b>${esc(r.mn)}</b> (${esc(r.d)}): ${esc(x)}${add(r, k)}<div class="text-xs text-gray-500">${fd(r.ra)}${r.ts ? ' · ' + who(r.ts) : ''}${r.fa ? ' → ' + fd(r.fa) : ''}</div></div>`;
   const empty = `<p class="text-sm text-gray-500">${tr('none')}</p>`;
+  const form = can ? `<form class="np border rounded-xl p-3 bg-white space-y-2" onsubmit="snSave(event)"><b>✍ ${tr('shNotes')}</b><p class="text-xs text-gray-500">${tr('shHint')}</p>
+<div class="grid sm:grid-cols-2 gap-2"><select id="sn_k">${['done', 'watch', 'info'].map(k => `<option value="${k}" ${snKind == k ? 'selected' : ''}>${NK[k][0]} ${tr(NK[k][1])}</option>`).join('')}</select><select id="sn_r"><option value="">${tr('shNoReq')}</option>${[...op, ...dn].map(r => `<option value="${r.id}" ${String(snReq) == String(r.id) ? 'selected' : ''}>${esc(r.mn)} #${r.id}</option>`).join('')}</select></div>
+<textarea id="sn_t" rows="2" maxlength="1000" required placeholder="${tr('shNoteTxt')}">${esc(snText)}</textarea><button class="${btn}">${tr('shSave')}</button></form>` : '';
   return `<div class="req bg-white rounded-xl shadow p-5 space-y-4"><div class="flex justify-between items-start gap-3"><div><h3 class="text-xl font-bold text-teal-800">📋 ${tr('tabShift')}</h3><p class="text-sm text-gray-500">${tr('shiftNote')}</p><p class="text-sm font-semibold">${fd(s)} → ${fd(e)}</p></div><div class="np space-y-2"><select onchange="setShift(this.value)"><option value="0" ${shOff == 0 ? 'selected' : ''}>${tr('curShift')}</option><option value="1" ${shOff == 1 ? 'selected' : ''}>${tr('prevShift')}</option></select><button onclick="pr()" class="${btn}">🖨 ${tr('print')}</button></div></div>
-<div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, r.ds)).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, r.ac)).join('') : empty}</div></div></div>`;
+${form}
+<div class="grid md:grid-cols-2 gap-4"><div class="border rounded-xl p-3 bg-amber-50"><h4 class="font-bold text-amber-800 mb-2">⚠ ${tr('stillOpen')}</h4>${op.length ? op.map(r => li(r, descOut(r), 'watch')).join('') : empty}</div><div class="border rounded-xl p-3 bg-green-50"><h4 class="font-bold text-green-800 mb-2">✅ ${tr('doneShift')}</h4>${dn.length ? dn.map(r => li(r, actOut(r), 'done')).join('') : empty}</div></div>
+<div class="border rounded-xl p-3 bg-gray-50"><h4 class="font-bold mb-1">📝 ${tr('shNotes')}</h4>${nts.length ? nts.map(noteBox).join('') : `<p class="text-sm text-gray-500">${tr('shNoNotes')}</p>`}</div></div>`;
 }
 
 /* ---------- PREVENTIVE MAINTENANCE PLANS ---------- */
@@ -1892,12 +2054,12 @@ function delPM(id) { if (confirm(tr('confirmPlan'))) adm('admin_delete', { p_kin
 /* ---------- DEPARTMENT ADMIN ---------- */
 const dReqs = () => db.requests.filter(r => r.k != 'pm' && r.d == me.dp);
 function deptView() {
-  const A = ['hold', 'dopen', 'dprev', 'dstaff', 'dmach'];
+  const A = ['hold', 'dopen', 'appr', 'dstaff', 'dmach'];
   if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { hold: 'tabHold', dopen: 'tabDOpen', dprev: 'tabDPrev', dstaff: 'tabDStaff', dmach: 'tabDMach' };
-  const nh = dReqs().filter(isHeld).length, np = db.staff.filter(s => s.st == 'pending').length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'hold' && nh ? ' (' + nh + ')' : ''}${k == 'dstaff' && np ? ' (' + np + ')' : ''}</button>`).join('')}</div>`
-    + { hold: dHold, dopen: dOpen, dprev: dPrev, dstaff: dStaff, dmach: dMach }[tab]();
+  const N = { hold: 'tabHold', dopen: 'tabDOpen', appr: 'tabAppr', dstaff: 'tabDStaff', dmach: 'tabDMach' };
+  const nh = dReqs().filter(isHeld).length, np = db.staff.filter(s => s.st == 'pending').length, na = apprPend().length;
+  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'hold' && nh ? ' (' + nh + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'dstaff' && np ? ' (' + np + ')' : ''}</button>`).join('')}</div>`
+    + { hold: dHold, dopen: dOpen, appr: aAppr, dstaff: dStaff, dmach: dMach }[tab]();
 }
 const dBtns = r => `<span class="np flex gap-3 flex-wrap">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs bg-teal-700 text-white font-semibold rounded px-2 py-1">✔ ${tr('approve')}</button>` : ''}${r.s == 'open' ? `<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="cancelReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('cancelReq')}</button>` : ''}</span>`;
 function cancelReq(id) { if (confirm(tr('confirmCancel'))) act('dept_cancel_request', { p_id: id }); }
