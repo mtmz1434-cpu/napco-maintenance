@@ -184,24 +184,24 @@ all|كل الفترات|All time
 parts2|قطع الغيار|Spare parts
 topMach|الآلات الأكثر أعطالاً|Machines with most breakdowns
 stopDur|مدة التوقف|Downtime
-stopMin|مدة التوقف (دقيقة)|Downtime (min)
+stopMin|مدة التوقف (ساعة)|Downtime (hours)
 lastFault|آخر عطل|Last breakdown
 stoppedNow|متوقفة منذ|Stopped for
 topParts|قطع الغيار الأكثر استخداماً|Most used spare parts
 timesUsed|مرات الاستخدام|Times used
 usedIn|استُخدمت في|Used in
-partsByMonth|القطع المستخدمة لكل آلة وشهر|Parts used per machine and month
 month|الشهر|Month
 times|مرة|times
-reporter|رقم المشغّل|Operator no.
 tech|الفني|Technician
 withMe2|المرافقون|Companions
-repMin|مدة الإصلاح (دقيقة)|Repair time (min)
+repHr|مدة الإصلاح (ساعة)|Repair time (hours)
+repTime|مدة الإصلاح|Repair time
+respHr|زمن الاستجابة (ساعة)|Response time (hours)
+futureT|لا يمكن اختيار وقت في المستقبل. اختر الوقت الحالي أو وقتاً سابقاً|You cannot pick a time in the future. Pick the current time or an earlier one
 status|الحالة|Status
 shReq|الطلبات|Requests
 shMach|الآلات|Machines
 shParts|قطع الغيار|Spare parts
-shPM|القطع حسب الآلة والشهر|Parts by machine-month
 shTech|الفنيون|Technicians
 qrHint|اطبع رمز QR والصقه على الآلة. لما المشغل يمسحه يفتح له نموذج العطل لنفس الآلة|Print the QR code and stick it on the machine. Scanning it opens the fault form for that machine
 addMachine|إضافة آلة|Add machine
@@ -223,6 +223,8 @@ rc_mech|ميكانيكي|Mechanical
 rc_misuse|سوء استخدام|Misuse / operator error
 rc_wear|تآكل وعمر افتراضي|Wear and tear
 rc_maint|نقص صيانة أو تزييت|Lack of maintenance / lubrication
+rc_clean|نقص نظافة|Lack of cleaning
+rc_lube|نقص تشحيم|Lack of lubrication
 rc_sw|تحكم / برمجيات|Control / software
 rc_mat|قطعة أو مادة معيبة|Defective part / material
 topRC|الأسباب الجذرية للأعطال|Root causes of breakdowns
@@ -304,6 +306,50 @@ planItems|بنود الفحص|checklist items
 savePlan|حفظ الخطة|Save plan
 confirmPlan|حذف هذه الخطة؟|Delete this plan?
 noPlans|لا توجد خطط صيانة وقائية بعد|No preventive maintenance plans yet
+pmMaster|الجدول الرئيسي ٢٠٢٦|Master plan 2026
+pmIntervals|خطط بالأيام|Plans by days
+pmWkN|أسبوع|week
+pmL_Q|صيانة وقائية ربع سنوية (Q)|Quarterly preventive maintenance (Q)
+pmL_MD|صيانة وقائية نصف سنوية (MD)|Mid-year preventive maintenance (MD)
+pmL_Y|صيانة وقائية سنوية (Y)|Yearly preventive maintenance (Y)
+pmL_M|صيانة وقائية شهرية (M)|Monthly preventive maintenance (M)
+pmLegend|Q ربع سنوية · MD نصف سنوية · Y سنوية · M شهرية. الرقم W هو أسبوع الجدول، والموعد يوم الخميس من الأسبوع|Q quarterly · MD mid-year · Y yearly · M monthly. W is the week of the plan; the due day is the Thursday of that week
+pmSt_planned|مخططة|Planned
+pmSt_registered|مسجّلة (طلب مفتوح)|Registered (task made)
+pmSt_done|منفّذة|Done
+pmSt_past|سابقة|Past
+pmSt_skipped|متجاوزة|Skipped
+pmTPlanned|مخططة قادمة|Planned ahead
+pmTReg|مسجّلة وقيد التنفيذ|Registered, not done
+pmTDone|منفّذة|Done
+pmTUnl|مكائن غير مربوطة|Machines not linked
+pmAll|السنة كاملة|Whole year
+pmNoSched|ما فيه جدول رئيسي بعد: شغّل ملف التحديث ١٤ في Supabase|No master plan yet: run update 14 in Supabase
+pmNoEntries|ما فيه صيانات مخططة في هذه الفترة|No maintenance is planned in this period
+pmIdle|غير مشغّلة|Not in use
+pmUnlinked|غير مربوطة|Not linked
+pmChange|تغيير الربط|Change link
+pmUnlTitle|مكائن الجدول غير المربوطة بمكائن الموقع|Plan machines that are not linked to a machine of the site
+pmUnlHint|اربط كل مكينة بمكينتها في الموقع، وبعدها تنسجل صيانتها لوحدها. المقترح يظهر لما الاسم يشبه|Link each one to its machine on the site; its maintenance is then registered by itself. A suggestion shows when the name looks alike
+pmSuggest|المقترح|Suggested
+pmChoose|اختر المكينة...|Choose a machine...
+pmLink|ربط|Link
+pmCreate|إنشاء مكينة جديدة|Create a new machine
+pmNoDept|أضف قسماً أولاً من تبويب الأقسام عشان تقدر تنشئ المكينة|Add a department first (Sections tab) to create the machine
+pmSkip|غير مشغّلة (تجاوز)|Not in use (skip)
+pmSkipAsk|هذي المكينة ما تُصان؟ ما راح تنسجل لها صيانات|Is this machine out of use? No maintenance will be registered for it
+pmIdleTitle|مكائن معطّلة في الجدول|Idle machines in the plan
+pmRegTitle|تسجيل صيانات شهر بيدك|Register the maintenance of a month yourself
+pmRegAuto|الشهر الماضي والحالي والقادم تنسجل لوحدها. هنا تسجّل أي شهر ثاني|Last, this and next month register by themselves. Use this for any other month
+pmRegBtn|سجّل الآن|Register now
+pmRegDone|عدد الصيانات المسجّلة|Maintenance tasks registered
+pmLvTitle|قوائم الفحص لكل نوع صيانة|Checklists of each maintenance type
+pmLvHint|تُنسخ في كل صيانة جديدة تنسجل من الجدول. الصيانات المسجّلة سابقاً ما تتغير|Copied into every new task registered from the plan. Tasks already made do not change
+pmLvName|العنوان|Title
+pmSave|حفظ|Save
+pmRowDate|الموعد|Date
+pmRowState|الحالة|State
+pmRowBusy|هذي الصيانة انسجلت لها مهمة، عدّلها من المهمة نفسها|A task was already made for this one; change the task itself
 every|كل|every
 days|يوم|days
 ckTitle|قائمة الفحص|Checklist
@@ -501,7 +547,7 @@ D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k
 const LS = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: the app still works, it just will not remember */ } } };
 let lang = LS.get('lang') == 'en' ? 'en' : 'ar';
 const tr = k => L[lang][k] ?? esc(k);
-let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [] };
+let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [], sched: [], link: [], lv: {}, pmOn: false, sbr: new Map() };
 // signed-in staff (operator, technician, supervisor, department admin) carry a session token; an old saved sign-in without one is dropped
 const STAFF = ['operator', 'technician', 'supervisor', 'deptadmin'];
 const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'deptadmin' };
@@ -512,12 +558,17 @@ let sv = 'tables', cf = { r: '30d', from: '', to: '', d: '', m: '' }, chartAnim 
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
 const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
+// the preventive maintenance master plan: its weeks start on Sunday (W1 = 28 Dec 2025); its months are 4-4-5 weeks (January = W1-5 ... December = W49-52)
+const PM_MST = [1, 6, 10, 14, 19, 23, 27, 32, 36, 41, 45, 49, 53], PM_W1 = '2025-12-28', PM_LV = ['Q', 'MD', 'Y', 'M'], PM_SEC = ['Extrusion', 'Printing', 'Cutting', 'Thermoforming', 'Workshop', 'Premises'];
+const LV_DEF = { Q: 'Quarterly preventive maintenance (Q)', MD: 'Mid-year preventive maintenance (MD)', Y: 'Yearly preventive maintenance (Y)', M: 'Monthly preventive maintenance (M)' };
+let pmLoaded = false, pmSig = '';
 
 const $ = id => document.getElementById(id);
 const save = () => { if (!(me && me.sx)) LS.set('napco_me', JSON.stringify(me)); };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const loc = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 16); };
 const now = () => loc(new Date());
+const futureT = v => !!v && new Date(v) - Date.now() > 5 * 60000;   // a few minutes of slack for clocks that are not exactly the same
 const fd = s => s ? '<bdi dir="ltr">' + esc(String(s).replace('T', ' ')) + '</bdi>' : '—';
 // a value placed inside an inline handler, e.g. onclick="go(${js(x)})": safe in the HTML attribute AND as a JavaScript string
 const js = s => esc("'" + String(s ?? '').replace(/[\\'\n\r\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')) + "'");
@@ -531,12 +582,14 @@ const yesNo = v => v == 'Yes' ? 'Yes' : v == 'No' ? 'No' : null;
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
 const tl = v => DT.includes(v) || v == 'pm' || v == 'unspec' ? tr(v) : enx(v);
 const yn = () => `<option value="No">${tr('no')}</option><option value="Yes">${tr('yes')}</option>`;
-const hm = m => m >= 60 ? Math.floor(m / 60) + tr('hr') + ' ' + (m % 60) + tr('min') : m + tr('min');
-const dhm = m => { m = Math.round(m); const d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + tr('day') + ' ' : '') + h + tr('hr') + ' ' + (m % 60) + tr('min'); };
+// every duration is shown in hours (1.5 h = one hour and a half); fh() is the bare number, for Excel cells
+const fh = m => m == null || m === '' || isNaN(m) ? '' : Math.round(m / 0.6) / 100;
+const hm = m => fh(m) + ' ' + tr('hr');
+const dhm = hm;
 const who = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? esc(t.nm) + ' ' : '') + '<bdi dir="ltr">#' + esc(e) + '</bdi>'; };
 const cw = r => [].concat(r.tw || []).filter(Boolean);
 const crewTxt = r => cw(r).length ? ' + ' + cw(r).map(who).join(', ') : '';
-const RC = ['rc_elec', 'rc_mech', 'rc_misuse', 'rc_wear', 'rc_maint', 'rc_sw', 'rc_mat'];
+const RC_OPT = ['rc_elec', 'rc_mech', 'rc_misuse', 'rc_wear', 'rc_clean', 'rc_lube', 'rc_sw', 'rc_mat'], RC = [...RC_OPT, 'rc_maint'];   // rc_maint stays known so that old records still read right
 const rl = v => RC.includes(v) ? tr(v) : enx(v || '');
 const BDPARTS = {"Extrusion": ["Main motor (EXT)", "Gearbox (EXT)", "Hopper (Dosing)", "Feeder motor", "Extruder A (EXT)", "Extruder B (EXT)", "Extruder C (EXT)", "Hopper cooling", "Die (EXT)", "IBC", "Heat exchanger (EXT)", "Air ring", "Basket", "Profile Scanner", "Collapsing unit", "Feeding pump", "Hopper (Feeding)", "Niproller (EXT)", "Oscillation", "Track rollers (EXT)", "Web-guider", "Treatment unit", "In-line printer", "Post-gusset unit", "Haul-off", "Winder (EXT)", "Rotary blade", "NGR", "Other (EXT)"], "Cutting": ["Unwinder main (CUT)", "Unwinder for handle roll", "Single roller motor", "Niproller (CUT)", "Arc sealer", "Folding assembly", "Cross-handle unit", "Round bottom unit", "Presealer unit", "Main sealing unit", "Draw roller (CUT)", "Wicket arms", "Conveyor unit", "Web-guider (CUT)", "winder (CUT)", "Dancer unit (CUT)", "shoulder cut unit", "Perforation unit", "Wicket punch unit", "griphole punch unit", "aeration hole punch unit", "Vacuum pump (CUT)", "Drive (CUT)", "Photocell", "Other (CUT)"], "Printing": ["Unwinder (PRNT)", "Unwinder dancer (PRNT)", "Winder web-guide (PRNT)", "Web-cleaner", "Draw unit (PRNT)", "Squeeze roller", "Supply pump", "Return pump", "Drum", "Station #1", "Station #2", "Station #3", "Station #4", "Station #5", "Station #6", "Station #7", "Station #8", "Station Dryer", "Drying tunnel", "Chilled roller (PRNT)", "Web camera", "winder dancer (PRNT)", "winder (PRNT)", "Other (PRNT)"], "Thermoforming": ["Main motor (THERMO)", "Gearbox (THERMO)", "Hopper (THERMO)", "Dosing unit (THERMO)", "Extruder A (THERMO)", "Extruder B (THERMO)", "Melt pump", "Die (THERMO)", "Calender", "Calender cooling unit", "Niproller (THERMO)", "Recycling unit", "Dancer (THERMO)", "Winder (THERMO)", "unwinder (THERMO)", "conveyor", "preheating unit (THERMO)", "mold unit", "stacker unit", "scrap winder", "Other (THERMO)"]};
 const BDMACH = {"kiefel_2": "Extrusion", "kiefel_3": "Extrusion", "coexshrink": "Extrusion", "kiefel_8": "Extrusion", "wh_4": "Extrusion", "wh_3": "Extrusion", "macchi": "Extrusion", "kiefel_9": "Extrusion", "kiefel_4": "Extrusion", "kiefel_1": "Extrusion", "kiefel_5": "Extrusion", "kiefel_6": "Extrusion", "wh_1": "Extrusion", "kiefel_7": "Extrusion", "erema": "Extrusion", "k60_2": "Extrusion", "wh_5": "Extrusion", "lemo_5": "Cutting", "lemo_4": "Cutting", "fmc_3": "Cutting", "fmc_2": "Cutting", "fmc_1": "Cutting", "fmc_4750": "Cutting", "lemo_intermat": "Cutting", "kampf": "Cutting", "proslit": "Cutting", "elba_1": "Cutting", "soma": "Cutting", "fmc_jumbo": "Cutting", "mamata": "Cutting", "polytex": "Cutting", "miraflex_1": "Printing", "miraflex_2": "Printing", "s_16": "Printing", "amut_1": "Thermoforming", "amut_2": "Thermoforming", "cmg": "Thermoforming", "ftv_1": "Thermoforming", "ftv_2": "Thermoforming"};
@@ -554,7 +607,7 @@ const partOpts = (mn, d, cur, more) => {
   const known = all.some(k => BDPARTS[k].includes(cur));
   return `<option value="">${tr('pickPart')}</option>` + (cur && !known ? o(cur) : '') + (sec ? BDPARTS[sec].map(o).join('') : all.map(k => `<optgroup label="${k}">${BDPARTS[k].map(o).join('')}</optgroup>`).join('')) + (sec && more ? `<option value="__all">${tr('morePartsOpt')}</option>` : '');
 };
-const rcOpts = cur => `<option value="">—</option>${RC.map(k => `<option value="${k}" ${k == cur ? 'selected' : ''}>${tr(k)}</option>`).join('')}${cur && !RC.includes(cur) ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ''}<option value="other">${tr('other')}</option>`;
+const rcOpts = cur => `<option value="">—</option>${(cur == 'rc_maint' ? RC : RC_OPT).map(k => `<option value="${k}" ${k == cur ? 'selected' : ''}>${tr(k)}</option>`).join('')}${cur && !RC.includes(cur) ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ''}<option value="other">${tr('other')}</option>`;
 const ymd = d => loc(d).slice(0, 10);
 const box = (t, b) => `<div class="bg-white rounded-xl shadow p-4 mb-5"><h3 class="font-bold text-teal-800 mb-3">${t}</h3>${b}</div>`;
 const kpi = (v, l, c = 'text-teal-800') => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c}">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
@@ -750,7 +803,7 @@ const XSTAT = { open: ['FEE2E2', '991B1B'], prog: ['DBEAFE', '1E40AF'], done: ['
 const xTint = p => p ? { bg: p[0], c: p[1], b: 1, h: 'center' } : {};
 // a data sheet: coloured header, set widths, filter buttons, frozen header row. cols: [{h, w, t}], rows: arrays (a cell may be {v, s} for its own style)
 function xlTable(bk, name, cols, rows) {
-  const ST = { txt: {}, wrap: { w: 1 }, mid: { h: 'center' }, int: { nf: '#,##0', h: 'center' }, dec: { nf: '0.0', h: 'center' }, date: { nf: 'yyyy-mm-dd hh:mm', h: 'center' } };
+  const ST = { txt: {}, wrap: { w: 1 }, mid: { h: 'center' }, int: { nf: '#,##0', h: 'center' }, dec2: { nf: '0.00', h: 'center' }, dec: { nf: '0.0', h: 'center' }, date: { nf: 'yyyy-mm-dd hh:mm', h: 'center' } };
   const sh = bk.sheet(name, { tab: XC.teal, land: cols.length > 6, freeze: 1, titleRows: 1 });
   cols.forEach((c, i) => { sh.widths[i] = c.w || 14; sh.set(0, i, c.h, XHEAD); });
   rows.forEach((row, r) => row.forEach((x, i) => {
@@ -767,15 +820,15 @@ function reqTable(bk, list) {
   const stf = e => { const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
   const cols = [
     { h: tr('reqNo'), w: 10, t: 'int' }, { h: tr('kindCol'), w: 13, t: 'mid' }, { h: tr('machine'), w: 22 }, { h: tr('dept'), w: 16 }, { h: tr('ptype'), w: 15 }, { h: tr('priority'), w: 11, t: 'mid' }, { h: tr('stopped'), w: 12, t: 'mid' },
-    { h: tr('desc'), w: 42, t: 'wrap' }, ...(lang == 'en' ? [] : [{ h: tr('descEn'), w: 42, t: 'wrap' }]), { h: tr('reporter'), w: 16 }, { h: tr('reportedAt'), w: 18, t: 'date' }, { h: tr('tech'), w: 18 }, { h: tr('withMe2'), w: 20, t: 'wrap' },
-    { h: tr('takenAt'), w: 18, t: 'date' }, { h: tr('finishedAt'), w: 18, t: 'date' }, { h: tr('status'), w: 13, t: 'mid' }, { h: tr('repMin'), w: 12, t: 'int' },
+    { h: tr('desc'), w: 42, t: 'wrap' }, ...(lang == 'en' ? [] : [{ h: tr('descEn'), w: 42, t: 'wrap' }]), { h: tr('reportedAt'), w: 18, t: 'date' }, { h: tr('tech'), w: 18 }, { h: tr('withMe2'), w: 20, t: 'wrap' },
+    { h: tr('takenAt'), w: 18, t: 'date' }, { h: tr('finishedAt'), w: 18, t: 'date' }, { h: tr('status'), w: 13, t: 'mid' }, { h: tr('repHr'), w: 13, t: 'dec2' },
     { h: tr('action'), w: 42, t: 'wrap' }, { h: tr('rootCause'), w: 18 }, { h: tr('clean'), w: 10, t: 'mid' }, { h: tr('parts2'), w: 30, t: 'wrap' }, { h: tr('ckCol'), w: 44, t: 'wrap' }, { h: tr('mpart'), w: 22 }, { h: tr('bdClass'), w: 16, t: 'mid' }
   ];
   const rows = list.map(r => [
     r.no, { v: r.k == 'pm' ? tr('pm') : tr('bdKind'), s: r.k == 'pm' ? { bg: 'DBEAFE', c: '1E40AF' } : {} }, r.mn, r.d, enx(tl(r.pt)), { v: tr(r.pr), s: xTint(XPRIO[r.pr]) },
-    { v: y(r.st), s: r.st == 'Yes' ? { c: 'B91C1C', b: 1 } : {} }, lang == 'en' ? enx(descOut(r)) : r.ds, ...(lang == 'en' ? [] : [r.de || '']), r.by, dt(r.ra), r.ts ? stf(r.ts) : '', cw(r).map(stf).join(', '),
+    { v: y(r.st), s: r.st == 'Yes' ? { c: 'B91C1C', b: 1 } : {} }, lang == 'en' ? enx(descOut(r)) : dsOf(r), ...(lang == 'en' ? [] : [r.de || '']), dt(r.ra), r.ts ? stf(r.ts) : '', cw(r).map(stf).join(', '),
     dt(r.ta), dt(r.fa), { v: tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg'), s: xTint(XSTAT[r.s]) },
-    r.fa && r.ta ? Math.round((new Date(r.fa) - new Date(r.ta)) / 60000) : '', lang == 'en' ? enx(actOut(r)) : r.ac || '', enx(rl(r.rc)), y(r.cl),
+    r.fa && r.ta ? fh(Math.max(0, (new Date(r.fa) - new Date(r.ta)) / 60000)) : '', lang == 'en' ? enx(actOut(r)) : r.ac || '', enx(rl(r.rc)), y(r.cl),
     (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
     (r.ck || []).filter(c => c.r).map(c => tr(c.r == 'ok' ? 'ckOk' : c.r == 'bad' ? 'ckBad' : 'ckNa') + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '),
     enx(r.mp) || '', r.bc ? tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''
@@ -958,6 +1011,16 @@ async function load(full) {
     n = ch.length + dl.length;
   }
   db.requests.sort((a, b) => b.id - a.id);
+  // the preventive maintenance master plan (a database without update 14 simply has none); read once, then again when requests changed, on the plan tab and every 30th round
+  if (me && me.r != 'operator' && (!pmLoaded || full || n > 0 || (tab == 'pm' && (me.r == 'admin' || me.r == 'supervisor')))) {
+    const [ps, pk, pv] = await Promise.all([api('pm_sched?select=*&order=due,id').catch(() => null), api('pm_link?select=*&order=name').catch(() => null), api('pm_levels?select=*').catch(() => null)]);
+    pmLoaded = true; pmSig = JSON.stringify([ps, pk, pv]);
+    db.pmOn = Array.isArray(ps) && Array.isArray(pk);
+    db.sched = db.pmOn ? ps.map(x => ({ id: Number(x.id), nm: txt(x.name) || '', l: oneOf(x.level, PM_LV, 'Q'), d: dts(x.due) || '1970-01-01', sq: Number(x.seq) || 0, w: x.plan_week == null ? null : Number(x.plan_week), s: oneOf(x.state, ['planned', 'registered', 'done', 'past', 'skipped'], 'planned'), rid: x.request_id == null ? null : Number(x.request_id), da: txt(x.done_at) })) : [];
+    db.link = db.pmOn ? pk.map(x => ({ nm: txt(x.name) || '', sec: txt(x.section) || '', mid: txt(x.machine_id), sk: !!x.skip, h: txt(x.hint) })) : [];
+    db.lv = {}; (Array.isArray(pv) ? pv : []).forEach(x => { db.lv[x.level] = { t: txt(x.title) || '', ck: arr(x.checklist).map(txt).filter(Boolean) }; });
+    db.sbr = new Map(db.sched.filter(x => x.rid != null).map(x => [x.rid, x]));
+  }
   db.machines = m.map(x => ({ id: String(x.id), n: txt(x.name) || '', d: txt(x.dept) || '', sn: txt(x.serial), md: txt(x.model), lc: txt(x.location), ins: txt(x.installed), nt: txt(x.notes) }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: String(x.emp), nm: txt(x.name) || '', st: x.status == 'approved' ? 'approved' : 'pending', r: x.role == 'sup' ? 'sup' : 'tech' }));
   db.depts = dpt.map(x => txt(x.name)).filter(Boolean);
@@ -966,7 +1029,7 @@ async function load(full) {
   else if (!me || !(me.r == 'admin' || me.r == 'deptadmin')) db.staff = [];
   db.custom = Object.fromEntries(c.map(x => [String(x.k), { m: txt(x.machine_id), l: txt(x.label) || '', n: Number(x.n) || 0 }]));
   db.plans = pp.map(x => ({ id: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), t: txt(x.title) || '', iv: Number(x.interval_days) || 1, pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), ck: arr(x.checklist).map(txt).filter(Boolean), nd: dts(x.next_due) || '1970-01-01', ac: !!x.active, ld: dts(x.last_done) }));
-  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]);
+  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]) + pmSig;
   const changed = n > 0 || sig !== smallSig;
   smallSig = sig;
   return changed;
@@ -1305,7 +1368,15 @@ async function ensureEnglish(list, force, opt = {}) {
   return list.reduce((a, r) => a + (dOpen(r) && !trBad.has('d' + r.id) ? 1 : 0) + (aOpen2(r) && !trBad.has('a' + r.id) ? 1 : 0), 0) + [...strs].filter(t => !trStr.has(t) && !trBad.has(t)).length + trBadN;
 }
 // the English text of a request (translated and saved earlier, or translated in this session); the original when there is none
-const descOut = r => (lang == 'en' ? r.de || trCache[r.id] : '') || r.ds || '';
+// a task made from the master plan shows its text in the language of the page: "<type of maintenance> - week N"
+const pmDs = r => {
+  if (r.k != 'pm') return '';
+  const x = db.sbr.get(r.id); if (!x) return '';
+  const v = db.lv[x.l], t = !v ? x.l : v.t == LV_DEF[x.l] ? tr('pmL_' + x.l) : v.t;
+  return t + (x.w ? ' - ' + tr('pmWkN') + ' ' + x.w : '');
+};
+const dsOf = r => pmDs(r) || r.ds;
+const descOut = r => pmDs(r) || (lang == 'en' ? r.de || trCache[r.id] : '') || r.ds || '';
 const actOut = r => (lang == 'en' ? r.ae || trAc[r.id] : '') || r.ac || '';
 // any other typed text (custom problem types, parts, checklist notes ...): English in an English file when it was translated
 const enx = t => { if (lang != 'en' || !t || !hasAr(t)) return t; return trStr.get(t) || trStr.get(String(t).trim()) || t; };
@@ -1331,7 +1402,7 @@ async function sendReq(e) {
 const maintSide = () => !!me && ['technician', 'supervisor', 'admin', 'workshop'].includes(me.r);
 const descBlock = r => {
   const en = r.de || trCache[r.id] || '', showEn = maintSide() || lang == 'en';
-  if (!showEn || !en) return `<p class="text-sm bg-gray-50 rounded p-2 my-2" dir="auto">${esc(r.ds)}${showEn && r.k != 'pm' && hasAr(r.ds) ? ` <button type="button" onclick="trNow(${r.id})" class="np text-xs text-teal-700 font-semibold">${tr('trBtn')}</button>` : ''}</p>`;
+  if (!showEn || !en) return `<p class="text-sm bg-gray-50 rounded p-2 my-2" dir="auto">${esc(dsOf(r))}${showEn && r.k != 'pm' && hasAr(r.ds) ? ` <button type="button" onclick="trNow(${r.id})" class="np text-xs text-teal-700 font-semibold">${tr('trBtn')}</button>` : ''}</p>`;
   return `<div class="text-sm bg-gray-50 rounded p-2 my-2"><p dir="auto">${esc(en)}</p><p class="text-xs text-gray-500 mt-1 border-t pt-1" dir="auto">${tr('origText')}: ${esc(r.ds)}</p></div>`;
 };
 const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${esc(r.mn)}${r.no ? ` <span class="text-xs font-normal text-gray-400">${tr('reqNo')} ${r.no}</span>` : ''}</b><span class="flex gap-1">${r.k == 'pm' ? `<span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-bold">🗓 PM</span>` : ''}<span class="text-xs px-2 py-1 rounded-full ${pcol[r.pr]}">${tr(r.pr)}</span></span></div>
@@ -1345,7 +1416,7 @@ const pmDue = r => (r.ra || '').slice(0, 10);
 const dayDiff = (a, b) => Math.round((new Date(a) - new Date(b)) / 864e5);
 function pmState() {
   const td = ymd(new Date()), op = db.requests.filter(r => r.k == 'pm' && r.s != 'done');
-  const items = op.map(r => ({ due: pmDue(r), mn: r.mn, t: r.ds, mid: r.mid, s: r.s }))
+  const items = op.map(r => ({ due: pmDue(r), mn: r.mn, t: dsOf(r), mid: r.mid, s: r.s }))
     .concat((db.plans || []).filter(p => p.ac && !op.some(r => r.pl == p.id)).map(p => ({ due: p.nd, mn: p.mn, t: p.t, mid: p.mid, s: 'plan' })))
     .sort((a, b) => a.due.localeCompare(b.due));
   items.forEach(x => { x.d = dayDiff(x.due, td); });
@@ -1358,7 +1429,7 @@ function pmAlerts() {
   return out;
 }
 const pmBanner = () => { const o = pmAlerts(); return o.length ? `<div class="np flex flex-wrap gap-2 mb-4 text-sm">${o.map(x => `<span class="bg-blue-50 border border-blue-300 text-blue-900 rounded-lg px-3 py-1">${x}</span>`).join('')}</div>` : ''; };
-const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${actHtml(r)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}${r.k != 'pm' && (r.mp || r.bc) ? `<div><b>${tr('mpart')}:</b> ${esc(r.mp || '—')}${r.bc ? ' · ' + tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''}</div>` : ''}${ckRes(r)}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${stopTxt(r.s2)}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.q ? ' ×' + p.q : '') + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
+const done = r => `<div class="text-sm mt-2 border-t pt-2 space-y-1"><div><b>${tr('action')}:</b> ${actHtml(r)}</div>${r.rc ? `<div><b>${tr('rootCause')}:</b> ${esc(rl(r.rc))}</div>` : ''}${r.k != 'pm' && (r.mp || r.bc) ? `<div><b>${tr('mpart')}:</b> ${esc(r.mp || '—')}${r.bc ? ' · ' + tr({ Electrical: 'bdElec', Mechanical: 'bdMech', 'E&M': 'bdEM' }[r.bc]) : ''}</div>` : ''}${ckRes(r)}<div>${tr('clean')} ${tr(r.cl == 'Yes' ? 'yes' : 'no')} · ${tr('stopped')} ${stopTxt(r.s2)}${r.ta && r.fa ? ` · ${tr('repTime')}: <bdi dir="ltr">${hm(mins(r.ta, r.fa))}</bdi>` : ''}</div>${r.sp.length ? `<div><b>${tr('parts2')}:</b> ${r.sp.map(p => esc(p.n) + (p.q ? ' ×' + p.q : '') + (p.p ? ' (' + esc(p.p) + ')' : '')).join(', ')}</div>` : ''}</div>`;
 
 // repair history of the same machine, shown under a request the technician / supervisor has taken
 function hist(r) {
@@ -1482,7 +1553,7 @@ ${bd ? `<div class="grid grid-cols-2 gap-2"><div><label class="text-sm font-semi
 <div><label class="text-sm font-semibold">${tr('ptype')} *</label><select id="tt${r.id}" required onchange="$('tto${r.id}').classList.toggle('hidden',this.value!='other')">${typeOptsT(r.mid, r.pt)}</select><input id="tto${r.id}" class="hidden mt-1" placeholder="${tr('otherType')}"></div>
 <div><label class="text-sm font-semibold">${tr('bdClass')} *</label><select id="tc${r.id}" required>${bcOpts(r.bc || bcOf(r.pt))}</select></div>
 <div><label class="text-sm font-semibold">${tr('mpart')} *</label><select id="tm${r.id}" required onchange="partMore(this)">${partOpts(r.mn, r.d, r.mp, true)}</select></div></div>` : ''}
-<label class="text-sm font-semibold">${tr('takenAt')}</label><input type="datetime-local" id="ta${r.id}" value="${now()}" required>
+<label class="text-sm font-semibold">${tr('takenAt')}</label><input type="datetime-local" id="ta${r.id}" value="${now()}" max="${now()}" onfocus="this.max=now()" required>
 <div id="tw${r.id}" class="border rounded-lg p-2 text-sm space-y-1"><div class="font-semibold">${tr('withMe')}</div>${db.techs.filter(t => t.st == 'approved' && t.e != me.e).map(t => `<label class="flex items-center gap-2"><input type="checkbox" value="${esc(t.e)}"> ${who(t.e)}</label>`).join('') || `<span class="text-gray-500">${tr('none')}</span>`}</div>
 <button class="${btn}">${tr('take')}</button></form>`; };
 const ckForm = r => (r.ck || []).length ? `<div class="border rounded-lg p-2 space-y-2"><div class="font-bold text-teal-800 text-sm">☑ ${tr('ckTitle')}</div>${r.ck.map((c, i) => `<div class="text-sm"><div class="font-semibold">${i + 1}. ${esc(c.t)}</div><div class="grid grid-cols-3 gap-2 mt-1"><select id="ck${r.id}_${i}"><option value="">—</option><option value="ok">✅ ${tr('ckOk')}</option><option value="bad">⚠ ${tr('ckBad')}</option><option value="na">${tr('ckNa')}</option></select><input id="cn${r.id}_${i}" class="col-span-2" placeholder="${tr('ckNote')}"></div></div>`).join('')}</div>` : '';
@@ -1494,11 +1565,12 @@ ${bd ? `<div class="grid grid-cols-2 gap-2"><div><label class="text-sm font-semi
 <label class="text-sm font-semibold">${tr('parts')}</label><select id="sp${r.id}" onchange="pchg(${r.id},this.value)">${yn()}</select>
 <div id="pb${r.id}" class="hidden space-y-2"><div id="pl${r.id}" class="space-y-2"></div><button type="button" class="text-teal-700 font-semibold" onclick="addPart(${r.id})">+ ${tr('addPart')}</button></div>
 ${r.k == 'pm' ? ckForm(r) : `<label class="text-sm font-semibold">${tr('rootCause')} *</label><select id="rc${r.id}" required onchange="$('rco${r.id}').classList.toggle('hidden',this.value!='other')">${rcOpts('')}</select><input id="rco${r.id}" class="hidden" placeholder="${tr('rcTypeIt')}">`}
-<label class="text-sm font-semibold">${tr('finishedAt')}</label><input type="datetime-local" id="fa${r.id}" value="${now()}" required>
+<label class="text-sm font-semibold">${tr('finishedAt')}</label><input type="datetime-local" id="fa${r.id}" value="${now()}" max="${now()}" onfocus="this.max=now()" required>
 <button class="w-full bg-green-700 text-white font-bold py-3 rounded-lg">${tr('close')}</button></form>`; };
 async function take(e, id) {
   e.preventDefault();
   const r = db.requests.find(x => x.id == id), bd = !!r && r.k != 'pm';
+  if (futureT($('ta' + id).value)) return alert(tr('futureT'));
   try {
     const crew = [...document.querySelectorAll('#tw' + id + ' input:checked')].map(i => i.value);
     const base = { status: 'prog', taken_by: me.e, taken_at: $('ta' + id).value, companions: crew }, body = { ...base };
@@ -1535,6 +1607,7 @@ function addPart(id) {
 async function fin(e, id) {
   e.preventDefault();
   const r = db.requests.find(x => x.id == id), fa = $('fa' + id).value;
+  if (futureT(fa)) return alert(tr('futureT'));
   if (fa < r.ta) return alert(tr('dateErr'));
   const sp = $('sp' + id).value == 'Yes' ? [...$('pl' + id).querySelectorAll('.pr')].map(d => { const i = d.querySelectorAll('input'); return { n: i[0].value.trim(), p: i[1].value.trim(), q: Math.max(1, Math.min(9999, parseInt(i[2].value, 10) || 1)) }; }).filter(x => x.n || x.p) : [];
   let rc = null, ck = null, bd = {};
@@ -1655,7 +1728,7 @@ const secOf = r => bdSec(r.mn, r.d) || r.d || '';
 const nmOf = e => { const t = db.techs.find(x => x.e == e); return t && t.nm ? t.nm : '#' + e; };
 const bdRow = r => {
   const l = [r.ts, ...cw(r)].filter(Boolean).map(nmOf);
-  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), enx(r.mp) || '', lang == 'en' ? enx(descOut(r)) : r.de || r.ds || '', l[0] || '', l[1] || '', l.slice(2).join(', '), lang == 'en' ? enx(actOut(r)) : r.ac || '',
+  return [r.no, secOf(r), r.mn, r.bc || bcOf(r.pt), enx(r.mp) || '', lang == 'en' ? enx(descOut(r)) : r.de || dsOf(r) || '', l[0] || '', l[1] || '', l.slice(2).join(', '), lang == 'en' ? enx(actOut(r)) : r.ac || '',
     (r.sp || []).length ? r.sp.map(p => enx(p.n) + (p.q ? '-' + p.q : '') + (p.p ? ' (' + p.p + ')' : '')).join(',') : 'Nil',
     ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2 || r.st] || '', r.ra, r.ta, r.fa, mins(r.ta, r.fa), mins(r.ra, r.ta)];
 };
@@ -1756,37 +1829,35 @@ async function exportAll(btn) {
   finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
 }
 function backupBook(now) {
-  const bk = XW.Book(false), dt = XW.date, toc = [];
-  const stf = e => { if (!e) return ''; const t = db.techs.find(x => x.e == e); return (t && t.nm ? t.nm + ' ' : '') + '#' + e; };
-  const table = (name, note, cols, rows) => { const sh = xlTable(bk, name, cols, rows); toc.push([sh.name, rows.length, note]); return sh; };
-  const info = bk.sheet('Info', { grid: false, tab: XC.dark });
+  const bk = XW.Book(false), dt = XW.date;
+  const stf = e => { if (!e) return ''; const t = db.techs.find(x => x.e == e); return t && t.nm ? t.nm : '#' + e; };   // the name; the number only when there is no name
+  const table = (name, note, cols, rows) => xlTable(bk, name, cols, rows);
   const reqs = db.requests.slice().sort((a, b) => a.id - b.id), closed = reqs.filter(r => r.k != 'pm' && r.s == 'done');
-  const cnt = {}; reqs.forEach(r => { cnt[r.mid] = (cnt[r.mid] || 0) + 1; });
   const yn = v => v == 'Yes' ? 'Yes' : v == 'No' ? 'No' : '';
   const day = v => v ? { v: dt(v), s: { nf: 'yyyy-mm-dd', h: 'center' } } : '';
 
   // every request: open, in progress and closed; breakdowns and preventive tasks
   table('Requests (all)', 'Every request with all its details: breakdowns and preventive tasks, open and closed', [
     { h: 'ID', w: 8, t: 'int' }, { h: 'Type', w: 12, t: 'mid' }, { h: 'Status', w: 12, t: 'mid' }, { h: 'Machine ID', w: 11 }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Problem type', w: 18 }, { h: 'Priority', w: 10, t: 'mid' },
-    { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 52, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' }, { h: 'Saved on server', w: 18, t: 'date' }, { h: 'Released by section head', w: 18, t: 'date' },
-    { h: 'Taken by', w: 20 }, { h: 'With him', w: 22, t: 'wrap' }, { h: 'Taken at', w: 18, t: 'date' }, { h: 'Finished at', w: 18, t: 'date' }, { h: 'Repair (min)', w: 11, t: 'int' }, { h: 'Response (min)', w: 11, t: 'int' },
-    { h: 'Action(s) taken', w: 52, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
-    { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' }, { h: 'Plan ID', w: 9, t: 'int' },
+    { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 52, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' },
+    { h: 'Taken by', w: 20 }, { h: 'With him', w: 22, t: 'wrap' }, { h: 'Taken at', w: 18, t: 'date' }, { h: 'Finished at', w: 18, t: 'date' }, { h: 'Repair time (hours)', w: 12, t: 'dec2' }, { h: 'Response time (hours)', w: 12, t: 'dec2' },
+    { h: 'Action(s) taken', w: 52, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
+    { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' },
     { h: 'Approval', w: 12, t: 'mid' }, { h: 'Approved / sent back by', w: 20 }, { h: 'Approval date', w: 18, t: 'date' }, { h: 'Approval note', w: 40, t: 'wrap' }, { h: 'Re-opened from request', w: 12, t: 'int' }
   ], reqs.map(r => [
     r.no, r.k == 'pm' ? 'Preventive' : 'Breakdown', r.s == 'done' ? 'Closed' : r.s == 'open' ? 'Open' : 'In progress', r.mid, r.mn, r.d, enx(tl(r.pt)), tr(r.pr),
-    yn(r.st), enx(descOut(r)), r.by, dt(r.ra), dt(r.cr), dt(r.ap),
-    stf(r.ts), cw(r).map(stf).join(', '), dt(r.ta), dt(r.fa), mins(r.ta, r.fa) ?? '', mins(r.ra, r.ta) ?? '',
-    enx(actOut(r)), enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', enx(r.mp) || '',
+    yn(r.st), enx(descOut(r)), r.by, dt(r.ra),
+    stf(r.ts), cw(r).map(stf).join(', '), dt(r.ta), dt(r.fa), fh(mins(r.ta, r.fa)), fh(mins(r.ra, r.ta)),
+    enx(actOut(r)), enx(rl(r.rc)), yn(r.cl), r.bc || '', enx(r.mp) || '',
     (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
-    (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '), r.pl == null ? '' : r.pl,
+    (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '),
     r.ok ? ({ pending: 'Waiting', approved: 'Approved', rejected: 'Sent back' })[r.ok] : '', r.okn || '', dt(r.oka), enx(r.okt || ''), r.rf == null ? '' : r.rf
   ]));
 
   // the breakdown log: one sheet per month, exactly the layout of the workbook's "Breakdowns (JAN)" sheet
   const by = {}; closed.forEach(r => { const k = r.ra.slice(0, 7); (by[k] = by[k] || []).push(r); });
   const ks = Object.keys(by).sort(), multi = new Set(ks.map(k => k.slice(0, 4))).size > 1;
-  ks.forEach(k => { const sh = bdSheet(bk, 'Breakdowns (' + MON[+k.slice(5) - 1] + (multi ? ' ' + k.slice(0, 4) : '') + ')', by[k].sort(bdSort), true); toc.push([sh.name, by[k].length, 'Closed breakdowns of ' + MON[+k.slice(5) - 1] + ' ' + k.slice(0, 4) + ', same columns as the workbook']); });
+  ks.forEach(k => bdSheet(bk, 'Breakdowns (' + MON[+k.slice(5) - 1] + (multi ? ' ' + k.slice(0, 4) : '') + ')', by[k].sort(bdSort), true));
 
   // spare parts: one row per part used
   const parts = []; reqs.forEach(r => (r.sp || []).forEach(p => parts.push([r.no, dt(r.fa || r.ra), r.mn, r.d, enx(p.n), p.p, p.q == null ? '' : p.q])));
@@ -1795,20 +1866,15 @@ function backupBook(now) {
   table('Spare parts life', 'Average life of a spare part: the time between two replacements of the same part on the same machine', [{ h: 'Machine', w: 24 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Times replaced', w: 14, t: 'int' }, { h: 'Average life (days)', w: 18, t: 'int' }, { h: 'Last replaced', w: 18, t: 'date' }],
     partLife().map(x => [x.m, enx(x.n), x.p, x.c, Math.round(x.avg), dt(x.last)]));
 
-  table('Machines', 'Every machine with its section, details and number of requests', [
-    { h: 'ID', w: 8 }, { h: 'Machine', w: 24 }, { h: 'Section', w: 18 }, { h: 'Serial no.', w: 16 }, { h: 'Model', w: 16 }, { h: 'Location', w: 16 }, { h: 'Installed', w: 14 }, { h: 'Notes', w: 34, t: 'wrap' }, { h: 'Requests', w: 10, t: 'int' }
-  ], db.machines.map(m => [m.id, m.n, m.d || bdSec(m.n, m.d), m.sn || '', enx(m.md) || '', enx(m.lc) || '', m.ins || '', enx(m.nt) || '', cnt[m.id] || 0]));
-
-  table('Sections', 'The sections (departments) and how many machines each has', [{ h: 'Section', w: 24 }, { h: 'Machines', w: 11, t: 'int' }],
-    [...new Set([...db.depts, ...db.machines.map(m => m.d).filter(Boolean)])].sort().map(d => [d, db.machines.filter(m => m.d == d).length]));
-
   table('Preventive plans', 'The preventive maintenance plans with their checklists and next due dates', [
-    { h: 'Plan ID', w: 9, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Task', w: 28 }, { h: 'Every (days)', w: 11, t: 'int' }, { h: 'Priority', w: 10, t: 'mid' }, { h: 'Checklist', w: 50, t: 'wrap' }, { h: 'Next due', w: 12, t: 'mid' }, { h: 'Last done', w: 12, t: 'mid' }, { h: 'Active', w: 8, t: 'mid' }
-  ], db.plans.map(p => [p.id, p.mn, p.d || '', enx(p.t), p.iv, tr(p.pr), p.ck.map(enx).join(' | '), day(p.nd), day(p.ld), p.ac ? 'Yes' : 'No']));
+    { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Task', w: 28 }, { h: 'Every (days)', w: 11, t: 'int' }, { h: 'Priority', w: 10, t: 'mid' }, { h: 'Checklist', w: 50, t: 'wrap' }, { h: 'Next due', w: 12, t: 'mid' }, { h: 'Last done', w: 12, t: 'mid' }, { h: 'Active', w: 8, t: 'mid' }
+  ], db.plans.map(p => [p.mn, p.d || '', enx(p.t), p.iv, tr(p.pr), p.ck.map(enx).join(' | '), day(p.nd), day(p.ld), p.ac ? 'Yes' : 'No']));
 
-  const RO = { op: 'Operator', tech: 'Technician', sup: 'Supervisor', dadm: 'Section head' };
-  table('Staff', 'Employees and their roles (no passwords)', [{ h: 'Employee no.', w: 13 }, { h: 'Name', w: 26 }, { h: 'Role', w: 16, t: 'mid' }, { h: 'Status', w: 11, t: 'mid' }, { h: 'Section', w: 18 }],
-    (db.staff.length ? db.staff : db.techs).map(t => [t.e, t.nm, RO[t.r] || t.r, t.st == 'approved' ? 'Approved' : 'Waiting', t.d || '']));
+  if (db.pmOn && db.sched.length) {
+    const SN = { planned: 'Planned', registered: 'Registered (task made)', done: 'Done', past: 'Past (not registered)', skipped: 'Skipped' };
+    table('Master plan', 'The yearly preventive maintenance master plan: every planned maintenance of every machine with its state', [{ h: 'Section', w: 16 }, { h: 'Machine (plan)', w: 24 }, { h: 'Machine (site)', w: 22 }, { h: 'Type', w: 8, t: 'mid' }, { h: 'Week', w: 8, t: 'int' }, { h: 'Due date', w: 12, t: 'mid' }, { h: 'State', w: 22, t: 'mid' }, { h: 'Request ID', w: 11, t: 'int' }, { h: 'Done on', w: 12, t: 'mid' }],
+      db.sched.slice().sort((a, b) => a.d.localeCompare(b.d) || a.nm.localeCompare(b.nm)).map(x => { const k = db.link.find(l => l.nm == x.nm) || {}, mc = k.mid ? db.machines.find(q => q.id == k.mid) : null; return [k.sec || '', x.nm, mc ? mc.n : '', x.l, pmWk(x.d), day(x.d), SN[x.s] || x.s, x.rid == null ? '' : x.rid, x.da ? day(x.da.slice(0, 10)) : '']; }));
+  }
 
   const cu = Object.entries(db.custom);
   if (cu.length) table('Problem types added', 'Problem types typed by operators that were added to the lists', [{ h: 'Machine', w: 24 }, { h: 'Problem type', w: 30 }, { h: 'Times', w: 8, t: 'int' }],
@@ -1818,17 +1884,9 @@ function backupBook(now) {
   if (db.notes.length) {
     const KN = { done: 'Fixed this shift', watch: 'Watch', info: 'Info' };
     table('Shift notes', 'Handover notes written by technicians and supervisors (kept 90 days)', [{ h: 'ID', w: 8, t: 'int' }, { h: 'Written at', w: 18, t: 'date' }, { h: 'Request ID', w: 11, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Type', w: 16, t: 'mid' }, { h: 'Note', w: 56, t: 'wrap' }, { h: 'By', w: 24 }],
-      db.notes.slice().sort((a, b) => a.id - b.id).map(n => { const r = n.rid == null ? null : db.requests.find(x => x.id == n.rid); return [n.id, dt(n.at), n.rid == null ? '' : n.rid, r ? r.mn : '', KN[n.k] || n.k, enx(n.t), (n.n ? n.n + ' ' : '') + (n.e ? '#' + n.e : '')]; }));
+      db.notes.slice().sort((a, b) => a.id - b.id).map(n => { const r = n.rid == null ? null : db.requests.find(x => x.id == n.rid); return [n.id, dt(n.at), n.rid == null ? '' : n.rid, r ? r.mn : '', KN[n.k] || n.k, enx(n.t), n.n || (n.e ? '#' + n.e : '')]; }));
   }
 
-  // the first sheet: what is inside
-  const O = { bd: XC.line, v: 'center' };
-  info.widths[0] = 24; info.widths[1] = 10; info.widths[2] = 86;
-  info.merge(0, 0, 0, 2, 'Napco Maintenance — full data backup', { b: 1, sz: 16, c: 'FFFFFF', bg: XC.dark, h: 'center', v: 'center' }); info.heights[0] = 36;
-  [['Created', loc(now).replace('T', ' ')], ['All requests', reqs.length], ['Closed breakdowns', closed.length], ['Machines', db.machines.length]].forEach(([k, v], i) => { info.set(2 + i, 0, k, { b: 1 }); info.set(2 + i, 1, v, { h: 'left' }); });
-  info.set(6, 0, 'Passwords and secret keys are never included in this file.', { i: 1, c: XC.mute });
-  ['Sheet', 'Rows', 'What it holds'].forEach((h, i) => info.set(8, i, h, XHEAD));
-  toc.forEach(([n, c, d], i) => { info.set(9 + i, 0, n, { ...O, b: 1 }); info.set(9 + i, 1, c, { ...O, h: 'center' }); info.set(9 + i, 2, d, O); });
   return bk;
 }
 function aPrevPm() {
@@ -1949,7 +2007,7 @@ function calc(fl) {
   const inP = fl ? fl.inP : s => sfRange() ? ((s || '').slice(0, 10) >= (sf.from || '') && (!sf.to || (s || '').slice(0, 10) <= sf.to)) : (period == 'all' || (s || '').startsWith(period));
   const okR = fl ? fl.okR : r => (!sf.d || r.d == sf.d) && (!sf.m || String(r.mid) == sf.m);
   const rs = db.requests.filter(r => r.k != 'pm' && inP(r.ra) && okR(r));
-  const G = {}, M = {}, SN = {}, P = {}, PM = {}, T = {}, RCc = {};
+  const G = {}, M = {}, SN = {}, P = {}, T = {}, RCc = {};
   rs.forEach(r => (G[r.mid] = G[r.mid] || []).push(r));
   Object.entries(G).forEach(([id, l]) => { M[id] = { n: l[0].mn, d: l[0].d, ...mst(l) }; });
   db.requests.filter(r => r.s != 'done' && r.st == 'Yes').forEach(r => { if (!SN[r.mid] || r.ra < SN[r.mid]) SN[r.mid] = r.ra; });
@@ -1958,8 +2016,6 @@ function calc(fl) {
     (r.sp || []).forEach(x => {
       const k = (x.n + '|' + x.p).toLowerCase(), o = P[k] = P[k] || { n: x.n, p: x.p, c: 0, m: new Set() };
       o.c++; o.m.add(r.mn);
-      const mo = r.fa.slice(0, 7), k2 = mo + '|' + r.mn + '|' + k, q = PM[k2] = PM[k2] || { mo, m: r.mn, n: x.n, p: x.p, c: 0 };
-      q.c++;
     });
   });
   db.requests.filter(r => r.ts && inP(r.ta) && okR(r)).forEach(r => {
@@ -1973,7 +2029,7 @@ function calc(fl) {
   const stopped = {}; db.requests.filter(r => r.k != 'pm' && r.s != 'done' && r.st == 'Yes').forEach(r => { stopped[r.mid] = dk(r.d); });
   Object.values(stopped).forEach(k => { dz(k).now++; });
   const all = Object.values(M);
-  return { rs, M, SN, P, PM, T, D, RC: RCc, mttr: av([].concat(...all.map(m => m.rep))), mtbf: av([].concat(...all.map(m => m.gap))) };
+  return { rs, M, SN, P, T, D, RC: RCc, mttr: av([].concat(...all.map(m => m.rep))), mtbf: av([].concat(...all.map(m => m.gap))) };
 }
 function openM(id) { mview = id; medit = false; render(); window.scrollTo(0, 0); }
 function goM(id) { tab = 'stats'; openM(id); }
@@ -2111,7 +2167,6 @@ function aStats() {
   const ps = new Set(); db.requests.forEach(r => { ps.add(r.ra.slice(0, 4)); ps.add(r.ra.slice(0, 7)); });
   const ms = Object.entries(S.M).sort((a, b) => b[1].c - a[1].c);
   const pt = Object.values(S.P).sort((a, b) => b.c - a.c);
-  const pm = Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo) || b.c - a.c);
   const tk = Object.entries(S.T), rcs = Object.entries(S.RC).sort((a, b) => b[1] - a[1]);
   const none = `<p class="text-gray-500">${tr('none')}</p>`;
   const th = k => `<th class="p-2 text-start">${tr(k)}</th>`;
@@ -2121,7 +2176,6 @@ function aStats() {
     + box(tr('deptTable'), `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('dept')}${th('dMach')}${th('dNow')}${th('total')}${th('stops')}${th('dHrs')}</tr></thead><tbody>${ds.sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => `<tr class="border-b"><td class="p-2 font-semibold">${esc(k)}</td><td class="p-2 font-bold text-orange-600">${o.m}</td><td class="p-2 ${o.now ? 'font-bold text-red-600' : ''}">${o.now}</td><td class="p-2">${o.c}</td><td class="p-2">${o.s}</td><td class="p-2 font-bold text-red-600">${hrs(o)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-3">${tr('deptNote')}</p>`)
     : box(tr('deptMach'), none);
   const ptab = `<div class="overflow-x-auto mt-4"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('partName')}${th('partNo')}${th('timesUsed')}${th('usedIn')}</tr></thead><tbody>${pt.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(enx(x.n))}</td><td class="p-2 font-mono text-xs">${esc(x.p)}</td><td class="p-2 font-bold text-blue-700">${x.c}</td><td class="p-2 text-gray-500">${[...x.m].map(esc).join(', ')}</td></tr>`).join('')}</tbody></table></div>`;
-  const pmtab = `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b">${th('month')}${th('machine')}${th('partName')}${th('timesUsed')}</tr></thead><tbody>${pm.map(x => `<tr class="border-b"><td class="p-2">${esc(x.mo)}</td><td class="p-2">${esc(x.m)}</td><td class="p-2">${esc(enx(x.n))}${x.p ? ' <span class="font-mono text-xs text-gray-500">(' + esc(x.p) + ')</span>' : ''}</td><td class="p-2 font-bold text-blue-700">${x.c}</td></tr>`).join('')}</tbody></table></div>`;
   const mcards = ms.map(([id, m], i) => `<div class="bg-white rounded-xl shadow p-4 cursor-pointer" onclick="openM(${js(id)})"><div class="flex justify-between gap-3"><div><span class="text-xs text-gray-400">#${i + 1}</span><div class="font-bold text-lg">${esc(m.n)}</div><div class="text-sm text-gray-500">${esc(m.d)}</div></div><div class="text-center"><div class="text-3xl font-bold text-orange-600">${m.c}</div><div class="text-xs text-gray-500">${tr('total')}</div></div></div>
 <div class="text-sm text-red-700 mt-2">${tr('stops')}: <b>${m.s}</b> · ${tr('stopDur')}: <b>${dhm(m.dt)}</b></div>
 <div class="text-xs text-gray-500 mt-1">${tr('lastFault')}: ${fd(m.last)}</div>
@@ -2145,7 +2199,6 @@ ${box(tr('topMach'), ms.length ? bars(ms.slice(0, 8).map(([, m]) => [m.n, m.c]),
 ${box(tr('topRC'), rcs.length ? bars(rcs.slice(0, 8).map(([k, v]) => [rl(k), v]), 'bg-purple-600') : none)}
 ${box(tr('topParts'), pt.length ? bars(pt.slice(0, 8).map(x => [enx(x.n) + (x.p ? ' (' + x.p + ')' : ''), x.c]), 'bg-blue-600') + ptab : none)}
 ${box(tr('lifeT'), (() => { const l = partLife(); return l.length ? lifeTable(l, true) : `<p class="text-gray-500">${tr('lifeNote')}</p>`; })())}
-${box(tr('partsByMonth'), pm.length ? pmtab : none)}
 ${me.r == 'admin' ? box(tr('statsTech'), techs) : ''}</div>`;
 }
 async function exportXl() {
@@ -2157,9 +2210,9 @@ async function exportXl() {
     if (S.rs.length) reqTable(bk, S.rs);
     const add = (n, cols, rows) => { if (rows.length) xlTable(bk, n, cols, rows); };
     add(tr('shMach'), [
-      { h: tr('machine'), w: 24 }, { h: tr('dept'), w: 16 }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('stopMin'), w: 14, t: 'int' },
-      { h: tr('mttr') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('mtbf') + ' (' + tr('min') + ')', w: 18, t: 'int' }, { h: tr('lastFault'), w: 18, t: 'date' }, { h: tr('ptype'), w: 40, t: 'wrap' }
-    ], Object.values(S.M).sort((a, b) => b.c - a.c).map(m => [m.n, m.d, m.c, m.s, Math.round(m.dt), m.mttr == null ? '' : Math.round(m.mttr), m.mtbf == null ? '' : Math.round(m.mtbf), XW.date(m.last), Object.entries(m.t).map(([k, v]) => enx(tl(k)) + ': ' + v).join(', ')]));
+      { h: tr('machine'), w: 24 }, { h: tr('dept'), w: 16 }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('stopMin'), w: 14, t: 'dec2' },
+      { h: tr('mttr') + ' (' + tr('hr') + ')', w: 18, t: 'dec2' }, { h: tr('mtbf') + ' (' + tr('hr') + ')', w: 18, t: 'dec2' }, { h: tr('lastFault'), w: 18, t: 'date' }, { h: tr('ptype'), w: 40, t: 'wrap' }
+    ], Object.values(S.M).sort((a, b) => b.c - a.c).map(m => [m.n, m.d, m.c, m.s, fh(m.dt), fh(m.mttr), fh(m.mtbf), XW.date(m.last), Object.entries(m.t).map(([k, v]) => enx(tl(k)) + ': ' + v).join(', ')]));
     add(tr('shDept'), [
       { h: tr('dept'), w: 22 }, { h: tr('dMach'), w: 14, t: 'int' }, { h: tr('dNow'), w: 14, t: 'int' }, { h: tr('total'), w: 11, t: 'int' }, { h: tr('stops'), w: 11, t: 'int' }, { h: tr('dHrs'), w: 14, t: 'dec' }
     ], Object.entries(S.D).sort((a, b) => b[1].dt - a[1].dt).map(([k, o]) => [k, o.m, { v: o.now, s: o.now ? { c: 'B91C1C', b: 1 } : {} }, o.c, o.s, Math.round(o.dt / 6) / 10]));
@@ -2169,12 +2222,9 @@ async function exportXl() {
     add(tr('shLife'), [
       { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('machine'), w: 24 }, { h: tr('replaced'), w: 14, t: 'int' }, { h: tr('lifeAvg') + ' (' + tr('days') + ')', w: 20, t: 'int' }, { h: tr('lastRepl'), w: 18, t: 'date' }
     ], partLife().map(x => [enx(x.n), x.p, x.m, x.c, Math.round(x.avg), XW.date(x.last)]));
-    add(tr('shPM'), [
-      { h: tr('month'), w: 12, t: 'mid' }, { h: tr('machine'), w: 24 }, { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('timesUsed'), w: 12, t: 'int' }
-    ], Object.values(S.PM).sort((a, b) => b.mo.localeCompare(a.mo)).map(x => [x.mo, x.m, enx(x.n), x.p, x.c]));
     if (me.r == 'admin') add(tr('shTech'), [
-      { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repMin'), w: 16, t: 'int' }
-    ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? Math.round(t.ms / t.d / 60000) : '']));
+      { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repHr'), w: 16, t: 'dec2' }
+    ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? fh(t.ms / t.d / 60000) : '']));
     await saveXl(bk, 'napco-' + (sfRange() ? (sf.from || 'start') + '_' + (sf.to || 'now') : period == 'all' ? 'all' : period) + (sf.m ? '-machine' : sf.d ? '-dept' : '') + '.xlsx');
     if (left) alert(trLeftMsg(left));
   } catch (err) { alert(tr('xlErr')); }
@@ -2261,6 +2311,120 @@ ${form}
 
 /* ---------- PREVENTIVE MAINTENANCE PLANS ---------- */
 function editPM(v) { pmEdit = v; render(); }
+/* ---------- PREVENTIVE MAINTENANCE MASTER PLAN (the yearly table) ---------- */
+let pmV = 'master', pmMon = null, pmSel = null, pmRel = null;
+const pmAdd = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+const pmWk = d => Math.floor((Date.parse(d + 'T12:00:00Z') - Date.parse(PM_W1 + 'T12:00:00Z')) / 864e5 / 7) + 1;
+const pmMonthOf = d => { const w = pmWk(d); return w < 1 || w > 52 ? -1 : PM_MST.filter(x => x <= w).length - 1; };
+const pmRange = i => [pmAdd(PM_W1, 7 * (PM_MST[i] - 1)), pmAdd(PM_W1, 7 * (PM_MST[i + 1] - 1) - 1)];
+const pmMN = i => new Date(Date.UTC(2026, i, 15)).toLocaleDateString(lang == 'ar' ? 'ar' : 'en', { month: 'long', timeZone: 'UTC' });
+const lvName = l => { const v = db.lv[l]; return !v ? l : v.t == LV_DEF[l] ? tr('pmL_' + l) : v.t; };
+const PM_ST = { planned: ['bg-white border', ''], registered: ['bg-blue-100 text-blue-800', '🗓'], done: ['bg-green-100 text-green-800', '✓'], past: ['bg-gray-100 text-gray-400', ''], skipped: ['bg-gray-100 text-gray-400 line-through', '⏭'] };
+// an admin call of the master plan: { ok, r }
+async function admT(fn, args) {
+  try { return { ok: true, r: await rpc(fn, { p_tok: me.h, ...args }) }; }
+  catch (e) {
+    if (isDenied(e)) { alert(tr('sessExp')); logout(); }
+    else if (noFn(e)) alert(tr('pmNoSched'));
+    else alert(/already registered/.test(String(e && e.message)) ? tr('pmRowBusy') : tr('netErr'));
+    return { ok: false, r: null };
+  }
+}
+function setPMV(k) { pmV = k; pmEdit = null; pmSel = null; render(); }
+function setPMon(i) { pmMon = i; pmSel = null; render(); }
+function pmPick(id) { pmSel = pmSel == id ? null : id; render(); }
+function pmRelink(nm) { pmRel = nm; render(); }
+function pmRowEd(x, isA) {
+  const r = x.rid == null ? null : db.requests.find(q => q.id == x.rid);
+  const info = `<div class="text-xs text-gray-600 mt-2" data-pm-info>${esc(lvName(x.l))} · ${tr('pmDue')}: <bdi dir="ltr">${esc(x.d)}</bdi> · ${tr('pmSt_' + x.s)}${r ? ' · #' + r.id + ' ' + tr(r.s == 'done' ? 'sDone' : r.s == 'open' ? 'sOpen' : 'sProg') : ''}${x.s == 'done' && x.da ? ' · ' + tr('finishedAt') + ': ' + fd(x.da) : ''}</div>`;
+  if (!isA || !['planned', 'skipped'].includes(x.s)) return info;
+  return info + `<div class="np flex flex-wrap gap-2 mt-2 items-end"><label class="text-xs">${tr('pmRowDate')}<input type="date" id="pmrd" value="${esc(x.d)}"></label><label class="text-xs">${tr('pmRowState')}<select id="pmrs"><option value="planned" ${x.s == 'planned' ? 'selected' : ''}>${tr('pmSt_planned')}</option><option value="skipped" ${x.s == 'skipped' ? 'selected' : ''}>${tr('pmSt_skipped')}</option></select></label><button onclick="pmRowSave(${x.id})" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">${tr('pmSave')}</button></div>`;
+}
+async function pmRowSave(id) {
+  const d = $('pmrd').value, st = $('pmrs').value;
+  if (!d) return;
+  const r = await admT('admin_pm_sched_set', { p_id: id, p_due: d, p_state: st });
+  if (r.ok) { pmSel = null; await refresh(); }
+}
+function pmMach(k, e, isA) {
+  const mn = k.mid ? (db.machines.find(m => m.id == k.mid) || {}).n : '';
+  const tag = k.sk ? `<span class="text-xs text-gray-500">💤 ${tr('pmIdle')}</span>` : k.mid ? `<span class="text-xs text-green-700" dir="auto">→ ${esc(mn || k.mid)}</span>` : `<span class="text-xs font-bold text-amber-700">⚠ ${tr('pmUnlinked')}</span>`;
+  const chip = x => `<button onclick="pmPick(${x.id})" title="${esc(tr('pmSt_' + x.s))}" data-sid="${x.id}" class="text-xs rounded-lg px-2 py-1 ${PM_ST[x.s][0]} ${pmSel == x.id ? 'ring-2 ring-teal-600' : ''}"><b>${x.l}</b> <bdi dir="ltr">W${pmWk(x.d)} · ${+x.d.slice(8)}/${+x.d.slice(5, 7)}</bdi> ${PM_ST[x.s][1]}</button>`;
+  const sel = e.find(x => x.id == pmSel);
+  return `<div class="bg-white rounded-xl shadow p-3 mb-2" data-pmn="${esc(k.nm)}"><div class="flex justify-between gap-2"><b>${esc(k.nm)}</b>${tag}</div>
+<div class="flex flex-wrap gap-1 mt-2">${e.map(chip).join('')}</div>${sel ? pmRowEd(sel, isA) : ''}${isA && k.mid ? `<button onclick="pmRelink(${js(k.nm)})" class="np text-xs text-teal-700 font-semibold mt-2">✏ ${tr('pmChange')}</button>` : ''}</div>`;
+}
+function pmUnlBox() {
+  const K = db.link, list = K.filter(k => (!k.mid && !k.sk) || k.nm == pmRel), idle = K.filter(k => k.sk && k.nm != pmRel);
+  if (!list.length && !idle.length) return '';
+  const mOpts = cur => `<option value="">${tr('pmChoose')}</option>` + db.machines.map(m => `<option value="${esc(m.id)}" ${String(cur) == String(m.id) ? 'selected' : ''}>${esc(m.n)}</option>`).join('');
+  const row = (k, i, canSkip) => {
+    const h = k.h && !k.mid ? db.machines.find(m => m.n == k.h) : null;
+    return `<div class="border rounded-lg p-2 mb-2 bg-white" data-unl="${esc(k.nm)}">
+<div class="flex justify-between gap-2"><b>${esc(k.nm)}</b><span class="text-xs text-gray-500">${esc(k.sec)}</span></div>
+${h ? `<button onclick="pmLinkTo(${js(k.nm)},${js(h.id)})" data-sug class="np text-xs bg-green-700 text-white rounded-lg px-2 py-1 mt-1">✓ ${tr('pmSuggest')}: ${esc(h.n)}</button>` : ''}
+<div class="np flex gap-2 mt-2"><select id="pml${i}" class="flex-1">${mOpts(k.mid)}</select><button onclick="pmLinkSel(${js(k.nm)},${i})" class="bg-teal-700 text-white px-3 rounded-lg text-sm">${tr('pmLink')}</button></div>
+<div class="np flex flex-wrap gap-3 mt-2 items-center text-xs">${db.depts.length ? `<select id="pmd${i}">${deptOpts(db.depts.includes(k.sec) ? k.sec : db.depts[0])}</select><button onclick="pmNewMach(${js(k.nm)},${i})" class="text-teal-700 font-semibold">+ ${tr('pmCreate')}</button>` : `<span class="text-gray-500">${tr('pmNoDept')}</span>`}${canSkip && !k.mid ? `<button onclick="pmSkip(${js(k.nm)})" class="text-gray-600 font-semibold">💤 ${tr('pmSkip')}</button>` : ''}${k.nm == pmRel ? `<button onclick="pmRelink(null)" class="text-gray-500 font-semibold">${tr('cancel')}</button>` : ''}</div></div>`;
+  };
+  return `<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-3 np" id="pmUnl">
+${list.length ? `<b class="text-amber-800">⚠ ${tr('pmUnlTitle')} (${list.length})</b><p class="text-xs text-gray-600 my-2">${tr('pmUnlHint')}</p>${list.map((k, i) => row(k, i, true)).join('')}` : ''}
+${idle.length ? `<details class="mt-2"><summary class="text-sm font-semibold cursor-pointer">💤 ${tr('pmIdleTitle')} (${idle.length})</summary><div class="mt-2">${idle.map((k, i) => row(k, list.length + i, false)).join('')}</div></details>` : ''}</div>`;
+}
+async function pmLinkTo(nm, mid) {
+  if (!mid) return;
+  pmRel = null;
+  const r = await admT('admin_pm_link', { p_name: nm, p_machine_id: String(mid) });
+  if (r.ok) { await refresh(); if (r.r > 0) alert(tr('pmRegDone') + ': ' + r.r); }
+}
+function pmLinkSel(nm, i) { const v = $('pml' + i).value; if (v) pmLinkTo(nm, v); }
+async function pmSkip(nm) {
+  if (!confirm(tr('pmSkipAsk'))) return;
+  const r = await admT('admin_pm_link', { p_name: nm, p_machine_id: null, p_skip: true });
+  if (r.ok) await refresh();
+}
+async function pmNewMach(nm, i) {
+  const d = $('pmd' + i).value, n = nm.replace(/[^A-Za-z0-9_؀-ۿ-]+/g, '_').replace(/^_+|_+$/g, '') || nm;
+  if (!d) return;
+  if (!db.machines.some(m => m.n.toLowerCase() == n.toLowerCase())) {
+    const a = await admT('admin_machine_add', { p_name: n, p_dept: d });
+    if (!a.ok) return;
+    await load();
+  }
+  const m = db.machines.find(q => q.n.toLowerCase() == n.toLowerCase());
+  if (m) await pmLinkTo(nm, m.id); else render();
+}
+async function pmRegister() {
+  const [a, b] = pmRange(+$('pmrm').value);
+  const r = await admT('admin_pm_register', { p_from: a, p_to: b });
+  if (r.ok) { await refresh(); alert(tr('pmRegDone') + ': ' + r.r); }
+}
+async function pmLvSave(l) {
+  const t = $('pmlt' + l).value.trim(), ck = $('pmlc' + l).value.split('\n').map(x => x.trim()).filter(Boolean);
+  if (!t) return;
+  const r = await admT('admin_pm_level_save', { p_level: l, p_title: t, p_checklist: ck });
+  if (r.ok) await refresh();
+}
+function pmMaster() {
+  const isA = me.r == 'admin', S = db.sched, K = db.link, td = ymd(new Date()), cur = pmMonthOf(td), mon = pmMon == null ? cur : pmMon;
+  const cnt = st => S.filter(x => x.s == st).length, unl = K.filter(k => !k.mid && !k.sk);
+  const tile = (n, l, c) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c || ''}">${n}</div><div class="text-xs text-gray-600">${tr(l)}</div></div>`;
+  const tiles = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" id="pmTiles">${tile(cnt('planned'), 'pmTPlanned')}${tile(cnt('registered'), 'pmTReg', 'text-blue-700')}${tile(cnt('done'), 'pmTDone', 'text-green-700')}${tile(unl.length, 'pmTUnl', unl.length ? 'text-amber-600' : '')}</div>`;
+  const cl = on => `px-2 py-1 rounded-lg text-xs font-bold ${on ? 'bg-teal-700 text-white' : 'bg-white border'}`;
+  const chips = `<div class="flex flex-wrap gap-1 mb-2 np" id="pmMons">${[...Array(12).keys()].map(i => `<button onclick="setPMon(${i})" data-mon="${i}" class="${cl(mon == i)}">${esc(pmMN(i))}${i == cur ? ' •' : ''}</button>`).join('')}<button onclick="setPMon(-1)" data-mon="-1" class="${cl(mon < 0)}">${tr('pmAll')}</button></div>`;
+  const inM = x => mon < 0 || pmMonthOf(x.d) == mon;
+  const secs = [...new Set(K.map(k => k.sec))].sort((a, b) => (PM_SEC.indexOf(a) + 1 || 99) - (PM_SEC.indexOf(b) + 1 || 99) || a.localeCompare(b));
+  const body = secs.map(sec => {
+    const rows = K.filter(k => k.sec == sec).map(k => ({ k, e: S.filter(x => x.nm == k.nm && inM(x)).sort((a, b) => a.d.localeCompare(b.d) || a.sq - b.sq) })).filter(x => x.e.length || (mon < 0 && x.k.sk));
+    return rows.length ? `<h3 class="font-bold text-teal-800 mt-4 mb-2">${esc(sec)}</h3><div class="cols2">${rows.map(x => pmMach(x.k, x.e, isA)).join('')}</div>` : '';
+  }).join('');
+  const regBox = `<details class="bg-white rounded-xl shadow p-3 mt-4 np" id="pmReg"><summary class="font-bold cursor-pointer">${tr('pmRegTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmRegAuto')}</p><div class="flex gap-2"><select id="pmrm" class="flex-1">${[...Array(12).keys()].map(i => `<option value="${i}" ${i == (cur < 0 ? 0 : cur) ? 'selected' : ''}>${esc(pmMN(i))}</option>`).join('')}</select><button onclick="pmRegister()" class="bg-teal-700 text-white px-3 rounded-lg text-sm">${tr('pmRegBtn')}</button></div></details>`;
+  const lvBox = `<details class="bg-white rounded-xl shadow p-3 mt-3 np" id="pmLv"><summary class="font-bold cursor-pointer">${tr('pmLvTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmLvHint')}</p>${PM_LV.filter(l => db.lv[l]).map(l => `<div class="border rounded-lg p-2 mt-2"><b>${l}</b><label class="block text-xs mt-1">${tr('pmLvName')}<input id="pmlt${l}" class="w-full" value="${esc(db.lv[l].t)}"></label><label class="block text-xs mt-1">${tr('planChecklist')}<textarea id="pmlc${l}" rows="6" class="w-full">${esc(db.lv[l].ck.join('\n'))}</textarea></label><button onclick="pmLvSave('${l}')" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm mt-2">${tr('pmSave')}</button></div>`).join('')}</details>`;
+  return tiles + (isA ? pmUnlBox() : '') + chips + `<p class="text-xs text-gray-500 mb-2">${tr('pmLegend')}</p>` + (body || `<p class="text-gray-500">${tr('pmNoEntries')}</p>`) + (isA ? regBox + lvBox : '');
+}
+function aPM() {
+  const sub = db.pmOn ? `<div class="flex gap-2 mb-3 np" id="pmSub">${[['master', 'pmMaster'], ['plans', 'pmIntervals']].map(([k, l]) => `<button onclick="setPMV('${k}')" data-pv="${k}" class="px-3 py-2 rounded-lg font-bold text-sm ${pmV == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>` : '';
+  return db.pmOn && pmV == 'master' ? sub + pmMaster() : sub + aPlans();
+}
 function pmForm(p) {
   const L2 = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
   return `<form onsubmit="savePM(event,${js(p ? p.id : '')})" class="bg-white rounded-xl shadow p-4 mb-3 space-y-2 border-2 border-teal-600"><b class="text-teal-800">${p ? '✏ ' + tr('edit') : '+ ' + tr('addPlan')}</b>
@@ -2272,7 +2436,7 @@ ${L2('planChecklist')}<textarea id="pmc" rows="5">${esc(p ? p.ck.join('\n') : ''
 <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="pma" ${!p || p.ac ? 'checked' : ''}> ${tr('planActive')}</label>
 <div class="flex gap-2"><button class="${btn}">${tr('savePlan')}</button><button type="button" onclick="editPM(null)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`;
 }
-function aPM() {
+function aPlans() {
   const isA = me.r == 'admin', pl = db.plans || [], td = ymd(new Date());
   const form = isA && pmEdit != null ? pmForm(pmEdit === 'new' ? null : pl.find(p => p.id == pmEdit)) : '';
   const items = pl.map(p => {
