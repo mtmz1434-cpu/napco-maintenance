@@ -77,9 +77,11 @@ regExists|تعذر التسجيل: الرقم مسجل مسبقاً أو غير 
 roleQ|من أنت؟|Who are you?
 operator|مشغّل|Operator
 technician|فني صيانة|Technician
-supervisor|مشرف|Supervisor
+supervisor|مشرف صيانة|Maintenance supervisor
+prodsup|مشرف إنتاج|Production supervisor
+supRoleHint|مشرف الصيانة يستلم ويغلق الطلبات ويشوف كل الأقسام (بدون اعتماد). مشرف الإنتاج يشوف قسمه فقط ويعتمد الإغلاق|The maintenance supervisor takes and closes requests and sees every section (no approval). The production supervisor sees his own section only and approves closures
 createPw|أنشئ كلمة مرور خاصة بك|Create your own password
-waiting|تم تسجيلك. بانتظار الموافقة (مشغل: رئيس قسمك، فني أو مشرف: أدمن الصيانة)|You are registered. Waiting for approval (operator: your section admin; technician or supervisor: the maintenance admin)
+waiting|تم تسجيلك. بانتظار الموافقة (مشغل أو مشرف إنتاج: رئيس قسمك، فني أو مشرف صيانة: أدمن الصيانة)|You are registered. Waiting for approval (operator or production supervisor: your section head; technician or maintenance supervisor: the maintenance admin)
 report|تسجيل عطل جديد|Report a machine fault
 machine|الآلة|Machine
 machineName|اسم الآلة الجديدة|New machine name
@@ -350,6 +352,87 @@ pmSave|حفظ|Save
 pmRowDate|الموعد|Date
 pmRowState|الحالة|State
 pmRowBusy|هذي الصيانة انسجلت لها مهمة، عدّلها من المهمة نفسها|A task was already made for this one; change the task itself
+tabAll|جميع الأقسام|All sections
+hubAll|جميع الأقسام|All sections
+hubPick|اختر القسم ثم المكينة|Pick a section, then a machine
+hubFind|ابحث عن مكينة...|Find a machine...
+hubMachN|مكينة|machines
+hubNoMach|ما فيه مكائن في هذا القسم|No machines in this section
+hubNoFound|ما لقينا مكينة بهذا الاسم|No machine with this name
+hub_parts|قطع الغيار|Spare parts
+hub_log|سجل الأعطال|Breakdown log
+hub_manual|مانول المكينة|Machine manual
+hubPartsN|قطعة|parts
+hubClosedN|عطل مغلق|closed
+hubDocsN|ملف|files
+hubKBd|أعطال|Breakdowns
+hubKPm|صيانة وقائية|Preventive
+hubKAll|الكل|Everything
+hubLogNone|ما فيه سجلات بهذا الفلتر|Nothing for this filter
+hubAlertN|تنبيه|alerts
+spStore|في المخزن|In store
+spInstalled|راكبة|Installed
+spLife|العمر الافتراضي|Normal life
+spMin|الحد الأدنى|Minimum
+spLow|المخزون منخفض|Low stock
+spOut0|نفد من المخزن|Out of stock
+spInstAt|ركّبت في|Installed
+spAge|العمر|Age
+spLeft|المتبقي|Left
+spOverBy|تجاوزت عمرها بـ|Past its life by
+spNoLife|بدون عمر افتراضي|no normal life set
+spSoon|قرب ينتهي عمرها|Near the end of its life
+spOver|انتهى عمرها|Life is over
+spInstall|تركيب|Install
+spReplace|تركيب / استبدال|Install / replace
+spOut|فكّ القطعة (انتهت)|Take out (worn out)
+spOutAsk|تأكيد: القطعة انفكّت من المكينة؟|Confirm: this piece was taken out of the machine?
+spWhen|وقت التركيب|Time installed
+spForReq|للطلب (اختياري)|For request (optional)
+spReplaces|تستبدل القطعة|Replaces
+spAddAnother|إضافة قطعة بدون استبدال|Add another, replace nothing
+spConfirm|تأكيد التركيب|Confirm install
+spNoStock|ما بقي من هذي القطعة في المخزن|None of this part is left in the store
+spNoDb|شغّل ملف التحديث ١٥ في Supabase|Run update 15 in Supabase
+spSample|مثال|example
+spNone|ما فيه قطع غيار مسجّلة لهذي المكينة|No spare parts are recorded for this machine
+spAdd|إضافة قطعة غيار|Add a spare part
+spCode|رقم القطعة|Part no.
+spName|اسم القطعة|Part name
+spQty|الكمية في المخزن|Quantity in store
+spMinQ|أقل كمية قبل التنبيه|Lowest quantity before a warning
+spLifeD|العمر الافتراضي (يوم)|Normal life (days)
+spNote|ملاحظة|Note
+spRecv|استلام كمية|Receive stock
+spRecvQ|الكمية (سالب للتصحيح)|Quantity (negative to correct)
+spDelAsk|حذف هذي القطعة مع سجل تركيباتها؟|Delete this part and its install history?
+spClear|حذف كل القطع الأمثلة|Delete all example parts
+spClearAsk|حذف كل القطع الأمثلة مع سجل تركيباتها؟ القطع الي عدّلتها بنفسك ما تنحذف|Delete every example part with its install history? Parts you edited yourself are kept
+spClearDone|عدد القطع المحذوفة|Parts deleted
+docBad|الرابط غير مسموح: لازم يبدأ بـ https:// أو manuals/ وبدون مسافات|The link is not allowed: it must start with https:// or manuals/ and have no spaces
+spDup|فيه قطعة بنفس الرقم على هذي المكينة|A part with this number already exists on this machine
+spMoreEnd|قطع ثانية قرب ينتهي عمرها|more parts near the end of life
+spLowN|قطعة مخزونها منخفض|parts are low in the store
+spMo|شهر|months
+spSave|حفظ|Save
+docAdd|إضافة مانول|Add a manual
+docTitle|اسم الملف|File name
+docLink|الرابط|Link
+docHint|ملف جنب index.html مثل manuals/polytex-62386.pdf أو رابط يبدأ بـ https|A file next to index.html such as manuals/polytex-62386.pdf, or a link that starts with https
+docNone|ما فيه مانول لهذي المكينة بعد|No manual for this machine yet
+docOpen|فتح|Open
+docDelAsk|حذف هذا الرابط؟|Remove this link?
+shSpare|مخزون قطع الغيار|Spare parts inventory
+shSpInst|قطع الغيار المركّبة|Installed spare parts
+spStatus|الحالة|Status
+spOk|سليم|OK
+spInstNow|راكبة الآن|Installed now
+spOldest|أقدم قطعة (يوم)|Oldest piece (days)
+spLeftD|المتبقي (يوم)|Left (days)
+spRemAt|تاريخ الفك|Taken out
+spAgeD|العمر (يوم)|Age (days)
+spBy|ركّبها|Installed by
+spReq|رقم الطلب|Request no.
 every|كل|every
 days|يوم|days
 ckTitle|قائمة الفحص|Checklist
@@ -547,10 +630,10 @@ D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k
 const LS = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: the app still works, it just will not remember */ } } };
 let lang = LS.get('lang') == 'en' ? 'en' : 'ar';
 const tr = k => L[lang][k] ?? esc(k);
-let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [], sched: [], link: [], lv: {}, pmOn: false, sbr: new Map() };
+let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [], sched: [], link: [], lv: {}, pmOn: false, sbr: new Map(), sp: { on: false, parts: [], inst: [], docs: [] } };
 // signed-in staff (operator, technician, supervisor, department admin) carry a session token; an old saved sign-in without one is dropped
-const STAFF = ['operator', 'technician', 'supervisor', 'deptadmin'];
-const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'deptadmin' };
+const STAFF = ['operator', 'technician', 'supervisor', 'prodsup', 'deptadmin'];
+const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', psup: 'prodsup', dadm: 'deptadmin' };
 let me = (() => { try { const v = JSON.parse(LS.get('napco_me') || 'null'); return v && typeof v === 'object' && [...STAFF, 'admin', 'workshop'].includes(v.r) && (!STAFF.includes(v.r) || /^[0-9a-f]{64}$/.test(v.t || '')) ? v : null; } catch (e) { return null; } })();
 let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, sxPanel = false, pwPanel = false, qrWarned = false, rpEmp = null, sfR = '', sfD = '', sxTaps = [], pf = { r: 'all', from: '', to: '', m: '', k: '', bm: 'last', bs: '' }, showResp = false, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
@@ -561,7 +644,7 @@ const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
 // the preventive maintenance master plan: its weeks start on Sunday (W1 = 28 Dec 2025); its months are 4-4-5 weeks (January = W1-5 ... December = W49-52)
 const PM_MST = [1, 6, 10, 14, 19, 23, 27, 32, 36, 41, 45, 49, 53], PM_W1 = '2025-12-28', PM_LV = ['Q', 'MD', 'Y', 'M'], PM_SEC = ['Extrusion', 'Printing', 'Cutting', 'Thermoforming', 'Workshop', 'Premises'];
 const LV_DEF = { Q: 'Quarterly preventive maintenance (Q)', MD: 'Mid-year preventive maintenance (MD)', Y: 'Yearly preventive maintenance (Y)', M: 'Monthly preventive maintenance (M)' };
-let pmLoaded = false, pmSig = '';
+let pmLoaded = false, pmSig = '', spLoaded = false, spSig = '';
 
 const $ = id => document.getElementById(id);
 const save = () => { if (!(me && me.sx)) LS.set('napco_me', JSON.stringify(me)); };
@@ -932,6 +1015,7 @@ function alerts() {
   db.requests.filter(r => r.k != 'pm' && r.ra >= since && r.pt != 'unspec').forEach(r => { const k = r.mid + '|' + String(r.pt).toLowerCase(), o = C[k] = C[k] || { n: r.mn, t: r.pt, c: 0 }; o.c++; });
   Object.values(C).filter(o => o.c >= 3).sort((a, b) => b.c - a.c).forEach(o => out.push(`🔁 ${tr('repAlert')}: ${esc(o.n)} — ${esc(tl(o.t))} × ${o.c} ${tr('inDays')}`));
   pmAlerts().forEach(x => out.push(x));
+  spAlerts().forEach(x => out.push(x));
   return out.length ? `<div class="np flex flex-wrap items-center gap-2 mb-4 text-sm"><b class="text-red-800">⚠ ${tr('alertsT')}</b>${out.map(x => `<span class="bg-red-50 border border-red-300 text-red-800 rounded-lg px-3 py-1">${x}</span>`).join('')}</div>` : '';
 }
 // earlier fixes for the same machine + fault type, shown to the technician
@@ -1012,7 +1096,7 @@ async function load(full) {
   }
   db.requests.sort((a, b) => b.id - a.id);
   // the preventive maintenance master plan (a database without update 14 simply has none); read once, then again when requests changed, on the plan tab and every 30th round
-  if (me && me.r != 'operator' && (!pmLoaded || full || n > 0 || (tab == 'pm' && (me.r == 'admin' || me.r == 'supervisor')))) {
+  if (me && me.r != 'operator' && me.r != 'prodsup' && (!pmLoaded || full || n > 0 || (tab == 'pm' && (me.r == 'admin' || me.r == 'supervisor')))) {
     const [ps, pk, pv] = await Promise.all([api('pm_sched?select=*&order=due,id').catch(() => null), api('pm_link?select=*&order=name').catch(() => null), api('pm_levels?select=*').catch(() => null)]);
     pmLoaded = true; pmSig = JSON.stringify([ps, pk, pv]);
     db.pmOn = Array.isArray(ps) && Array.isArray(pk);
@@ -1021,15 +1105,27 @@ async function load(full) {
     db.lv = {}; (Array.isArray(pv) ? pv : []).forEach(x => { db.lv[x.level] = { t: txt(x.title) || '', ck: arr(x.checklist).map(txt).filter(Boolean) }; });
     db.sbr = new Map(db.sched.filter(x => x.rid != null).map(x => [x.rid, x]));
   }
+  // the spare parts store and the manuals (a database without update 15 simply has none); read once, again on the "All sections" tab, after an action, and every 30th round
+  if (me && me.r != 'operator' && me.r != 'deptadmin' && me.r != 'prodsup' && (!spLoaded || full || tab == 'all' || (me.r == 'technician' && ttab == 'all'))) {
+    const [sp, si, sd] = await Promise.all([api('spare_parts?select=*&order=name').catch(() => null), pages('spare_installs?select=*&order=id').catch(() => null), api('machine_docs?select=*&order=id').catch(() => null)]);
+    spLoaded = true; spSig = JSON.stringify([sp, si, sd]);
+    const on = Array.isArray(sp) && Array.isArray(si), life = v => v == null ? null : Number(v), tm = v => typeof v === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(v) ? v : null;
+    db.sp = {
+      on,
+      parts: on ? sp.map(x => ({ id: Number(x.id), mid: String(x.machine_id), cd: txt(x.code) || '', n: txt(x.name) || '', q: Number(x.qty) || 0, mq: Number(x.min_qty) || 0, lf: life(x.life_days), nt: txt(x.note) || '', sm: !!x.sample, ac: x.active !== false })) : [],
+      inst: on ? si.map(x => ({ id: Number(x.id), pid: Number(x.part_id), mid: String(x.machine_id), at: tm(x.installed_at) || '1970-01-01T00:00', lf: life(x.life_days), en: txt(x.by_emp), nm: txt(x.by_name) || '', rq: x.request_id == null ? null : Number(x.request_id), ra: tm(x.removed_at), rb: txt(x.removed_by) })) : [],
+      docs: Array.isArray(sd) ? sd.map(x => ({ id: Number(x.id), mid: String(x.machine_id), t: txt(x.title) || '', u: txt(x.url) || '' })) : []
+    };
+  }
   db.machines = m.map(x => ({ id: String(x.id), n: txt(x.name) || '', d: txt(x.dept) || '', sn: txt(x.serial), md: txt(x.model), lc: txt(x.location), ins: txt(x.installed), nt: txt(x.notes) }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: String(x.emp), nm: txt(x.name) || '', st: x.status == 'approved' ? 'approved' : 'pending', r: x.role == 'sup' ? 'sup' : 'tech' }));
   db.depts = dpt.map(x => txt(x.name)).filter(Boolean);
   db.notes = (Array.isArray(sn) ? sn : []).map(mapNote);
-  if (Array.isArray(sl)) db.staff = sl.map(x => ({ e: String(x.emp), nm: txt(x.name) || '', r: oneOf(x.role, ['op', 'tech', 'sup', 'dadm'], 'op'), st: x.status == 'approved' ? 'approved' : 'pending', d: txt(x.dept) || '' }));
+  if (Array.isArray(sl)) db.staff = sl.map(x => ({ e: String(x.emp), nm: txt(x.name) || '', r: oneOf(x.role, ['op', 'tech', 'sup', 'psup', 'dadm'], 'op'), st: x.status == 'approved' ? 'approved' : 'pending', d: txt(x.dept) || '' }));
   else if (!me || !(me.r == 'admin' || me.r == 'deptadmin')) db.staff = [];
   db.custom = Object.fromEntries(c.map(x => [String(x.k), { m: txt(x.machine_id), l: txt(x.label) || '', n: Number(x.n) || 0 }]));
   db.plans = pp.map(x => ({ id: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), t: txt(x.title) || '', iv: Number(x.interval_days) || 1, pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), ck: arr(x.checklist).map(txt).filter(Boolean), nd: dts(x.next_due) || '1970-01-01', ac: !!x.active, ld: dts(x.last_done) }));
-  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]) + pmSig;
+  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]) + pmSig + spSig;
   const changed = n > 0 || sig !== smallSig;
   smallSig = sig;
   return changed;
@@ -1074,7 +1170,7 @@ function logout() {
   if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
   else if (me && me.r == 'admin') rpc('admin_sign_out', { p_tok: me.h }).catch(() => {});
   else if (me && me.t) rpc('staff_sign_out', { p_tok: me.t }).catch(() => {});
-  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; step = { s: 'emp', e: '' }; save(); render();
+  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' }; save(); render();
 }
 function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; render(); }
 function setPeriod(v) { period = v; render(); }
@@ -1101,7 +1197,7 @@ function renderNow() {
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
   let h = `<header class="bg-teal-800 text-white np"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
-  h += !me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : adminView();
+  h += !me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : me.r == 'prodsup' ? psView() : adminView();
   $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px 22px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
   if (me && me.r == 'operator' && !pwPanel) {
     const qn = new URLSearchParams(location.search).get('m');
@@ -1122,7 +1218,7 @@ function loginView() {
   const bk = `<button type="button" onclick="step={s:'emp',e:''};render()" class="text-sm text-gray-500 mt-3">← ${tr('back')}</button>`;
   const wrap = b => `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-8">${b}</div>`;
   if (s == 'emp') return wrap(`<form onsubmit="doLogin(event)" class="space-y-3"><label class="font-semibold">${tr('empNo')}</label><input id="emp" inputmode="numeric" autocomplete="username" required><label class="block font-semibold">${tr('password')}</label><input id="pw" type="password" autocomplete="current-password" required><button class="${btn}">${tr('login')}</button></form><button type="button" onclick="step={s:'reg',e:''};render()" class="w-full border rounded-lg py-3 font-bold mt-3">${tr('newAccount')}</button>`);
-  if (s == 'reg') return wrap(`<form onsubmit="doReg(event)" class="space-y-3"><b>${tr('newAccount')}</b><input id="emp" inputmode="numeric" placeholder="${tr('empNo')}" autocomplete="off" required><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><select id="rr" onchange="$('rdw').classList.toggle('hidden',!['op','sup'].includes(this.value))"><option value="op">${tr('operator')}</option><option value="tech">${tr('technician')}</option><option value="sup">${tr('supervisor')}</option></select><div id="rdw"><label class="block font-semibold">${tr('dept')}</label><select id="rd">${db.depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('') || `<option value="">${tr('noDepts')}</option>`}</select></div><input id="pw" type="password" placeholder="${tr('password')}" required autocomplete="new-password"><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required autocomplete="new-password"><button class="${btn}">${tr('register')}</button></form>${bk}`);
+  if (s == 'reg') return wrap(`<form onsubmit="doReg(event)" class="space-y-3"><b>${tr('newAccount')}</b><input id="emp" inputmode="numeric" placeholder="${tr('empNo')}" autocomplete="off" required><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><select id="rr" onchange="$('rdw').classList.toggle('hidden',!['op','psup'].includes(this.value))"><option value="op">${tr('operator')}</option><option value="tech">${tr('technician')}</option><option value="sup">${tr('supervisor')}</option><option value="psup">${tr('prodsup')}</option></select><div id="rdw"><label class="block font-semibold">${tr('dept')}</label><select id="rd">${db.depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('') || `<option value="">${tr('noDepts')}</option>`}</select></div><input id="pw" type="password" placeholder="${tr('password')}" required autocomplete="new-password"><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required autocomplete="new-password"><button class="${btn}">${tr('register')}</button></form>${bk}`);
   if (s == 'sx') return wrap(`<form onsubmit="doSx(event)" class="space-y-3" autocomplete="off"><label class="font-semibold">${tr('empNo')}</label><input id="xe" inputmode="numeric" autocomplete="off" required><label class="block font-semibold">${tr('password')}</label><input id="xp" type="password" autocomplete="off" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
   return wrap(`<p class="text-center py-4">⏳ ${tr('waiting')}</p>${bk}`);
 }
@@ -1222,9 +1318,9 @@ async function doReg(e) {
   if (nm.length < 2) return alert(tr('nameShort'));
   if (a.length < 4) return alert(tr('pwShort'));
   if (a !== $('pw2').value) return alert(tr('pwMismatch'));
-  if ((role == 'op' || role == 'sup') && !$('rd').value) return alert(tr('noDepts'));
+  if ((role == 'op' || role == 'psup') && !$('rd').value) return alert(tr('noDepts'));
   try {
-    const ok = await rpc('register_staff', { p_emp: u, p_name: nm, p_hash: await sha(a), p_role: role, p_dept: role == 'op' || role == 'sup' ? $('rd').value : null });
+    const ok = await rpc('register_staff', { p_emp: u, p_name: nm, p_hash: await sha(a), p_role: role, p_dept: role == 'op' || role == 'psup' ? $('rd').value : null });
     if (!ok) return alert(tr('regExists'));
     step = { s: 'wait', e: u }; render();
   } catch (err) { alert(tr('netErr')); }
@@ -1634,11 +1730,11 @@ async function fin(e, id) {
 }
 
 /* ---------- APPROVAL of finished work: the section head, the section's supervisors and the admin ---------- */
-const apprPend = () => (me.r == 'admin' || me.r == 'deptadmin' || (me.r == 'supervisor' && me.dp)) ? db.requests.filter(r => r.s == 'done' && r.ok == 'pending' && (me.r == 'admin' || r.d == me.dp)).sort((a, b) => (a.fa || '').localeCompare(b.fa || '')) : [];
+const apprPend = () => (me.r == 'admin' || me.r == 'deptadmin' || (me.r == 'prodsup' && me.dp)) ? db.requests.filter(r => r.s == 'done' && r.ok == 'pending' && (me.r == 'admin' || r.d == me.dp)).sort((a, b) => (a.fa || '').localeCompare(b.fa || '')) : [];
 const apprBadge = r => !r.ok ? '' : r.ok == 'pending' ? `<span class="inline-block text-xs font-bold text-amber-900 bg-amber-100 rounded-full px-2 py-1 mt-2">⏳ ${tr('apprWait')}</span>`
   : `<div class="mt-2 text-xs rounded p-2 ${r.ok == 'approved' ? 'text-green-800 bg-green-50' : 'text-red-800 bg-red-50'}"><b>${r.ok == 'approved' ? '✔ ' + tr('apprApproved') : '↩ ' + tr('apprRejected')}</b> · ${tr('apprBy')} ${esc(r.okn || '')} · ${fd(r.oka)}${r.okt ? `<div dir="auto">${esc(r.okt)}</div>` : ''}</div>`;
 function aAppr() {
-  if (me.r == 'supervisor' && !me.dp) return `<p class="text-sm text-amber-800 bg-amber-50 border border-amber-300 rounded-lg p-3">${tr('apprNoSec')}</p>`;
+  if (me.r == 'prodsup' && !me.dp) return `<p class="text-sm text-amber-800 bg-amber-50 border border-amber-300 rounded-lg p-3">${tr('apprNoSec')}</p>`;
   const l = apprPend(), rec = db.requests.filter(r => r.ok && r.ok != 'pending' && (me.r == 'admin' || r.d == me.dp)).sort((a, b) => (b.oka || '').localeCompare(a.oka || '')).slice(0, 12);
   const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 border-amber-500">${card(r)}${done(r)}<textarea id="ao${r.id}" rows="2" class="mt-2" placeholder="${tr('apprNote')}"></textarea><div class="np flex gap-2 mt-2"><button onclick="apprGo(${r.id},true)" class="flex-1 bg-green-700 text-white font-bold py-2 rounded-lg">✔ ${tr('apprOk')}</button><button onclick="apprGo(${r.id},false)" class="flex-1 bg-red-600 text-white font-bold py-2 rounded-lg">↩ ${tr('apprBack')}</button></div></div>`;
   return `<p class="text-sm text-gray-500 mb-3">${tr('apprHint')}</p>${l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(one).join('')}</div>` : `<p class="text-gray-500">${tr('apprNone')}</p>`}`
@@ -1653,12 +1749,12 @@ async function apprGo(id, ok) {
 
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['dash', 'open', 'prev', 'appr', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'shift', 'pm', ...(me.dp ? ['appr'] : []), 'stats'], workshop: ['open', 'prev'] }[me.r];
+  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'shift', 'pm', 'stats'], workshop: ['open', 'prev', 'all'] }[me.r];
   if (tv) tab = 'open';
   if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { appr: 'tabAppr', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
+  const N = { all: 'tabAll', appr: 'tabAppr', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
   const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length;
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</div>` : '') + ({ appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</div>` : '') + ({ all: hubView, appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs text-teal-700 font-semibold">✔ ${tr('approve')}</button>` : ''}<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 // the badge under an open / in-progress request: waiting for the department, pickup timer, preventive due date, or who is working on it
@@ -1734,13 +1830,14 @@ const bdRow = r => {
 };
 // the workbook's order: section, machine, electrical before mechanical, part, time
 const bdSort = (a, b) => { const c = (x, y) => String(x || '').localeCompare(String(y || ''), 'en', { numeric: true, sensitivity: 'base' }); return c(secOf(a), secOf(b)) || c(a.mn, b.mn) || c(a.bc || bcOf(a.pt), b.bc || bcOf(b.pt)) || c(a.mp, b.mp) || c(a.ra, b.ra); };
-const bdBase = () => (me.r == 'deptadmin' ? dReqs() : db.requests).filter(r => r.s == 'done' && r.k != 'pm');
+const secOnly = () => me.r == 'deptadmin' || me.r == 'prodsup';
+const bdBase = () => (secOnly() ? dReqs() : db.requests).filter(r => r.s == 'done' && r.k != 'pm');
 function bdList() {
   const base = bdBase(), months = [...new Set(base.map(r => r.ra.slice(0, 7)))].sort().reverse(), mo = pf.bm == 'last' ? (months[0] || '') : pf.bm;
   const rows = base.filter(r => (!mo || r.ra.startsWith(mo)) && (!pf.bs || r.d == pf.bs) && (!pf.m || String(r.mid) == pf.m)).sort(bdSort);
   return { base, months, mo, rows };
 }
-const kindSwitch = () => me.r == 'deptadmin' ? '' : `<div class="np flex gap-2 mb-3">${[['', 'bdKind'], ['pm', 'pm']].map(([k, l]) => `<button onclick="setPF('k','${k}')" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${(pf.k == 'pm') == (k == 'pm') ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
+const kindSwitch = () => secOnly() ? '' : `<div class="np flex gap-2 mb-3">${[['', 'bdKind'], ['pm', 'pm']].map(([k, l]) => `<button onclick="setPF('k','${k}')" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${(pf.k == 'pm') == (k == 'pm') ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
 function aPrev() { return pf.k == 'pm' ? aPrevPm() : bdView(); }
 function bdView() {
   const { base, months, mo, rows } = bdList(), adm = me.r == 'admin', resp = showResp;
@@ -1748,7 +1845,7 @@ function bdView() {
   const opt = (v, l, cur) => `<option value="${esc(v)}" ${v == cur ? 'selected' : ''}>${esc(l)}</option>`;
   const bar = `<div class="np bg-white rounded-xl shadow p-3 mb-3"><div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
 <select onchange="setPF('bm',this.value)">${opt('', tr('allMonths'), mo)}${months.map(m => opt(m, MON[+m.slice(5) - 1] + ' ' + m.slice(0, 4), mo)).join('')}</select>
-${me.r == 'deptadmin' ? '' : `<select onchange="setPF('bs',this.value)">${opt('', tr('allDepts'), pf.bs)}${secs.map(d => opt(d, d, pf.bs)).join('')}</select>`}
+${secOnly() ? '' : `<select onchange="setPF('bs',this.value)">${opt('', tr('allDepts'), pf.bs)}${secs.map(d => opt(d, d, pf.bs)).join('')}</select>`}
 <select onchange="setPF('m',this.value)">${opt('', tr('allMach'), pf.m)}${ms.map(([id, n]) => opt(id, n, pf.m)).join('')}</select>
 <label class="flex items-center gap-2 text-sm px-2"><input type="checkbox" ${resp ? 'checked' : ''} onchange="showResp=this.checked;render()"> ${tr('showResp')}</label></div>
 <div class="flex flex-wrap items-center gap-3 mt-2"><span class="text-sm">${tr('bdTotalN')}: <b>${rows.length}</b>${(() => { const c = {}; rows.forEach(r => { c[secOf(r) || '—'] = (c[secOf(r) || '—'] || 0) + 1; }); const e = Object.entries(c); return e.length > 1 ? ' <bdi dir="ltr">(' + e.map(([k, v]) => esc(k) + ' ' + v).join(' · ') + ')</bdi>' : ''; })()}</span><span class="flex-1"></span>
@@ -1876,6 +1973,14 @@ function backupBook(now) {
       db.sched.slice().sort((a, b) => a.d.localeCompare(b.d) || a.nm.localeCompare(b.nm)).map(x => { const k = db.link.find(l => l.nm == x.nm) || {}, mc = k.mid ? db.machines.find(q => q.id == k.mid) : null; return [k.sec || '', x.nm, mc ? mc.n : '', x.l, pmWk(x.d), day(x.d), SN[x.s] || x.s, x.rid == null ? '' : x.rid, x.da ? day(x.da.slice(0, 10)) : '']; }));
   }
 
+  if (db.sp.on && db.sp.parts.length) {
+    const mn = id => (db.machines.find(x => x.id == id) || {}).n || id;
+    table('Spare parts store', 'The spare parts store: quantity in stock, the lowest quantity before a warning, the normal life of the part and the pieces installed now', [{ h: 'Machine', w: 22 }, { h: 'Part no.', w: 16 }, { h: 'Part name', w: 34 }, { h: 'In store', w: 11, t: 'int' }, { h: 'Minimum', w: 11, t: 'int' }, { h: 'Installed now', w: 12, t: 'int' }, { h: 'Normal life (days)', w: 16, t: 'int' }, { h: 'Oldest piece (days)', w: 16, t: 'int' }, { h: 'Example', w: 9, t: 'mid' }],
+      db.sp.parts.slice().sort((a, b) => mn(a.mid).localeCompare(mn(b.mid)) || a.n.localeCompare(b.n)).map(p => { const ag = spAct(p.id).map(spAge); return [mn(p.mid), p.cd, enx(p.n), p.q, p.mq, spAct(p.id).length, p.lf == null ? '' : p.lf, ag.length ? Math.round(Math.max(...ag)) : '', p.sm ? 'Yes' : '']; }));
+    table('Spare parts installed', 'Every piece that was installed on a machine: when, by whom, and when it came out', [{ h: 'Machine', w: 22 }, { h: 'Part name', w: 34 }, { h: 'Installed at', w: 18, t: 'date' }, { h: 'Taken out at', w: 18, t: 'date' }, { h: 'Age (days)', w: 11, t: 'int' }, { h: 'Normal life (days)', w: 16, t: 'int' }, { h: 'Installed by', w: 22 }, { h: 'Request ID', w: 11, t: 'int' }],
+      db.sp.inst.slice().sort((a, b) => a.id - b.id).map(i => { const p = db.sp.parts.find(x => x.id == i.pid); return [mn(i.mid), p ? enx(p.n) : '', dt(i.at), i.ra ? dt(i.ra) : '', Math.round(spAge(i)), i.lf == null ? '' : i.lf, i.nm, i.rq == null ? '' : i.rq]; }));
+  }
+
   const cu = Object.entries(db.custom);
   if (cu.length) table('Problem types added', 'Problem types typed by operators that were added to the lists', [{ h: 'Machine', w: 24 }, { h: 'Problem type', w: 30 }, { h: 'Times', w: 8, t: 'int' }],
     cu.map(([, c]) => [(db.machines.find(m => m.id == c.m) || {}).n || c.m, enx(c.l), c.n]));
@@ -1947,19 +2052,20 @@ function pr(id, b) {
   window.onafterprint = () => { document.body.classList.remove('p1'); document.querySelectorAll('.only').forEach(x => x.classList.remove('only')); };
   window.print();
 }
-const roleLbl = r => tr({ op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'deptadmin' }[r] || 'operator');
+const roleLbl = r => tr({ op: 'operator', tech: 'technician', sup: 'supervisor', psup: 'prodsup', dadm: 'deptadmin' }[r] || 'operator');
 const rpForm = e => `<form onsubmit="rpSave(event,${js(e)})" class="mt-2 flex gap-2 items-center"><input id="rpn" type="password" placeholder="${tr('newPwFor')}" autocomplete="new-password" required><button class="bg-teal-700 text-white px-3 py-2 rounded whitespace-nowrap">${tr('sxSaveBtn')}</button><button type="button" onclick="rpOpen(null)" class="border px-3 py-2 rounded">${tr('cancel')}</button></form>`;
 function staffRow(s) {
   const pend = s.st == 'pending';
-  return `<div class="bg-white rounded-lg shadow p-3 mb-2"><div class="flex justify-between items-center gap-2"><div class="min-w-0"><b>${esc(s.nm) || '—'}</b> <bdi dir="ltr" class="text-gray-500">#${esc(s.e)}</bdi><div class="text-xs text-gray-500">${roleLbl(s.r)}${s.d ? ' · ' + esc(s.d) : s.r == 'sup' ? ' · <span class="text-amber-700 font-semibold">⚠ ' + tr('noSec') + '</span>' : ''} · ${tr(pend ? 'sPending' : 'sApproved')}</div>${me.r == 'admin' && s.r == 'sup' ? `<select class="!w-auto mt-1 text-sm np" onchange="supSec(${js(s.e)},this.value)"><option value="">${tr('noSec')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${d == s.d ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>` : ''}</div><div class="flex flex-wrap gap-2 justify-end">${pend ? `<button onclick="sAct(${js(s.e)},'approve')" class="bg-teal-700 text-white px-3 py-1 rounded">${tr('approve')}</button>` : `<button onclick="rpOpen(${js(s.e)})" class="border px-3 py-1 rounded text-sm">${tr('resetPw')}</button>`}<button onclick="sAct(${js(s.e)},'remove')" class="bg-red-600 text-white px-3 py-1 rounded">${tr(pend ? 'reject' : 'remove')}</button></div></div>${rpEmp == s.e ? rpForm(s.e) : ''}</div>`;
+  return `<div class="bg-white rounded-lg shadow p-3 mb-2"><div class="flex justify-between items-center gap-2"><div class="min-w-0"><b>${esc(s.nm) || '—'}</b> <bdi dir="ltr" class="text-gray-500">#${esc(s.e)}</bdi><div class="text-xs text-gray-500">${roleLbl(s.r)}${s.d ? ' · ' + esc(s.d) : ''} · ${tr(pend ? 'sPending' : 'sApproved')}</div>${me.r == 'admin' && (s.r == 'sup' || s.r == 'psup') ? `<select class="!w-auto mt-1 text-sm np" data-supsel="${esc(s.e)}" onchange="supSet(${js(s.e)},this.value)"><option value="" ${s.r == 'sup' ? 'selected' : ''}>${tr('supervisor')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${s.r == 'psup' && d == s.d ? 'selected' : ''}>${tr('prodsup')} · ${esc(d)}</option>`).join('')}</select>` : ''}</div><div class="flex flex-wrap gap-2 justify-end">${pend ? `<button onclick="sAct(${js(s.e)},'approve')" class="bg-teal-700 text-white px-3 py-1 rounded">${tr('approve')}</button>` : `<button onclick="rpOpen(${js(s.e)})" class="border px-3 py-1 rounded text-sm">${tr('resetPw')}</button>`}<button onclick="sAct(${js(s.e)},'remove')" class="bg-red-600 text-white px-3 py-1 rounded">${tr(pend ? 'reject' : 'remove')}</button></div></div>${rpEmp == s.e ? rpForm(s.e) : ''}</div>`;
 }
 const staffSort = (a, b) => (a.st == 'pending' ? 0 : 1) - (b.st == 'pending' ? 0 : 1) || a.e.localeCompare(b.e);
 function aTech() {
   const l = db.staff.filter(s => (!sfR || s.r == sfR) && (!sfD || s.d == sfD)).sort(staffSort);
-  return `<div class="np flex flex-wrap gap-2 mb-3"><select onchange="sfR=this.value;render()" class="!w-auto"><option value="">${tr('allRoles')}</option>${['op', 'tech', 'sup', 'dadm'].map(r => `<option value="${r}" ${sfR == r ? 'selected' : ''}>${roleLbl(r)}</option>`).join('')}</select><select onchange="sfD=this.value;render()" class="!w-auto"><option value="">${tr('allDepts')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${sfD == d ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div>`
+  return `<div class="np flex flex-wrap gap-2 mb-3"><select onchange="sfR=this.value;render()" class="!w-auto"><option value="">${tr('allRoles')}</option>${['op', 'tech', 'sup', 'psup', 'dadm'].map(r => `<option value="${r}" ${sfR == r ? 'selected' : ''}>${roleLbl(r)}</option>`).join('')}</select><select onchange="sfD=this.value;render()" class="!w-auto"><option value="">${tr('allDepts')}</option>${db.depts.map(d => `<option value="${esc(d)}" ${sfD == d ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div>`
     + (l.length ? `<div class="cols2">${l.map(staffRow).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`);
 }
-function supSec(e, d) { act('admin_staff_dept', { p_emp: e, p_dept: d }); }
+// '' = maintenance supervisor (no section); a section = production supervisor of that section
+function supSet(e, d) { act('admin_staff_role', { p_emp: e, p_role: d ? 'psup' : 'sup', p_dept: d || null }); }
 function sAct(e, a) {
   if (a == 'remove' && !confirm(tr('confirmUser'))) return;
   act('staff_manage', { p_emp: e, p_action: a });
@@ -2222,6 +2328,25 @@ async function exportXl() {
     add(tr('shLife'), [
       { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('machine'), w: 24 }, { h: tr('replaced'), w: 14, t: 'int' }, { h: tr('lifeAvg') + ' (' + tr('days') + ')', w: 20, t: 'int' }, { h: tr('lastRepl'), w: 18, t: 'date' }
     ], partLife().map(x => [enx(x.n), x.p, x.m, x.c, Math.round(x.avg), XW.date(x.last)]));
+    if (db.sp.on) {
+      const mn = id => (db.machines.find(x => x.id == id) || {}).n || id, md = id => (db.machines.find(x => x.id == id) || {}).d || '';
+      const bad = { c: 'B91C1C', b: 1 }, warn = { c: 'B45309', b: 1 };
+      add(tr('shSpare'), [
+        { h: tr('machine'), w: 22 }, { h: tr('dept'), w: 16 }, { h: tr('spCode'), w: 16 }, { h: tr('spName'), w: 34 }, { h: tr('spStore'), w: 11, t: 'int' }, { h: tr('spMin'), w: 11, t: 'int' }, { h: tr('spInstNow'), w: 12, t: 'int' },
+        { h: tr('spLifeD'), w: 14, t: 'int' }, { h: tr('spOldest'), w: 14, t: 'int' }, { h: tr('spLeftD'), w: 13, t: 'int' }, { h: tr('spStatus'), w: 20, t: 'mid' }
+      ], db.sp.parts.slice().sort((a, b) => mn(a.mid).localeCompare(mn(b.mid)) || a.n.localeCompare(b.n)).map(p => {
+        const act = spAct(p.id), sts = act.map(spState), ages = act.map(spAge), lefts = act.filter(i => i.lf != null).map(spLeft);
+        const stt = sts.includes('over') ? ['spOver', bad] : sts.includes('soon') ? ['spSoon', warn] : p.q == 0 && (p.mq > 0 || act.length) ? ['spOut0', bad] : spLow(p) ? ['spLow', warn] : ['spOk', {}];
+        return [mn(p.mid), md(p.mid), p.cd, enx(p.n), p.q, p.mq, act.length, p.lf == null ? '' : p.lf, ages.length ? Math.round(Math.max(...ages)) : '', lefts.length ? Math.round(Math.min(...lefts)) : '', { v: tr(stt[0]), s: stt[1] }];
+      }));
+      add(tr('shSpInst'), [
+        { h: tr('machine'), w: 22 }, { h: tr('dept'), w: 16 }, { h: tr('spName'), w: 34 }, { h: tr('spInstAt'), w: 18, t: 'date' }, { h: tr('spRemAt'), w: 18, t: 'date' }, { h: tr('spAgeD'), w: 12, t: 'int' }, { h: tr('spLifeD'), w: 14, t: 'int' },
+        { h: tr('spStatus'), w: 18, t: 'mid' }, { h: tr('spBy'), w: 20 }, { h: tr('spReq'), w: 11, t: 'int' }
+      ], db.sp.inst.slice().sort((a, b) => b.at.localeCompare(a.at)).map(i => {
+        const p = db.sp.parts.find(x => x.id == i.pid), st = spState(i);
+        return [mn(i.mid), md(i.mid), p ? enx(p.n) : '', XW.date(i.at), i.ra ? XW.date(i.ra) : '', Math.round(spAge(i)), i.lf == null ? '' : i.lf, { v: i.ra ? tr('spRemAt') : tr(st == 'over' ? 'spOver' : st == 'soon' ? 'spSoon' : 'spOk'), s: i.ra ? {} : st == 'over' ? bad : st == 'soon' ? warn : {} }, i.nm, i.rq == null ? '' : i.rq];
+      }));
+    }
     if (me.r == 'admin') add(tr('shTech'), [
       { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repHr'), w: 16, t: 'dec2' }
     ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? fh(t.ms / t.d / 60000) : '']));
@@ -2259,7 +2384,7 @@ let ttab = 'work';
 function setTT(k) { ttab = k; render(); }
 const techHome = () => {
   const w = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, n = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
+  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['all', 'tabAll', 0], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'all' ? hubView() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
 };
 function shiftWin(off) {
   const d = new Date(), h = d.getHours();
@@ -2457,6 +2582,192 @@ async function savePM(e, id) {
 }
 function delPM(id) { if (confirm(tr('confirmPlan'))) adm('admin_delete', { p_kind: 'plan', p_id: String(id) }); }
 
+/* ---------- ALL SECTIONS: section -> machine -> spare parts / breakdown log / manual ---------- */
+let hubS = null, hubM = null, hubV = null, hubSt = 'done', hubK = 'all', spInst = null, spEdit = null, spRecvId = null, docForm = false;
+const spDur = d => d >= 60 ? '≈ ' + Math.round(d / 30.4) + ' ' + tr('spMo') : Math.round(d) + ' ' + tr('days');
+const spAge = i => Math.max(0, (mins(i.at, i.ra || now()) || 0) / 1440);
+const spLeft = i => i.lf == null ? null : i.lf - spAge(i);
+// ok, near the end (the last 20% of its life, at least a week) or past its life
+const spState = i => { if (i.ra || i.lf == null) return 'ok'; const l = spLeft(i); return l < 0 ? 'over' : l <= Math.max(7, Math.round(i.lf * 0.2)) ? 'soon' : 'ok'; };
+const spAct = pid => db.sp.inst.filter(i => i.pid == pid && !i.ra);
+const spLow = p => p.mq > 0 && p.q <= p.mq;
+const spCan = () => ['technician', 'supervisor', 'admin'].includes(me.r);
+// how many warnings a machine has: pieces near the end of their life or past it, and parts low in the store
+function spAl(mid) {
+  if (!db.sp.on) return 0;
+  const ps = db.sp.parts.filter(p => p.mid == String(mid));
+  return db.sp.inst.filter(i => !i.ra && String(i.mid) == String(mid) && spState(i) != 'ok').length + ps.filter(spLow).length;
+}
+function spAlerts() {
+  if (!db.sp.on) return [];
+  const out = [], bad = db.sp.inst.filter(i => !i.ra && spState(i) != 'ok').sort((a, b) => spLeft(a) - spLeft(b));
+  bad.slice(0, 3).forEach(i => {
+    const p = db.sp.parts.find(x => x.id == i.pid), m = db.machines.find(x => x.id == i.mid);
+    if (p) out.push(`🔩 ${esc(m ? m.n : '')} — ${esc(enx(p.n))}: ${spState(i) == 'over' ? tr('spOverBy') + ' ' + spDur(-spLeft(i)) : tr('spLeft') + ' ' + spDur(spLeft(i))}`);
+  });
+  if (bad.length > 3) out.push(`🔩 +${bad.length - 3} ${tr('spMoreEnd')}`);
+  const low = db.sp.parts.filter(spLow);
+  if (low.length) out.push(`📦 ${low.length} ${tr('spLowN')}`);
+  return out;
+}
+function hubGo(s, m, v) { hubS = s || null; hubM = m || null; hubV = v || null; spInst = spEdit = spRecvId = null; docForm = false; render(); }
+function hubFilter(v) {
+  const q = String(v || '').trim().toLowerCase();
+  document.querySelectorAll('.hub-m').forEach(el => { el.style.display = !q || el.dataset.n.includes(q) ? '' : 'none'; });
+  const g = $('hubSecs'), a = $('hubAllM'), n = $('hubNoFound');
+  if (g) g.style.display = q ? 'none' : '';
+  if (a) a.style.display = q ? '' : 'none';
+  if (n) n.style.display = q && ![...document.querySelectorAll('#hubAllM .hub-m')].some(el => el.style.display != 'none') ? '' : 'none';
+}
+const hubMachCard = (m, sec) => { const al = spAl(m.id); return `<button onclick="hubGo(${js(m.d)},${js(m.id)})" class="hub-m text-start bg-white rounded-xl shadow p-3 flex justify-between items-center gap-2 w-full" data-n="${esc(m.n.toLowerCase())}"><span><b>${esc(m.n)}</b>${sec ? `<span class="block text-xs text-gray-500">${esc(m.d)}</span>` : ''}</span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`; };
+function hubCrumb() {
+  const m = hubM ? db.machines.find(x => x.id == hubM) : null, sep = ' <span class="text-gray-400">›</span> ';
+  const b = (t, f) => `<button onclick="${f}" class="text-teal-700 font-semibold">${t}</button>`;
+  const l = [hubS || hubM ? b(tr('hubAll'), 'hubGo()') : `<b>${tr('hubAll')}</b>`];
+  if (hubS) l.push(hubM ? b(esc(hubS), `hubGo(${js(hubS)})`) : `<b>${esc(hubS)}</b>`);
+  if (m) l.push(hubV ? b(esc(m.n), `hubGo(${js(hubS)},${js(hubM)})`) : `<b>${esc(m.n)}</b>`);
+  if (hubV) l.push(`<b>${tr('hub_' + hubV)}</b>`);
+  return `<div class="np flex flex-wrap items-center gap-1 text-sm mb-3" id="hubCrumb">${l.join(sep)}</div>`;
+}
+function hubView() {
+  const m = hubM ? db.machines.find(x => x.id == hubM) : null;
+  if (hubM && !m) { hubM = null; hubV = null; }
+  return `<h2 class="text-xl font-bold text-teal-800 mb-2">🏭 ${tr('tabAll')}</h2>` + hubCrumb() + (!hubS && !hubM ? hubSections() : hubS && !hubM ? hubMachines() : hubV == 'parts' ? hubParts(m) : hubV == 'log' ? hubLog(m) : hubV == 'manual' ? hubManual(m) : hubMachine(m));
+}
+const hubSearch = () => `<input type="search" id="hubQ" placeholder="${esc(tr('hubFind'))}" oninput="hubFilter(this.value)" class="w-full mb-3">`;
+function hubSections() {
+  const secs = [...new Set([...db.depts, ...db.machines.map(m => m.d)].filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const card = sec => { const ms = db.machines.filter(m => m.d == sec), al = ms.reduce((a, m) => a + spAl(m.id), 0); return `<button onclick="hubGo(${js(sec)})" data-sec="${esc(sec)}" class="text-start bg-white rounded-xl shadow p-4 flex justify-between items-center gap-2"><span><b class="text-lg">${esc(sec)}</b><span class="block text-xs text-gray-500">${ms.length} ${tr('hubMachN')}</span></span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`; };
+  const clr = me.r == 'admin' && db.sp.on && db.sp.parts.some(p => p.sm) ? `<button onclick="spClear()" class="np mt-4 text-xs text-red-700 font-semibold">🗑 ${tr('spClear')}</button>` : '';
+  return `<p class="text-sm text-gray-500 mb-3">${tr('hubPick')}</p>${hubSearch()}
+<div id="hubSecs" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">${secs.map(card).join('')}</div>
+<div id="hubAllM" style="display:none" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${db.machines.slice().sort((a, b) => a.n.localeCompare(b.n)).map(m => hubMachCard(m, true)).join('')}</div>
+<p id="hubNoFound" style="display:none" class="text-gray-500">${tr('hubNoFound')}</p>${clr}`;
+}
+function hubMachines() {
+  const ms = db.machines.filter(m => m.d == hubS).sort((a, b) => a.n.localeCompare(b.n));
+  return `${hubSearch()}<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${ms.length ? ms.map(m => hubMachCard(m, false)).join('') : `<p class="text-gray-500">${tr('hubNoMach')}</p>`}</div><p id="hubNoFound" style="display:none" class="text-gray-500">${tr('hubNoFound')}</p>`;
+}
+function hubMachine(m) {
+  const sps = db.sp.parts.filter(p => p.mid == m.id), al = spAl(m.id), docs = db.sp.docs.filter(d => d.mid == m.id), lg = db.requests.filter(r => String(r.mid) == String(m.id) && r.s == 'done' && r.k != 'pm').length;
+  const big = (v, ic, sub, warn) => `<button onclick="hubGo(${js(hubS)},${js(hubM)},'${v}')" data-hub="${v}" class="bg-white rounded-xl shadow p-5 text-start"><div class="text-3xl">${ic}</div><b class="text-lg block mt-1">${tr('hub_' + v)}</b><span class="text-xs text-gray-600">${sub}</span>${warn ? `<span class="ms-2 text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${warn}</span>` : ''}</button>`;
+  return `<div class="bg-white rounded-xl shadow p-4 mb-3"><b class="text-xl">${esc(m.n)}</b><span class="text-sm text-gray-500"> · ${esc(m.d)}</span></div>
+<div class="grid sm:grid-cols-3 gap-3">${big('parts', '🔩', db.sp.on ? sps.length + ' ' + tr('hubPartsN') : '—', al)}${big('log', '📋', lg + ' ' + tr('hubClosedN'))}${big('manual', '📖', docs.length + ' ' + tr('hubDocsN'))}</div>`;
+}
+// one installed piece with its countdown
+function spInstRow(i, canW) {
+  const st = spState(i), age = spAge(i), left = spLeft(i), pct = i.lf ? Math.min(100, Math.round(age / i.lf * 100)) : 0, col = { ok: 'bg-green-500', soon: 'bg-amber-500', over: 'bg-red-600' }[st];
+  return `<div class="border rounded-lg p-2 mt-2 ${st == 'over' ? 'border-red-400 bg-red-50' : st == 'soon' ? 'border-amber-400 bg-amber-50' : ''}" data-inst="${i.id}" data-st="${st}">
+<div class="flex justify-between gap-2 text-xs"><span>${tr('spInstAt')}: <bdi dir="ltr">${esc(i.at.replace('T', ' '))}</bdi>${i.nm ? ' · ' + esc(i.nm) : ''}</span>${st != 'ok' ? `<b class="${st == 'over' ? 'text-red-700' : 'text-amber-700'}">${st == 'over' ? '⛔ ' + tr('spOver') : '⚠ ' + tr('spSoon')}</b>` : ''}</div>
+${i.lf ? `<div class="h-2 bg-gray-200 rounded mt-1 overflow-hidden"><div class="${col} h-2" style="width:${pct}%"></div></div><div class="text-xs mt-1">${tr('spAge')}: <b data-age>${spDur(age)}</b> / ${spDur(i.lf)} · ${left >= 0 ? tr('spLeft') + ': <b data-left>' + spDur(left) + '</b>' : tr('spOverBy') + ' <b data-left>' + spDur(-left) + '</b>'}</div>` : `<div class="text-xs mt-1">${tr('spAge')}: <b data-age>${spDur(age)}</b> · ${tr('spNoLife')}</div>`}
+${canW ? `<div class="np mt-2"><button onclick="spOut(${i.id})" class="text-xs text-red-700 font-semibold">⏏ ${tr('spOut')}</button></div>` : ''}</div>`;
+}
+function spInstForm(p, act) {
+  const rs = db.requests.filter(r => String(r.mid) == String(p.mid) && r.s != 'done' && !isHeld(r)).sort((a, b) => b.id - a.id).slice(0, 20), t = now();
+  return `<form onsubmit="spDoInst(event,${p.id})" class="np mt-2 space-y-2 border-t pt-2" data-instform="${p.id}"><div class="grid grid-cols-2 gap-2">
+<label class="text-xs">${tr('spWhen')}<input type="datetime-local" id="spat" value="${esc(t)}" max="${esc(t)}" onfocus="this.max=now()" required></label>
+<label class="text-xs">${tr('spForReq')}<select id="sprq"><option value="">—</option>${rs.map(r => `<option value="${r.id}">#${r.id} · ${esc(String(dsOf(r)).slice(0, 40))}</option>`).join('')}</select></label></div>
+${act.length ? `<label class="text-xs block">${tr('spReplaces')}<select id="sprp">${act.slice().sort((a, b) => a.at.localeCompare(b.at)).map((i, k) => `<option value="${i.id}" ${k == 0 ? 'selected' : ''}>#${i.id} · ${esc(i.at.slice(0, 10))} (${spDur(spAge(i))})</option>`).join('')}<option value="">${tr('spAddAnother')}</option></select></label>` : ''}
+<div class="flex gap-2"><button class="bg-teal-700 text-white rounded-lg px-4 py-2 text-sm">${tr('spConfirm')}</button><button type="button" onclick="spOpen(null)" class="border rounded-lg px-4 py-2 text-sm">${tr('cancel')}</button></div></form>`;
+}
+function spForm(p) {
+  return `<form onsubmit="spSave(event,${p ? p.id : 'null'})" class="np bg-white rounded-xl shadow p-4 mb-3 space-y-2 border-2 border-teal-600" id="spForm"><b class="text-teal-800">${p ? '✏ ' + tr('edit') : '+ ' + tr('spAdd')}</b>
+<div class="grid grid-cols-2 gap-2"><label class="text-xs">${tr('spName')}<input id="spn" value="${esc(p ? p.n : '')}" required></label><label class="text-xs">${tr('spCode')}<input id="spc" value="${esc(p ? p.cd : '')}"></label>
+<label class="text-xs">${tr('spQty')}<input id="spq" type="number" min="0" value="${p ? p.q : 0}" required></label><label class="text-xs">${tr('spMinQ')}<input id="spm" type="number" min="0" value="${p ? p.mq : 0}" required></label>
+<label class="text-xs">${tr('spLifeD')}<input id="spl" type="number" min="1" max="36500" value="${p && p.lf ? p.lf : ''}"></label><label class="text-xs">${tr('spNote')}<input id="spt" value="${esc(p ? p.nt : '')}"></label></div>
+<div class="flex gap-2"><button class="${btn}">${tr('spSave')}</button><button type="button" onclick="spEditOpen(null)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`;
+}
+function spPartCard(p, canW, isA) {
+  const act = spAct(p.id).sort((a, b) => a.at.localeCompare(b.at)), low = spLow(p), worst = act.some(i => spState(i) == 'over') ? 'over' : act.some(i => spState(i) == 'soon') ? 'soon' : low || p.q == 0 && act.length ? 'low' : 'ok';
+  return `<div class="bg-white rounded-xl shadow p-3 mb-2 ${worst == 'over' ? 'border-s-4 border-red-500' : worst != 'ok' ? 'border-s-4 border-amber-400' : ''}" data-part="${p.id}" data-w="${worst}">
+<div class="flex justify-between gap-2"><div><b>${esc(enx(p.n))}</b>${p.cd ? `<span class="text-xs text-gray-500"> · ${esc(p.cd)}</span>` : ''}${p.sm ? `<span class="text-xs text-gray-400"> · ${tr('spSample')}</span>` : ''}</div><span class="text-sm whitespace-nowrap">${tr('spStore')}: <b class="${p.q == 0 ? 'text-red-700' : low ? 'text-amber-700' : ''}" data-q>${p.q}</b></span></div>
+<div class="text-xs text-gray-600 mt-1">${tr('spInstalled')}: <b data-n>${act.length}</b>${p.lf ? ' · ' + tr('spLife') + ': ' + spDur(p.lf) : ''}${p.mq ? ' · ' + tr('spMin') + ': ' + p.mq : ''}${p.q == 0 ? ` · <b class="text-red-700">⛔ ${tr('spOut0')}</b>` : low ? ` · <b class="text-amber-700">⚠ ${tr('spLow')}</b>` : ''}${p.nt ? ' · ' + esc(p.nt) : ''}</div>
+${act.map(i => spInstRow(i, canW)).join('')}
+${canW ? (spInst == p.id ? spInstForm(p, act) : `<div class="np mt-2"><button onclick="spOpen(${p.id})" ${p.q < 1 ? 'disabled' : ''} class="text-sm bg-teal-700 text-white rounded-lg px-3 py-1.5 disabled:opacity-40">🔩 ${tr(act.length ? 'spReplace' : 'spInstall')}</button></div>`) : ''}
+${spRecvId == p.id ? `<form onsubmit="spDoRecv(event,${p.id})" class="np mt-2 flex gap-2 items-end"><label class="text-xs">${tr('spRecvQ')}<input id="sprn" type="number" step="1" required></label><button class="bg-teal-700 text-white rounded-lg px-3 py-2 text-sm">${tr('spSave')}</button><button type="button" onclick="spRecvOpen(null)" class="border rounded-lg px-3 py-2 text-sm">${tr('cancel')}</button></form>` : ''}
+${isA ? `<div class="np flex gap-3 mt-2 text-xs"><button onclick="spEditOpen(${p.id})" class="text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="spRecvOpen(${p.id})" class="text-teal-700 font-semibold">➕ ${tr('spRecv')}</button><button onclick="spDel(${p.id})" class="text-red-600 font-semibold">🗑 ${tr('remove')}</button></div>` : ''}</div>`;
+}
+function hubParts(m) {
+  const canW = spCan(), isA = me.r == 'admin', ps = db.sp.parts.filter(p => p.mid == m.id);
+  if (!db.sp.on) return `<p class="text-gray-500">${tr('spNoDb')}</p>`;
+  const rank = p => { const a = spAct(p.id); return a.some(i => spState(i) == 'over') ? 0 : a.some(i => spState(i) == 'soon') ? 1 : spLow(p) ? 2 : 3; };
+  const list = ps.slice().sort((a, b) => rank(a) - rank(b) || a.n.localeCompare(b.n));
+  const form = isA && spEdit != null ? spForm(spEdit === 'new' ? null : ps.find(p => p.id == spEdit)) : '';
+  return `<div class="bg-white rounded-xl shadow p-3 mb-3 text-sm"><b>${esc(m.n)}</b> · ${ps.length} ${tr('hubPartsN')}</div>${isA && spEdit == null ? `<button onclick="spEditOpen('new')" class="${btn} mb-3 np">+ ${tr('spAdd')}</button>` : ''}${form}
+${list.length ? `<div class="cols2">${list.map(p => spPartCard(p, canW, isA)).join('')}</div>` : form ? '' : `<p class="text-gray-500">${tr('spNone')}</p>`}`;
+}
+function hubLog(m) {
+  const base = db.requests.filter(r => String(r.mid) == String(m.id) && !isHeld(r) && (hubK == 'all' || (hubK == 'pm') == (r.k == 'pm')));
+  const cnt = { '': base.length, open: 0, prog: 0, done: 0 }; base.forEach(r => { cnt[r.s]++; });
+  const all = base.filter(r => !hubSt || r.s == hubSt).sort((a, b) => (b.fa || b.ra || '').localeCompare(a.fa || a.ra || '')), rs = all.slice(0, 100);
+  const chip = (on, label, fn) => `<button onclick="${fn}" class="px-3 py-1.5 rounded-full text-sm border ${on ? 'bg-teal-700 text-white border-teal-700' : 'bg-white'}">${label}</button>`;
+  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : r.s == 'done' ? 'border-green-500' : 'border-teal-600'}">${card(r)}${noteLines(r)}${r.s == 'done' ? done(r) + apprBadge(r) : openBadge(r)}</div>`;
+  return `<div class="np bg-white rounded-xl shadow p-3 mb-3 space-y-2"><div class="flex flex-wrap gap-2">${[['all', 'hubKAll'], ['bd', 'hubKBd'], ['pm', 'hubKPm']].map(([k, l]) => chip(hubK == k, tr(l), `hubSetK('${k}')`)).join('')}</div>
+<div class="flex flex-wrap gap-2">${[['', 'tfAllSt'], ['open', 'sOpen'], ['prog', 'sProg'], ['done', 'sDone']].map(([k, l]) => chip(hubSt == k, `${tr(l)} (${cnt[k]})`, `hubSetSt('${k}')`)).join('')}</div></div>
+${rs.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4" id="hubLogList">${rs.map(one).join('')}</div>` : `<p class="text-gray-500">${tr('hubLogNone')}</p>`}`;
+}
+function hubManual(m) {
+  const isA = me.r == 'admin', docs = db.sp.docs.filter(d => d.mid == m.id);
+  const form = isA ? (docForm ? `<form onsubmit="docSave(event)" class="np bg-white rounded-xl shadow p-4 mb-3 space-y-2 border-2 border-teal-600" id="docForm"><b class="text-teal-800">+ ${tr('docAdd')}</b><label class="text-xs block">${tr('docTitle')}<input id="dct" required></label><label class="text-xs block">${tr('docLink')}<input id="dcu" dir="ltr" placeholder="manuals/..." required></label><p class="text-xs text-gray-500">${tr('docHint')}</p><div class="flex gap-2"><button class="${btn}">${tr('spSave')}</button><button type="button" onclick="docOpen(false)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>` : `<button onclick="docOpen(true)" class="${btn} mb-3 np">+ ${tr('docAdd')}</button>`) : '';
+  return `${form}${docs.length ? docs.map(d => `<div class="bg-white rounded-xl shadow p-4 mb-2 flex justify-between items-center gap-3" data-doc="${d.id}"><span>📖 <b>${esc(d.t)}</b></span><span class="flex gap-3 items-center"><a href="${esc(d.u)}" target="_blank" rel="noopener" class="bg-teal-700 text-white rounded-lg px-3 py-2 text-sm font-bold">${tr('docOpen')} ↗</a>${isA ? `<button onclick="docDel(${d.id})" class="np text-xs text-red-600 font-semibold">🗑</button>` : ''}</span></div>`).join('') : `<p class="text-gray-500">${tr('docNone')}</p>`}`;
+}
+function hubSetK(k) { hubK = k; render(); }
+function hubSetSt(k) { hubSt = k; render(); }
+function spOpen(id) { spInst = id; spRecvId = null; spEdit = null; render(); }
+function spEditOpen(id) { spEdit = id; spInst = null; spRecvId = null; render(); }
+function spRecvOpen(id) { spRecvId = id; spInst = null; spEdit = null; render(); }
+function docOpen(v) { docForm = !!v; render(); }
+const spReload = async () => { spLoaded = false; await refresh(); };
+// a call of the store: the member of staff (or the admin) is identified by the token
+async function spCall(fn, args) {
+  try { await rpc(fn, { p_tok: stTok(), ...args }); await spReload(); return true; }
+  catch (e) {
+    const m = String(e && e.message);
+    if (isDenied(e)) { alert(tr('sessExp')); logout(); }
+    else if (noFn(e)) alert(tr('spNoDb'));
+    else alert(/out of stock/.test(m) ? tr('spNoStock') : /future time/.test(m) ? tr('futureT') : /bad link/.test(m) ? tr('docBad') : /duplicate|unique/.test(m) ? tr('spDup') : tr('netErr'));
+    return false;
+  }
+}
+async function spDoInst(e, pid) {
+  e.preventDefault();
+  const at = $('spat').value;
+  if (futureT(at)) return alert(tr('futureT'));
+  const rp = $('sprp') ? $('sprp').value : '', rq = $('sprq').value;
+  if (await spCall('spare_install', { p_part: pid, p_at: at, p_req: rq ? +rq : null, p_replace: rp ? +rp : null })) spInst = null, render();
+}
+async function spOut(id) {
+  if (!confirm(tr('spOutAsk'))) return;
+  await spCall('spare_remove', { p_install: id, p_at: now() });
+}
+async function spSave(e, id) {
+  e.preventDefault();
+  const lf = $('spl').value;
+  spEdit = null;
+  await spCall('admin_spare_save', { p_id: id, p_machine: String(hubM), p_code: $('spc').value.trim(), p_name: $('spn').value.trim(), p_qty: +$('spq').value, p_min: +$('spm').value, p_life: lf ? +lf : null, p_note: $('spt').value.trim() });
+}
+async function spDoRecv(e, id) {
+  e.preventDefault();
+  const n = Math.round(+$('sprn').value);
+  if (!n) return;
+  spRecvId = null;
+  await spCall('admin_spare_receive', { p_part: id, p_delta: n });
+}
+async function spDel(id) { if (confirm(tr('spDelAsk'))) await spCall('admin_spare_delete', { p_id: id }); }
+async function spClear() {
+  if (!confirm(tr('spClearAsk'))) return;
+  try { const n = await rpc('admin_spare_clear_samples', { p_tok: me.h }); await spReload(); alert(tr('spClearDone') + ': ' + n); }
+  catch (e) { if (isDenied(e)) { alert(tr('sessExp')); logout(); } else alert(tr('netErr')); }
+}
+async function docSave(e) {
+  e.preventDefault();
+  const u = $('dcu').value.trim();
+  if (!/^(https:\/\/|manuals\/)[^\s<>"']+$/.test(u) || u.length > 500) return alert(tr('docBad'));
+  docForm = false;
+  await spCall('admin_doc_save', { p_machine: String(hubM), p_title: $('dct').value.trim(), p_url: u });
+}
+async function docDel(id) { if (confirm(tr('docDelAsk'))) await spCall('admin_doc_delete', { p_id: id }); }
+
 /* ---------- DEPARTMENT ADMIN ---------- */
 const dReqs = () => db.requests.filter(r => r.k != 'pm' && r.d == me.dp);
 function deptView() {
@@ -2480,6 +2791,20 @@ function dMach() {
   const base = location.origin + location.pathname, l = db.machines.filter(m => m.d == me.dp);
   return `<div class="np flex justify-between items-start gap-3 mb-3"><p class="text-sm text-gray-500">${tr('qrHint')}</p><button onclick="pr()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap">🖨 ${tr('printAll')}</button></div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">${l.length ? l.map(m => `<div class="req bg-white rounded-lg shadow p-3 flex gap-3 items-center" style="break-inside:avoid"><div data-qr="${esc(base + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d))}" class="shrink-0"></div><div class="min-w-0"><b>${esc(m.n)}</b><div class="text-xs text-gray-500">${esc(m.d)}</div></div></div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
+}
+
+/* ---------- PRODUCTION SUPERVISOR: his section's machines and requests, and the approval of finished work (he does not take or close maintenance) ---------- */
+function psView() {
+  const A = ['dopen', 'dprev', 'appr', 'dmach'];
+  if (!tab || !A.includes(tab)) tab = A[0];
+  const N = { dopen: 'tabDOpen', dprev: 'tabPrev', appr: 'tabAppr', dmach: 'tabDMach' };
+  const no = dReqs().filter(r => r.s != 'done').length, na = apprPend().length;
+  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'dopen' && no ? ' (' + no + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}</button>`).join('')}</div>`
+    + { dopen: psOpen, dprev: bdView, appr: aAppr, dmach: dMach }[tab]();
+}
+function psOpen() {
+  const l = dReqs().filter(r => r.s != 'done').sort((a, b) => (a.s == 'open' ? 0 : 1) - (b.s == 'open' ? 0 : 1) || b.id - a.id);
+  return l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="mt-2">${openBadge(r)}</div></div>`).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`;
 }
 
 /* ---------- ADMIN: DEPARTMENTS AND THEIR ADMINS ---------- */
