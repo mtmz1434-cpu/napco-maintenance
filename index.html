@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Napco Maintenance</title>
-<script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -41,6 +40,23 @@ button:disabled{opacity:.55;cursor:not-allowed}
 @media(prefers-reduced-motion:no-preference){.anim .cbar{animation:cgrow .6s cubic-bezier(.2,.8,.2,1) both}.anim .hbar{animation:hgrow .7s cubic-bezier(.2,.8,.2,1) both}.anim .cdon{animation:cfade .8s ease both}}
 @keyframes cgrow{from{transform:scaleY(0)}}@keyframes hgrow{from{transform:scaleX(0)}}@keyframes cfade{from{opacity:0;transform:scale(.8) rotate(-60deg)}}
 @media print{.bdw{max-height:none;overflow:visible;box-shadow:none}.bd{font-size:8px}.bd th{position:static;padding:2px 3px}.bd td{padding:1px 3px}}
+.pmg-wrap{overflow:auto;max-height:72vh;background:#fff;border-radius:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.pmg{border-collapse:separate;border-spacing:0;font-size:11px;direction:ltr}
+.pmg th,.pmg td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;text-align:center;padding:0}
+.pmg thead th{position:sticky;top:0;background:#0f766e;color:#fff;z-index:2;padding:3px 2px;font-weight:700;height:24px}
+.pmg thead tr:nth-child(2) th{top:24px;background:#14b8a6;font-size:10px}
+.pmg .pmg-n{position:sticky;left:0;background:#fff;z-index:1;min-width:112px;max-width:150px;text-align:left;padding:4px 6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pmg thead .pmg-n{z-index:3;background:#0f766e}
+.pmg td{min-width:30px;height:32px;padding:1px}
+.pmg td.pmg-now{background:#fffbeb}.pmg th.pmg-now{outline:2px solid #f59e0b;outline-offset:-2px}
+.pmg tr.pmg-sec td{background:#ccfbf1;font-weight:700;text-align:left;padding:3px 8px;position:sticky;left:0}
+.pmg td.pmg-idle{background:#f3f4f6;color:#6b7280;font-weight:700;letter-spacing:.1em}
+.pmg-c{display:block;width:100%;min-height:28px;border:1px solid;border-radius:5px;font-weight:700;font-size:10px;line-height:1.1}
+.pmg-cap{caption-side:top;text-align:left;font-weight:700;font-size:13px;color:#0f766e;padding:6px 8px;position:sticky;left:0}
+@media print{.pmg-wrap{max-height:none;overflow:visible;box-shadow:none}.pmg{font-size:7px}.pmg td{min-width:12px;height:16px;padding:0}.pmg-c{min-height:13px;font-size:6px;border-radius:2px}.pmg .pmg-n{position:static;min-width:60px;max-width:90px;padding:1px 3px}.pmg thead th{position:static;padding:1px;height:auto}.pmg tr.pmg-sec td{position:static}}
+</style>
+<style id="tw-static">
+*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.relative{position:relative}.inset-x-4{left:1rem;right:1rem}.bottom-4{bottom:1rem}.left-2{left:0.5rem}.top-2{top:0.5rem}.z-10{z-index:10}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.col-span-3{grid-column:span 3 / span 3}.mx-1{margin-left:0.25rem;margin-right:0.25rem}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:0.25rem;margin-bottom:0.25rem}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-3{margin-top:0.75rem;margin-bottom:0.75rem}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ms-2{margin-inline-start:0.5rem}.ms-auto{margin-inline-start:auto}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-8{height:2rem}.h-fit{height:-moz-fit-content;height:fit-content}.min-h-screen{min-height:100vh}.\!w-auto{width:auto !important}.w-10{width:2.5rem}.w-16{width:4rem}.w-28{width:7rem}.w-32{width:8rem}.w-8{width:2rem}.w-auto{width:auto}.w-fit{width:-moz-fit-content;width:fit-content}.w-full{width:100%}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-\[1600px\]{max-width:1600px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.list-disc{list-style-type:disc}.list-none{list-style-type:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-6{grid-template-columns:repeat(6, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-0\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.125rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t{border-top-left-radius:0.25rem;border-top-right-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-s-4{border-inline-start-width:4px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-amber-400{--tw-border-opacity:1;border-color:rgb(251 191 36 / var(--tw-border-opacity, 1))}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254 / var(--tw-border-opacity, 1))}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-green-700{--tw-border-opacity:1;border-color:rgb(21 128 61 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-teal-600{--tw-border-opacity:1;border-color:rgb(13 148 136 / var(--tw-border-opacity, 1))}.border-teal-700{--tw-border-opacity:1;border-color:rgb(15 118 110 / var(--tw-border-opacity, 1))}.border-white\/50{border-color:rgb(255 255 255 / 0.5)}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-200{--tw-bg-opacity:1;background-color:rgb(191 219 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237 / var(--tw-bg-opacity, 1))}.bg-orange-600{--tw-bg-opacity:1;background-color:rgb(234 88 12 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-teal-100{--tw-bg-opacity:1;background-color:rgb(204 251 241 / var(--tw-bg-opacity, 1))}.bg-teal-50{--tw-bg-opacity:1;background-color:rgb(240 253 250 / var(--tw-bg-opacity, 1))}.bg-teal-700{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.bg-teal-800{--tw-bg-opacity:1;background-color:rgb(17 94 89 / var(--tw-bg-opacity, 1))}.bg-teal-900{--tw-bg-opacity:1;background-color:rgb(19 78 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.ps-5{padding-inline-start:1.25rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.text-start{text-align:start}.text-end{text-align:end}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-normal{font-weight:400}.font-semibold{font-weight:600}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-800{--tw-text-opacity:1;color:rgb(154 52 18 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110 / var(--tw-text-opacity, 1))}.text-teal-800{--tw-text-opacity:1;color:rgb(17 94 89 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.opacity-60{opacity:0.6}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-red-400{--tw-ring-opacity:1;--tw-ring-color:rgb(248 113 113 / var(--tw-ring-opacity, 1))}.ring-teal-600{--tw-ring-opacity:1;--tw-ring-color:rgb(13 148 136 / var(--tw-ring-opacity, 1))}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.disabled\:opacity-40:disabled{opacity:0.4}@media (min-width: 640px){.sm\:w-44{width:11rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.sm\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}}@media (min-width: 1280px){.xl\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.xl\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}
 </style>
 </head>
 <body>
@@ -362,6 +378,34 @@ hubNoFound|ما لقينا مكينة بهذا الاسم|No machine with this n
 hub_parts|قطع الغيار|Spare parts
 hub_log|سجل الأعطال|Breakdown log
 hub_manual|مانول المكينة|Machine manual
+hubSt_ok|شغالة|Running
+hubSt_bd|عطل|Breakdown
+hubSt_stop|متوقفة|Stopped
+hubSt_pm|صيانة وقائية|Preventive maintenance
+hubPmDue|مستحقة|due
+hubAllSt|الكل|All
+hubNoSt|ما فيه مكائن بهذي الحالة|No machines in this state
+hub_file|ملف المكينة|Machine file
+hub_pm|جدول الصيانة|Maintenance schedule
+hubQr|باركود المكينة (امسحه لرفع بلاغ)|Machine barcode (scan to report a fault)
+hubPrintQr|طباعة الباركود|Print barcode
+hubSince|منذ|since
+hubOpenN|مفتوح|open
+hubPmDone|تمت|done
+hubPmOpen|لم تتم|not done
+hubPmMiss|فات موعدها ولم تتم|Past due, not done
+pmGridT|الجدول السنوي|Yearly table
+pmTitleT|خطة الصيانة الوقائية الرئيسية|PREVENTIVE MAINTENANCE MASTER PLAN
+pmGridLegend|الأخضر ✓ تمت · الأزرق مسجّلة قيد التنفيذ · الأبيض مخطّطة · الأحمر فات موعدها · الإطار البرتقالي = الأسبوع الحالي. اضغط على أي خانة لتفاصيلها|Green ✓ done · blue task registered · white planned · red past due · orange frame = this week. Tap a cell for its details
+pmAutoNote|الخطة تتجدد لحالها كل سنة (من أول ديسمبر) بنفس الأسابيع وأنواع الصيانة: ٣ أشهر، ٦ أشهر، ٩ أشهر، وسنوية|The plan renews itself every year (from 1 December) with the same weeks and maintenance types: 3, 6, 9 months and yearly
+pmNewYear|إنشاء خطة|Create plan
+pmNewYearAsk|ننشئ خطة سنة {y} من خطة السنة اللي قبلها (نفس الأسابيع والأنواع)؟|Make the {y} plan from the earlier year's plan (same weeks and levels)?
+pmYearMade|صيانات السنة الجديدة|Maintenances made for the year
+pmNoYear|ما فيه خطة لهذي السنة بعد|No plan for this year yet
+pmMachCol|المكينة|Machine
+pmSecAll|كل الأقسام|All sections
+pmIdleCell|غير مستخدمة (IDLE)|IDLE
+pmNeedUpd17|لإنشاء خطة سنة جديدة شغّل ملف التحديث ١٧ في Supabase|To make a new year's plan run update 17 in Supabase
 hubPartsN|قطعة|parts
 hubClosedN|عطل مغلق|closed
 hubDocsN|ملف|files
@@ -608,6 +652,9 @@ tfOpen|المفتوحة وطلباتي|Open and mine
 tfAllSt|كل الحالات|All statuses
 tfClosed|المغلقة فقط|Closed only
 tabPrevT|الطلبات السابقة|Previous requests
+bdShown|المعروض|Showing
+bdMore|عرض المزيد|Show more
+bdAllBtn|عرض الكل|Show all
 pvY2|أمس واليوم|Yesterday and today
 pvPeriod|الفترة|Period
 pvDone|مغلقة|Closed
@@ -1100,7 +1147,8 @@ async function load(full) {
     const [ps, pk, pv] = await Promise.all([api('pm_sched?select=*&order=due,id').catch(() => null), api('pm_link?select=*&order=name').catch(() => null), api('pm_levels?select=*').catch(() => null)]);
     pmLoaded = true; pmSig = JSON.stringify([ps, pk, pv]);
     db.pmOn = Array.isArray(ps) && Array.isArray(pk);
-    db.sched = db.pmOn ? ps.map(x => ({ id: Number(x.id), nm: txt(x.name) || '', l: oneOf(x.level, PM_LV, 'Q'), d: dts(x.due) || '1970-01-01', sq: Number(x.seq) || 0, w: x.plan_week == null ? null : Number(x.plan_week), s: oneOf(x.state, ['planned', 'registered', 'done', 'past', 'skipped'], 'planned'), rid: x.request_id == null ? null : Number(x.request_id), da: txt(x.done_at) })) : [];
+    db.pmYr = db.pmOn && ps.length > 0 && 'plan_year' in ps[0];   // update 17 (the yearly renewal) is in the database
+    db.sched = db.pmOn ? ps.map(x => ({ id: Number(x.id), nm: txt(x.name) || '', l: oneOf(x.level, PM_LV, 'Q'), d: dts(x.due) || '1970-01-01', sq: Number(x.seq) || 0, w: x.plan_week == null ? null : Number(x.plan_week), s: oneOf(x.state, ['planned', 'registered', 'done', 'past', 'skipped'], 'planned'), rid: x.request_id == null ? null : Number(x.request_id), da: txt(x.done_at), y: x.plan_year == null ? Number(String(dts(x.due) || '1970').slice(0, 4)) : Number(x.plan_year) })) : [];
     db.link = db.pmOn ? pk.map(x => ({ nm: txt(x.name) || '', sec: txt(x.section) || '', mid: txt(x.machine_id), sk: !!x.skip, h: txt(x.hint) })) : [];
     db.lv = {}; (Array.isArray(pv) ? pv : []).forEach(x => { db.lv[x.level] = { t: txt(x.title) || '', ck: arr(x.checklist).map(txt).filter(Boolean) }; });
     db.sbr = new Map(db.sched.filter(x => x.rid != null).map(x => [x.rid, x]));
@@ -1172,7 +1220,7 @@ function logout() {
   else if (me && me.t) rpc('staff_sign_out', { p_tok: me.t }).catch(() => {});
   me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' }; save(); render();
 }
-function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; render(); }
+function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; bdLim = BD_FIRST; bdAll = false; render(); }
 function setPeriod(v) { period = v; render(); }
 // statistics filters: department, machine and an exact date range (one day = the same date twice); a range overrides the period
 function setSF(k, v) { sf[k] = v; if (k == 'd') sf.m = ''; render(); }
@@ -1198,6 +1246,7 @@ function renderNow() {
   let h = `<header class="bg-teal-800 text-white np"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
   h += !me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : me.r == 'prodsup' ? psView() : adminView();
+  const og = document.getElementById('pmGrid'), gs = og ? [og.scrollLeft, og.scrollTop] : null;   // the yearly table keeps its place when the page is redrawn
   $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px 22px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
   if (me && me.r == 'operator' && !pwPanel) {
     const qn = new URLSearchParams(location.search).get('m');
@@ -1208,7 +1257,12 @@ function renderNow() {
   }
   document.querySelectorAll('#app textarea:not([maxlength]), #app input:not([maxlength]):not([type=checkbox]):not([type=number]):not([type=date]):not([type=datetime-local]):not([type=password])')
     .forEach(el => { el.maxLength = el.id == 'pmc' ? 3500 : el.id == 'nm' ? 100 : el.tagName == 'TEXTAREA' ? 2000 : 200; });
-  if (window.QRCode) document.querySelectorAll('[data-qr]').forEach(el => new QRCode(el, { text: el.dataset.qr, width: 96, height: 96 }));
+  if (window.QRCode) document.querySelectorAll('[data-qr]').forEach(el => new QRCode(el, { text: el.dataset.qr, width: +el.dataset.qs || 96, height: +el.dataset.qs || 96 }));
+  const ng = document.getElementById('pmGrid');
+  if (ng) {
+    if (gs) { ng.scrollLeft = gs[0]; ng.scrollTop = gs[1]; }
+    else { const c = ng.querySelector('th.pmg-now'); if (c) ng.scrollLeft = Math.max(0, c.getBoundingClientRect().left - ng.getBoundingClientRect().left + ng.scrollLeft - ng.clientWidth / 2); }   // first time: the table opens at the current week
+  }
   if (!me) { const f = document.querySelector('#app input'); if (f) f.focus(); }
 }
 
@@ -1301,7 +1355,7 @@ async function doLogin(e) {
     }
     if (u == WORKSHOP_ID) {
       if (!(await rpc('ws_login', { p_h: h }))) return alert(tr('wrongPw'));
-      me = { e: u, r: 'workshop' }; save(); return render();
+      me = { e: u, r: 'workshop' }; save(); await load().catch(() => {}); return render();   // the "All sections" tab needs the plan and the spare parts, so load them before the first screen
     }
     const x = await rpc('staff_sign_in', { p_emp: u, p_hash: h });
     if (!x.ok) return alert(tr(x.locked ? 'tryLater' : 'wrongPw'));
@@ -1749,9 +1803,9 @@ async function apprGo(id, ok) {
 
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'shift', 'pm', 'stats'], workshop: ['open', 'prev', 'all'] }[me.r];
+  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'shift', 'pm', 'stats'], workshop: ['all', 'open', 'prev'] }[me.r];
   if (tv) tab = 'open';
-  if (!tab || !A.includes(tab)) tab = A[0];
+  if (!tab || !A.includes(tab)) tab = me.r == 'workshop' ? 'open' : A[0];
   const N = { all: 'tabAll', appr: 'tabAppr', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
   const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length;
   return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</div>` : '') + ({ all: hubView, appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
@@ -1795,7 +1849,7 @@ function prevList() {
     return true;
   }).sort((a, b) => (b.fa || '').localeCompare(a.fa || ''));
 }
-function setPF(k, v) { pf[k] = v; sel.clear(); render(); }
+function setPF(k, v) { pf[k] = v; sel.clear(); bdLim = BD_FIRST; bdAll = false; render(); }
 function toggleSel(id, on) { if (on) sel.add(id); else sel.delete(id); const el = $('selN'); if (el) el.textContent = sel.size; }
 function selAll(on) { if (on) prevList().forEach(r => sel.add(r.id)); else sel.clear(); render(); }
 function printSel() {
@@ -1829,7 +1883,8 @@ const bdRow = r => {
     ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2 || r.st] || '', r.ra, r.ta, r.fa, mins(r.ta, r.fa), mins(r.ra, r.ta)];
 };
 // the workbook's order: section, machine, electrical before mechanical, part, time
-const bdSort = (a, b) => { const c = (x, y) => String(x || '').localeCompare(String(y || ''), 'en', { numeric: true, sensitivity: 'base' }); return c(secOf(a), secOf(b)) || c(a.mn, b.mn) || c(a.bc || bcOf(a.pt), b.bc || bcOf(b.pt)) || c(a.mp, b.mp) || c(a.ra, b.ra); };
+const BD_COL = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });   // one collator for the whole sort (a fresh one per comparison made the log slow)
+const bdSort = (a, b) => { const c = (x, y) => BD_COL.compare(String(x || ''), String(y || '')); return c(secOf(a), secOf(b)) || c(a.mn, b.mn) || c(a.bc || bcOf(a.pt), b.bc || bcOf(b.pt)) || c(a.mp, b.mp) || c(a.ra, b.ra); };
 const secOnly = () => me.r == 'deptadmin' || me.r == 'prodsup';
 const bdBase = () => (secOnly() ? dReqs() : db.requests).filter(r => r.s == 'done' && r.k != 'pm');
 function bdList() {
@@ -1838,6 +1893,10 @@ function bdList() {
   return { base, months, mo, rows };
 }
 const kindSwitch = () => secOnly() ? '' : `<div class="np flex gap-2 mb-3">${[['', 'bdKind'], ['pm', 'pm']].map(([k, l]) => `<button onclick="setPF('k','${k}')" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${(pf.k == 'pm') == (k == 'pm') ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
+let bdLim = 150, bdAll = false;
+const BD_FIRST = 150, BD_STEP = 300;
+function bdMore() { bdLim += BD_STEP; render(); }
+function bdShowAll() { bdAll = true; render(); }
 function aPrev() { return pf.k == 'pm' ? aPrevPm() : bdView(); }
 function bdView() {
   const { base, months, mo, rows } = bdList(), adm = me.r == 'admin', resp = showResp;
@@ -1856,13 +1915,16 @@ ${secOnly() ? '' : `<select onchange="setPF('bs',this.value)">${opt('', tr('allD
   const head = I.map(i => i == 6 ? `<th colspan="3" class="cb">Responsible</th>` : i == 7 || i == 8 ? '' : `<th class="${{ b: 'cb', g: 'cg' }[BDH[i][1]] || ''}">${esc(BDH[i][0]).replace('\n', '<br>')}</th>`).join('');
   const CL = ['nw', 'cb', 'cb', 'cb', 'cb tx', 'tx', 'cb nw', 'cb nw', 'cb', 'tl tx', 'tx', 'cb nw', 'nw', 'nw', 'nw', 'cg nw', 'cg nw'];
   const fmt = (i, v) => i >= 12 && i <= 14 ? `<bdi dir="ltr">${xdt(v)}</bdi>` : i >= 15 ? `<bdi dir="ltr">${xhm(v)}</bdi>` : esc(v);
-  const body = rows.map(r => { const v = bdRow(r); return '<tr>' + I.filter(i => i != 7 && i != 8 || resp).map(i => `<td dir="auto" class="${CL[i]}">${fmt(i, v[i])}${i == 0 && adm ? `<div class="np nw"><button onclick="editReq(${r.id})" title="${tr('edit')}">✏</button> <button onclick="delReq(${r.id})" title="${tr('remove')}">🗑</button></div>` : ''}</td>`).join('') + '</tr>'; }).join('');
+  const vis = bdAll ? rows : rows.slice(0, bdLim), more = rows.length - vis.length;
+  const body = vis.map(r => { const v = bdRow(r); return '<tr>' + I.filter(i => i != 7 && i != 8 || resp).map(i => `<td dir="auto" class="${CL[i]}">${fmt(i, v[i])}${i == 0 && adm ? `<div class="np nw"><button onclick="editReq(${r.id})" title="${tr('edit')}">✏</button> <button onclick="delReq(${r.id})" title="${tr('remove')}">🗑</button></div>` : ''}</td>`).join('') + '</tr>'; }).join('');
   return kindSwitch() + bar + (ed ? `<div class="np bg-white rounded-xl shadow p-4 mb-3 border-2 border-teal-600">${editForm(ed)}</div>` : '')
-    + (rows.length ? `<div class="bdw" dir="ltr"><table class="bd"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>` : `<p class="text-gray-500">${tr('none')}</p>`);
+    + (rows.length ? `<div class="bdw" dir="ltr"><table class="bd"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>` : `<p class="text-gray-500">${tr('none')}</p>`)
+    + (more > 0 ? `<div class="np flex flex-wrap items-center gap-3 mt-3"><span class="text-sm text-gray-600">${tr('bdShown')} <b>${vis.length}</b> / <b>${rows.length}</b></span><button onclick="bdMore()" class="bg-white border px-4 py-2 rounded-lg text-sm font-semibold">${tr('bdMore')} (${Math.min(BD_STEP, more)})</button><button onclick="bdShowAll()" class="bg-white border px-4 py-2 rounded-lg text-sm">${tr('bdAllBtn')}</button></div>` : '');
 }
 function printBd() {
+  const was = bdAll; if (!bdAll) { bdAll = true; render(); }          // the paper has every row, not only the first ones
   const st = document.createElement('style'); st.textContent = '@page{size:A4 landscape;margin:8mm}'; document.head.appendChild(st);
-  window.onafterprint = () => st.remove();
+  window.onafterprint = () => { st.remove(); if (!was) { bdAll = false; render(); } };
   window.print();
 }
 // the same table as an Excel sheet: the workbook's columns A..Q, its colours and borders, Repair / Response time as formulas
@@ -2144,7 +2206,7 @@ async function saveMach(e, id) {
   e.preventDefault(); medit = false;
   await adm('admin_update_machine', { p_id: id, p_dept: $('mfd').value.trim(), p_serial: $('mfs').value.trim(), p_model: $('mfm').value.trim(), p_location: $('mfl').value.trim(), p_installed: $('mfi').value, p_notes: $('mfn').value.trim() });
 }
-function machView(S) {
+function machView(S, back) {
   const mc = db.machines.find(x => String(x.id) == String(mview)) || {}, all = db.requests.filter(r => String(r.mid) == String(mview)), m = mst(all.filter(r => r.k != 'pm')), f = v => v == null ? tr('na') : dhm(v);
   const nm = mc.n || (all.length ? all[0].mn : ''), dp = mc.d || (all.length ? all[0].d : ''), base = location.origin + location.pathname;
   const kp = (v, l) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-lg font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
@@ -2156,7 +2218,7 @@ function machView(S) {
   const details = me.r == 'admin' && medit && mc.id
     ? `<form onsubmit="saveMach(event,${js(mc.id)})" class="space-y-2 np">${lb('dept')}<select id="mfd" required>${deptOpts(mc.d)}</select>${lb('serial')}<input id="mfs" value="${esc(mc.sn)}">${lb('model')}<input id="mfm" value="${esc(mc.md)}">${lb('locationT')}<input id="mfl" value="${esc(mc.lc)}">${lb('installedT')}<input type="date" id="mfi" value="${esc(mc.ins)}">${lb('notesT')}<textarea id="mfn" rows="2">${esc(mc.nt)}</textarea><div class="flex gap-2"><button class="${btn}">${tr('saveDetails')}</button><button type="button" onclick="editM(false)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>`
     : `${row('dept', dp)}${row('serial', mc.sn)}${row('model', mc.md)}${row('locationT', enx(mc.lc))}${row('installedT', mc.ins)}${row('notesT', enx(mc.nt))}`;
-  return `<div class="req"><div class="np flex justify-between mb-3"><button onclick="openM(null)" class="text-sm text-gray-600">← ${tr('back')}</button><span class="flex gap-3">${me.r == 'admin' && mc.id && !medit ? `<button onclick="editM(true)" class="text-sm text-teal-700 font-semibold">✏ ${tr('editDetails')}</button>` : ''}<button onclick="pr()" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button></span></div>
+  return `<div class="req"><div class="np flex justify-between mb-3"><button onclick="${back || 'openM(null)'}" class="text-sm text-gray-600">← ${tr('back')}</button><span class="flex gap-3">${me.r == 'admin' && mc.id && !medit ? `<button onclick="editM(true)" class="text-sm text-teal-700 font-semibold">✏ ${tr('editDetails')}</button>` : ''}<button onclick="pr()" class="text-sm text-teal-700 font-semibold">🖨 ${tr('print')}</button></span></div>
 <div class="flex justify-between items-start gap-3 mb-2"><div><h3 class="text-xl font-bold text-teal-800">${esc(nm)}</h3><div class="text-sm text-gray-500">${tr('mfile')}</div>${S.SN[mview] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red-600 rounded-full px-3 py-1">${tr('stoppedNow')} ${dhm((Date.now() - new Date(S.SN[mview])) / 60000)}</span>` : `<span class="inline-block mt-2 text-xs font-bold text-green-800 bg-green-100 rounded-full px-3 py-1">✅ ${tr('noStop')}</span>`}</div><div data-qr="${esc(base + '?m=' + encodeURIComponent(nm) + '&d=' + encodeURIComponent(dp))}" class="shrink-0"></div></div>
 <div class="bg-white rounded-xl shadow p-4 mb-3"><h4 class="font-bold text-teal-800 mb-2">${tr('mdetails')}</h4>${details}</div>
 <div class="bg-white rounded-xl shadow p-4 mb-3"><h4 class="font-bold text-teal-800 mb-2">🗓 ${tr('pmOnMach')}</h4>${mplans.length ? mplans.map(p => { const d = dayDiff(p.nd, ymd(new Date())), op = all.find(r => r.pl == p.id && r.s != 'done'); return `<div class="flex justify-between gap-2 border-b py-2 text-sm"><div><b>${esc(p.t)}</b><div class="text-xs text-gray-500">${tr('every')} ${p.iv} ${tr('days')} · ${tr('planLast')}: ${p.ld ? fd(p.ld) : '—'}${op ? ' · ' + tr(op.s == 'open' ? 'sOpen' : 'sProg') : ''}${p.ac ? '' : ' · ⏸'}</div></div><div class="text-xs font-bold whitespace-nowrap ${p.ac && d < 0 ? 'text-red-600' : 'text-blue-800'}">${tr('planNext')}: ${esc(p.nd)}</div></div>`; }).join('') : `<p class="text-sm text-gray-500">${tr('pmNoPlan')}</p>`}</div>
@@ -2437,11 +2499,15 @@ ${form}
 /* ---------- PREVENTIVE MAINTENANCE PLANS ---------- */
 function editPM(v) { pmEdit = v; render(); }
 /* ---------- PREVENTIVE MAINTENANCE MASTER PLAN (the yearly table) ---------- */
-let pmV = 'master', pmMon = null, pmSel = null, pmRel = null;
+let pmV = 'grid', pmMon = null, pmSel = null, pmRel = null, pmY = null, pmSec = '';
 const pmAdd = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
-const pmWk = d => Math.floor((Date.parse(d + 'T12:00:00Z') - Date.parse(PM_W1 + 'T12:00:00Z')) / 864e5 / 7) + 1;
-const pmMonthOf = d => { const w = pmWk(d); return w < 1 || w > 52 ? -1 : PM_MST.filter(x => x <= w).length - 1; };
-const pmRange = i => [pmAdd(PM_W1, 7 * (PM_MST[i] - 1)), pmAdd(PM_W1, 7 * (PM_MST[i + 1] - 1) - 1)];
+// the Sunday that starts week 1 of a year (the week of 1 January); the plan of every year uses the same week numbers and months
+const pmW1 = y => { const d = new Date(Date.UTC(y, 0, 1)); d.setUTCDate(1 - d.getUTCDay()); return d.toISOString().slice(0, 10); };
+const pmCY = () => +ymd(new Date()).slice(0, 4);
+const pmYr = () => pmY == null ? pmCY() : pmY;
+const pmWk = (d, y) => Math.floor((Date.parse(d + 'T12:00:00Z') - Date.parse(pmW1(y == null ? pmYr() : y) + 'T12:00:00Z')) / 864e5 / 7) + 1;
+const pmMonthOf = (d, y) => { const w = pmWk(d, y); return w < 1 || w > 52 ? -1 : PM_MST.filter(x => x <= w).length - 1; };
+const pmRange = (i, y) => { const w1 = pmW1(y == null ? pmYr() : y); return [pmAdd(w1, 7 * (PM_MST[i] - 1)), pmAdd(w1, 7 * (PM_MST[i + 1] - 1) - 1)]; };
 const pmMN = i => new Date(Date.UTC(2026, i, 15)).toLocaleDateString(lang == 'ar' ? 'ar' : 'en', { month: 'long', timeZone: 'UTC' });
 const lvName = l => { const v = db.lv[l]; return !v ? l : v.t == LV_DEF[l] ? tr('pmL_' + l) : v.t; };
 const PM_ST = { planned: ['bg-white border', ''], registered: ['bg-blue-100 text-blue-800', '🗓'], done: ['bg-green-100 text-green-800', '✓'], past: ['bg-gray-100 text-gray-400', ''], skipped: ['bg-gray-100 text-gray-400 line-through', '⏭'] };
@@ -2474,7 +2540,7 @@ async function pmRowSave(id) {
 function pmMach(k, e, isA) {
   const mn = k.mid ? (db.machines.find(m => m.id == k.mid) || {}).n : '';
   const tag = k.sk ? `<span class="text-xs text-gray-500">💤 ${tr('pmIdle')}</span>` : k.mid ? `<span class="text-xs text-green-700" dir="auto">→ ${esc(mn || k.mid)}</span>` : `<span class="text-xs font-bold text-amber-700">⚠ ${tr('pmUnlinked')}</span>`;
-  const chip = x => `<button onclick="pmPick(${x.id})" title="${esc(tr('pmSt_' + x.s))}" data-sid="${x.id}" class="text-xs rounded-lg px-2 py-1 ${PM_ST[x.s][0]} ${pmSel == x.id ? 'ring-2 ring-teal-600' : ''}"><b>${x.l}</b> <bdi dir="ltr">W${pmWk(x.d)} · ${+x.d.slice(8)}/${+x.d.slice(5, 7)}</bdi> ${PM_ST[x.s][1]}</button>`;
+  const chip = x => `<button onclick="pmPick(${x.id})" title="${esc(tr('pmSt_' + x.s))}" data-sid="${x.id}" class="text-xs rounded-lg px-2 py-1 ${PM_ST[x.s][0]} ${pmSel == x.id ? 'ring-2 ring-teal-600' : ''}"><b>${x.l}</b> <bdi dir="ltr">W${pmWk(x.d, x.y)} · ${+x.d.slice(8)}/${+x.d.slice(5, 7)}</bdi> ${PM_ST[x.s][1]}</button>`;
   const sel = e.find(x => x.id == pmSel);
   return `<div class="bg-white rounded-xl shadow p-3 mb-2" data-pmn="${esc(k.nm)}"><div class="flex justify-between gap-2"><b>${esc(k.nm)}</b>${tag}</div>
 <div class="flex flex-wrap gap-1 mt-2">${e.map(chip).join('')}</div>${sel ? pmRowEd(sel, isA) : ''}${isA && k.mid ? `<button onclick="pmRelink(${js(k.nm)})" class="np text-xs text-teal-700 font-semibold mt-2">✏ ${tr('pmChange')}</button>` : ''}</div>`;
@@ -2519,7 +2585,7 @@ async function pmNewMach(nm, i) {
   if (m) await pmLinkTo(nm, m.id); else render();
 }
 async function pmRegister() {
-  const [a, b] = pmRange(+$('pmrm').value);
+  const [a, b] = pmRange(+$('pmrm').value, pmYr());
   const r = await admT('admin_pm_register', { p_from: a, p_to: b });
   if (r.ok) { await refresh(); alert(tr('pmRegDone') + ': ' + r.r); }
 }
@@ -2530,13 +2596,13 @@ async function pmLvSave(l) {
   if (r.ok) await refresh();
 }
 function pmMaster() {
-  const isA = me.r == 'admin', S = db.sched, K = db.link, td = ymd(new Date()), cur = pmMonthOf(td), mon = pmMon == null ? cur : pmMon;
+  const isA = me.r == 'admin', S = db.sched.filter(x => x.y == pmYr()), K = db.link, td = ymd(new Date()), cur = pmMonthOf(td, pmYr()), mon = pmMon == null ? cur : pmMon;
   const cnt = st => S.filter(x => x.s == st).length, unl = K.filter(k => !k.mid && !k.sk);
   const tile = (n, l, c) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c || ''}">${n}</div><div class="text-xs text-gray-600">${tr(l)}</div></div>`;
   const tiles = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" id="pmTiles">${tile(cnt('planned'), 'pmTPlanned')}${tile(cnt('registered'), 'pmTReg', 'text-blue-700')}${tile(cnt('done'), 'pmTDone', 'text-green-700')}${tile(unl.length, 'pmTUnl', unl.length ? 'text-amber-600' : '')}</div>`;
   const cl = on => `px-2 py-1 rounded-lg text-xs font-bold ${on ? 'bg-teal-700 text-white' : 'bg-white border'}`;
   const chips = `<div class="flex flex-wrap gap-1 mb-2 np" id="pmMons">${[...Array(12).keys()].map(i => `<button onclick="setPMon(${i})" data-mon="${i}" class="${cl(mon == i)}">${esc(pmMN(i))}${i == cur ? ' •' : ''}</button>`).join('')}<button onclick="setPMon(-1)" data-mon="-1" class="${cl(mon < 0)}">${tr('pmAll')}</button></div>`;
-  const inM = x => mon < 0 || pmMonthOf(x.d) == mon;
+  const inM = x => mon < 0 || pmMonthOf(x.d, x.y) == mon;
   const secs = [...new Set(K.map(k => k.sec))].sort((a, b) => (PM_SEC.indexOf(a) + 1 || 99) - (PM_SEC.indexOf(b) + 1 || 99) || a.localeCompare(b));
   const body = secs.map(sec => {
     const rows = K.filter(k => k.sec == sec).map(k => ({ k, e: S.filter(x => x.nm == k.nm && inM(x)).sort((a, b) => a.d.localeCompare(b.d) || a.sq - b.sq) })).filter(x => x.e.length || (mon < 0 && x.k.sk));
@@ -2546,9 +2612,95 @@ function pmMaster() {
   const lvBox = `<details class="bg-white rounded-xl shadow p-3 mt-3 np" id="pmLv"><summary class="font-bold cursor-pointer">${tr('pmLvTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmLvHint')}</p>${PM_LV.filter(l => db.lv[l]).map(l => `<div class="border rounded-lg p-2 mt-2"><b>${l}</b><label class="block text-xs mt-1">${tr('pmLvName')}<input id="pmlt${l}" class="w-full" value="${esc(db.lv[l].t)}"></label><label class="block text-xs mt-1">${tr('planChecklist')}<textarea id="pmlc${l}" rows="6" class="w-full">${esc(db.lv[l].ck.join('\n'))}</textarea></label><button onclick="pmLvSave('${l}')" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm mt-2">${tr('pmSave')}</button></div>`).join('')}</details>`;
   return tiles + (isA ? pmUnlBox() : '') + chips + `<p class="text-xs text-gray-500 mb-2">${tr('pmLegend')}</p>` + (body || `<p class="text-gray-500">${tr('pmNoEntries')}</p>`) + (isA ? regBox + lvBox : '');
 }
+// ---- the yearly table (the same layout as the workbook: machines down, weeks 1..52 across, months on top) and the yearly renewal
+const pmYears = () => { const ys = new Set(db.sched.map(x => x.y)); ys.add(pmCY()); return [...ys].sort(); };
+function pmYearBar(fn, cur, canMake) {
+  const ys = pmYears(), nx = Math.max(...ys) + 1, mk = canMake && me.r == 'admin' && nx <= pmCY() + 2;
+  return `<div class="flex flex-wrap items-center gap-2 mb-3 np" id="pmYears">${ys.map(y => `<button onclick="${fn}(${y})" data-year="${y}" class="px-3 py-1.5 rounded-lg text-sm font-bold ${y == cur ? 'bg-teal-700 text-white' : 'bg-white border'}">${y}</button>`).join('')}${mk ? `<button onclick="pmNewYear(${nx})" data-newyear="${nx}" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-dashed border-teal-700 text-teal-700">＋ ${tr('pmNewYear')} ${nx}</button>` : ''}</div>`;
+}
+function setPMY(y) { pmY = y; pmMon = null; pmSel = null; render(); }
+async function pmNewYear(y) {
+  if (!db.pmYr) return alert(tr('pmNeedUpd17'));
+  if (!confirm(tr('pmNewYearAsk').replace('{y}', y))) return;
+  const r = await admT('admin_pm_renew', { p_year: y });
+  if (r.ok) { pmY = y; pmMon = null; await refresh(); alert(tr('pmYearMade') + ': ' + r.r); }
+}
+function setPMSec(v) { pmSec = v; pmSel = null; render(); }
+const PM_CELL = { planned: 'bg-white border-teal-600 text-teal-800', registered: 'bg-blue-200 border-blue-500 text-blue-900', done: 'bg-green-500 border-green-700 text-white', past: 'bg-red-100 border-red-400 text-red-700', skipped: 'bg-gray-100 border-gray-300 text-gray-400 line-through' };
+function pmGrid() {
+  const y = pmYr(), S = db.sched.filter(x => x.y == y), td = ymd(new Date()), curW = y == pmCY() ? pmWk(td, y) : 0, isA = me.r == 'admin';
+  const ord = (a, b) => (PM_SEC.indexOf(a) + 1 || 99) - (PM_SEC.indexOf(b) + 1 || 99) || a.localeCompare(b);
+  const K = db.link.filter(k => k.sk || S.some(x => x.nm == k.nm)), secs = [...new Set(K.map(k => k.sec))].sort(ord), cn = st => S.filter(x => x.s == st).length;
+  const tile = (n, l, c) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c || ''}">${n}</div><div class="text-xs text-gray-600">${l}</div></div>`;
+  const tiles = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" id="pmTiles">${tile(cn('done'), tr('pmTDone'), 'text-green-700')}${tile(cn('registered'), tr('pmTReg'), 'text-blue-700')}${tile(cn('planned'), tr('pmTPlanned'))}${tile(cn('past'), tr('hubPmMiss'), cn('past') ? 'text-red-600' : '')}</div>`;
+  if (!S.length) return `<p class="text-gray-500 mb-2">${tr('pmNoYear')}</p><p class="text-xs text-gray-500">${tr('pmAutoNote')}</p>`;
+  const cl = on => `px-2 py-1 rounded-lg text-xs font-bold ${on ? 'bg-teal-700 text-white' : 'bg-white border'}`;
+  const sc = `<div class="flex flex-wrap gap-1 mb-3 np" id="pmGSecs"><button onclick="setPMSec('')" data-gsec="" class="${cl(!pmSec)}">${tr('pmSecAll')}</button>${secs.map(x => `<button onclick="setPMSec(${js(x)})" data-gsec="${esc(x)}" class="${cl(pmSec == x)}">${esc(x)}</button>`).join('')}</div>`;
+  const mw = PM_MST.slice(1).map((w, i) => w - PM_MST[i]);
+  const head = `<thead><tr><th class="pmg-n" rowspan="2">${tr('pmMachCol')}</th>${mw.map((n, i) => `<th colspan="${n}">${esc(pmMN(i))}</th>`).join('')}</tr><tr>${[...Array(52).keys()].map(i => `<th class="${i + 1 == curW ? 'pmg-now' : ''}">${i + 1}</th>`).join('')}</tr></thead>`;
+  const rowOf = k => {
+    const E = S.filter(x => x.nm == k.nm), by = {};
+    E.forEach(x => { const w = Math.min(52, Math.max(1, pmWk(x.d, y))); (by[w] = by[w] || []).push(x); });
+    const tag = k.sk ? ' 💤' : !k.mid ? ' ⚠' : '';
+    if (k.sk) return `<tr data-gn="${esc(k.nm)}"><th class="pmg-n">${esc(k.nm)}${tag}</th><td colspan="52" class="pmg-idle">${tr('pmIdleCell')}</td></tr>`;
+    return `<tr data-gn="${esc(k.nm)}"><th class="pmg-n" title="${esc(k.nm)}">${esc(k.nm)}${tag}</th>${[...Array(52).keys()].map(i => { const l = by[i + 1]; return `<td class="${i + 1 == curW ? 'pmg-now' : ''}">${l ? l.map(x => `<button onclick="pmPick(${x.id})" data-sid="${x.id}" title="${esc(tr('pmSt_' + x.s))}" class="pmg-c ${PM_CELL[x.s]} ${pmSel == x.id ? 'ring-2 ring-teal-600' : ''}">${x.l}${x.s == 'done' ? '✓' : ''}</button>`).join('') : ''}</td>`; }).join('')}</tr>`;
+  };
+  const body = secs.filter(x => !pmSec || pmSec == x).map(sec => `<tr class="pmg-sec"><td colspan="53">${esc(sec)}</td></tr>${K.filter(k => k.sec == sec).map(rowOf).join('')}`).join('');
+  const sel = S.find(x => x.id == pmSel), sk = sel ? db.link.find(k => k.nm == sel.nm) : null;
+  const info = sel ? `<div class="bg-white rounded-xl shadow p-3 mt-3" id="pmGInfo"><b>${esc(sel.nm)}</b>${sk && sk.mid ? ` <span class="text-xs text-green-700" dir="auto">→ ${esc((db.machines.find(m => m.id == sk.mid) || {}).n || sk.mid)}</span>` : ''}${pmRowEd(sel, isA)}</div>` : '';
+  return tiles + `<p class="text-xs text-teal-800 bg-teal-50 rounded-lg p-2 mb-3 np">🔄 ${tr('pmAutoNote')}</p>` + sc
+    + `<div class="np flex flex-wrap items-center gap-3 mb-2"><span class="text-xs text-gray-500">${tr('pmLegend')}</span><span class="flex-1"></span><button onclick="printPmGrid()" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">🖨 ${tr('print')}</button><button onclick="exportPmGrid()" class="bg-green-700 text-white px-3 py-2 rounded-lg text-sm">⬇ ${tr('dlXl')}</button></div>`
+    + `<div class="pmg-wrap" dir="ltr" id="pmGrid"><table class="pmg"><caption class="pmg-cap">${tr('pmTitleT')} ${y}</caption>${head}<tbody>${body}</tbody></table></div><p class="text-xs text-gray-500 mt-2 np">${tr('pmGridLegend')}</p>` + info;
+}
+function printPmGrid() {
+  const st = document.createElement('style'); st.textContent = '@page{size:A4 landscape;margin:6mm}'; document.head.appendChild(st);
+  document.body.classList.add('p1');
+  window.onafterprint = () => { st.remove(); document.body.classList.remove('p1'); };
+  window.print();
+}
+// the same table as an Excel sheet (always in English): months, weeks 1..52, the level of each maintenance coloured by its state
+function pmGridSheet(bk, y) {
+  const F = 'Aptos Narrow', S = db.sched.filter(x => x.y == y), mw = PM_MST.slice(1).map((w, i) => w - PM_MST[i]), NC = 54;
+  const ord = (a, b) => (PM_SEC.indexOf(a) + 1 || 99) - (PM_SEC.indexOf(b) + 1 || 99) || a.localeCompare(b);
+  const K = db.link.filter(k => k.sk || S.some(x => x.nm == k.nm)), secs = [...new Set(K.map(k => k.sec))].sort(ord);
+  const FILL = { planned: 'FFFFFF', registered: 'BFDBFE', done: '86EFAC', past: 'FECACA', skipped: 'E5E7EB' };
+  const sh = bk.sheet(String(y), { tab: '0F9ED5', land: true, freeze: 3, titleRows: 3 });
+  sh.widths[0] = 15; sh.widths[1] = 17; for (let c = 2; c < NC; c++) sh.widths[c] = 4.6;
+  sh.merge(0, 0, 0, NC - 1, 'PREVENTIVE MAINTENANCE MASTER PLAN ' + y, { fn: F, b: 1, sz: 16, h: 'center', v: 'center' }); sh.heights[0] = 28;
+  const H = { fn: F, b: 1, sz: 10, h: 'center', v: 'center', bg: 'CAEEFB', bd: '000000' };
+  sh.merge(1, 0, 2, 0, 'Section', H); sh.merge(1, 1, 2, 1, 'Machine', H);
+  let c0 = 2; mw.forEach((n, i) => { sh.merge(1, c0, 1, c0 + n - 1, MON[i], H); c0 += n; });
+  for (let w = 1; w <= 52; w++) sh.set(2, w + 1, 'W' + w, { ...H, sz: 7 });
+  let r = 3;
+  secs.forEach(sec => {
+    const ks = K.filter(k => k.sec == sec), r1 = r;
+    ks.forEach(k => {
+      sh.set(r, 1, k.nm, { fn: F, sz: 10, b: 1, bd: '000000', v: 'center' });
+      if (k.sk) sh.merge(r, 2, r, NC - 1, 'IDLE', { fn: F, sz: 10, b: 1, h: 'center', v: 'center', bg: 'E5E7EB', bd: '000000' });
+      else {
+        for (let w = 1; w <= 52; w++) sh.set(r, w + 1, '', { fn: F, sz: 9, bd: 'BFBFBF', h: 'center', v: 'center' });
+        S.filter(x => x.nm == k.nm).forEach(x => { const w = Math.min(52, Math.max(1, pmWk(x.d, y))); sh.set(r, w + 1, x.l, { fn: F, sz: 9, b: 1, bd: '000000', h: 'center', v: 'center', bg: FILL[x.s] }); });
+      }
+      sh.heights[r] = 18; r++;
+    });
+    sh.merge(r1, 0, r - 1, 0, sec, { fn: F, sz: 11, b: 1, bd: '000000', h: 'center', v: 'center', w: 1 });
+  });
+  r++;
+  [['M: monthly', null], ['Q: quarterly', null], ['MD: mid year', null], ['Y: yearly', null], ['Done', FILL.done], ['Task registered (in progress)', FILL.registered], ['Planned', FILL.planned], ['Past due, not done', FILL.past]].forEach(([t, bg], i) => {
+    if (bg) sh.set(r + i, 0, '', { bg, bd: '000000' });
+    sh.merge(r + i, bg ? 1 : 0, r + i, 6, t, { fn: F, sz: 10 });
+  });
+  sh.set(r + 7, NC - 3, 'PT-MT-FM-09-05', { fn: F, sz: 9, c: '6B7280' });
+  return sh;
+}
+async function exportPmGrid() {
+  const y = pmYr();
+  if (!db.sched.some(x => x.y == y)) return alert(tr('none'));
+  try { const bk = XW.Book(false); pmGridSheet(bk, y); await saveXl(bk, 'PM-Master-Plan-' + y + '.xlsx'); } catch (err) { alert(tr('xlErr')); }
+}
 function aPM() {
-  const sub = db.pmOn ? `<div class="flex gap-2 mb-3 np" id="pmSub">${[['master', 'pmMaster'], ['plans', 'pmIntervals']].map(([k, l]) => `<button onclick="setPMV('${k}')" data-pv="${k}" class="px-3 py-2 rounded-lg font-bold text-sm ${pmV == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>` : '';
-  return db.pmOn && pmV == 'master' ? sub + pmMaster() : sub + aPlans();
+  const sub = db.pmOn ? `<div class="flex gap-2 mb-3 np" id="pmSub">${[['grid', 'pmGridT'], ['master', 'pmMaster'], ['plans', 'pmIntervals']].map(([k, l]) => `<button onclick="setPMV('${k}')" data-pv="${k}" class="px-3 py-2 rounded-lg font-bold text-sm ${pmV == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>` : '';
+  return db.pmOn && pmV == 'grid' ? sub + pmYearBar('setPMY', pmYr(), true) + pmGrid() : db.pmOn && pmV == 'master' ? sub + pmYearBar('setPMY', pmYr(), true) + pmMaster() : sub + aPlans();
 }
 function pmForm(p) {
   const L2 = k => `<label class="text-sm font-semibold">${tr(k)}</label>`;
@@ -2583,7 +2735,26 @@ async function savePM(e, id) {
 function delPM(id) { if (confirm(tr('confirmPlan'))) adm('admin_delete', { p_kind: 'plan', p_id: String(id) }); }
 
 /* ---------- ALL SECTIONS: section -> machine -> spare parts / breakdown log / manual ---------- */
-let hubS = null, hubM = null, hubV = null, hubSt = 'done', hubK = 'all', spInst = null, spEdit = null, spRecvId = null, docForm = false;
+let hubS = null, hubM = null, hubV = null, hubSt = '', hubK = 'all', spInst = null, spEdit = null, spRecvId = null, docForm = false, hubFl = '', hubMon = null, hubPf = '', hubY = null;
+// what each machine is doing right now: running, in breakdown (an open breakdown request) or in preventive maintenance (a PM task in progress, or one that is due today or overdue).
+// Requests still waiting for the department's approval and PM tasks dated in the future do not count.
+const MS_UI = { ok: ['border-green-500', 'bg-green-100 text-green-800', '🟢', 'text-green-700'], bd: ['border-red-500', 'bg-red-100 text-red-800', '🔴', 'text-red-700'], pm: ['border-blue-500', 'bg-blue-100 text-blue-800', '🔧', 'text-blue-700'] };
+function machStates() {
+  const o = {}, td = ymd(new Date());
+  db.requests.forEach(r => {
+    if (r.s == 'done' || isHeld(r)) return;
+    const id = String(r.mid), c = () => o[id] || (o[id] = { bd: 0, pm: 0, stop: '', pmp: false });
+    if (r.k == 'pm') { if (r.s == 'prog' || (r.ra || '').slice(0, 10) <= td) { const x = c(); x.pm++; if (r.s == 'prog') x.pmp = true; } }
+    else { const x = c(); x.bd++; if (r.st == 'Yes' && (!x.stop || r.ra < x.stop)) x.stop = r.ra; }
+  });
+  return o;
+}
+const msOf = (id, S) => { const c = S[String(id)]; return !c ? 'ok' : c.bd ? 'bd' : c.pm ? 'pm' : 'ok'; };
+const msLabel = (k, c) => tr('hubSt_' + k) + (k == 'bd' && c && c.stop ? ' · ' + tr('hubSt_stop') : '') + (k == 'pm' && c && !c.pmp ? ' · ' + tr('hubPmDue') : '');
+const msBadge = (id, S) => { const k = msOf(id, S); return `<span class="text-xs font-bold rounded-full px-2 py-1 ${MS_UI[k][1]}" data-ms="${k}">${MS_UI[k][2]} ${msLabel(k, S[String(id)])}</span>`; };
+const msCount = (ms, S) => { const c = { ok: 0, bd: 0, pm: 0 }; ms.forEach(m => { c[msOf(m.id, S)]++; }); return c; };
+const msLine = c => `<b class="text-green-700">${c.ok}</b> ${tr('hubSt_ok')}${c.bd ? ` · <b class="text-red-700">${c.bd}</b> ${tr('hubSt_bd')}` : ''}${c.pm ? ` · <b class="text-blue-700">${c.pm}</b> ${tr('hubSt_pm')}` : ''}`;
+const byName = (a, b) => a.n.localeCompare(b.n);
 const spDur = d => d >= 60 ? '≈ ' + Math.round(d / 30.4) + ' ' + tr('spMo') : Math.round(d) + ' ' + tr('days');
 const spAge = i => Math.max(0, (mins(i.at, i.ra || now()) || 0) / 1440);
 const spLeft = i => i.lf == null ? null : i.lf - spAge(i);
@@ -2610,21 +2781,35 @@ function spAlerts() {
   if (low.length) out.push(`📦 ${low.length} ${tr('spLowN')}`);
   return out;
 }
-function hubGo(s, m, v) { hubS = s || null; hubM = m || null; hubV = v || null; spInst = spEdit = spRecvId = null; docForm = false; render(); }
+function hubGo(s, m, v) { hubS = s || null; hubM = m || null; hubV = v || null; spInst = spEdit = spRecvId = null; docForm = false; hubMon = null; hubPf = ''; hubY = null; render(); }
+function hubSetY(y) { hubY = y; hubMon = null; pmSel = null; render(); }
+function hubSetFl(v) { hubFl = hubFl == v ? '' : v; render(); }
+function hubSetMon(i) { hubMon = i; pmSel = null; render(); }
+function hubSetPf(v) { hubPf = hubPf == v ? '' : v; pmSel = null; render(); }
 function hubFilter(v) {
   const q = String(v || '').trim().toLowerCase();
   document.querySelectorAll('.hub-m').forEach(el => { el.style.display = !q || el.dataset.n.includes(q) ? '' : 'none'; });
-  const g = $('hubSecs'), a = $('hubAllM'), n = $('hubNoFound');
+  const g = $('hubSecs'), a = $('hubAllM'), n = $('hubNoFound'), bd = $('hubBoard');
   if (g) g.style.display = q ? 'none' : '';
+  if (bd) bd.style.display = q ? 'none' : '';
   if (a) a.style.display = q ? '' : 'none';
   if (n) n.style.display = q && ![...document.querySelectorAll('#hubAllM .hub-m')].some(el => el.style.display != 'none') ? '' : 'none';
 }
-const hubMachCard = (m, sec) => { const al = spAl(m.id); return `<button onclick="hubGo(${js(m.d)},${js(m.id)})" class="hub-m text-start bg-white rounded-xl shadow p-3 flex justify-between items-center gap-2 w-full" data-n="${esc(m.n.toLowerCase())}"><span><b>${esc(m.n)}</b>${sec ? `<span class="block text-xs text-gray-500">${esc(m.d)}</span>` : ''}</span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`; };
+const hubMachCard = (m, sec, S) => {
+  S = S || machStates();
+  const al = spAl(m.id), k = msOf(m.id, S);
+  return `<button onclick="hubGo(${js(m.d)},${js(m.id)})" class="hub-m text-start bg-white rounded-xl shadow p-3 flex justify-between items-center gap-2 w-full border-s-4 ${MS_UI[k][0]}" data-n="${esc(m.n.toLowerCase())}" data-ms="${k}"><span><b>${esc(m.n)}</b>${sec ? `<span class="block text-xs text-gray-500">${esc(m.d)}</span>` : ''}<span class="block text-xs font-bold ${MS_UI[k][3]}">${msLabel(k, S[String(m.id)])}</span></span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`;
+};
+// a small tile on the board of all machines
+const hubBoardCard = (m, S) => {
+  const k = msOf(m.id, S), al = spAl(m.id);
+  return `<button onclick="hubGo(${js(m.d)},${js(m.id)})" class="hub-b text-start bg-white rounded-xl shadow p-3 border-s-4 ${MS_UI[k][0]}" data-ms="${k}" data-bn="${esc(m.n)}"><b class="block truncate">${esc(m.n)}</b><span class="block text-xs font-bold ${MS_UI[k][3]}">${MS_UI[k][2]} ${msLabel(k, S[String(m.id)])}</span>${al ? `<span class="text-xs font-bold text-amber-800">⚠ ${al}</span>` : ''}</button>`;
+};
 function hubCrumb() {
   const m = hubM ? db.machines.find(x => x.id == hubM) : null, sep = ' <span class="text-gray-400">›</span> ';
   const b = (t, f) => `<button onclick="${f}" class="text-teal-700 font-semibold">${t}</button>`;
   const l = [hubS || hubM ? b(tr('hubAll'), 'hubGo()') : `<b>${tr('hubAll')}</b>`];
-  if (hubS) l.push(hubM ? b(esc(hubS), `hubGo(${js(hubS)})`) : `<b>${esc(hubS)}</b>`);
+  if (hubS) l.push(hubM || hubV ? b(esc(hubS), `hubGo(${js(hubS)})`) : `<b>${esc(hubS)}</b>`);
   if (m) l.push(hubV ? b(esc(m.n), `hubGo(${js(hubS)},${js(hubM)})`) : `<b>${esc(m.n)}</b>`);
   if (hubV) l.push(`<b>${tr('hub_' + hubV)}</b>`);
   return `<div class="np flex flex-wrap items-center gap-1 text-sm mb-3" id="hubCrumb">${l.join(sep)}</div>`;
@@ -2632,27 +2817,64 @@ function hubCrumb() {
 function hubView() {
   const m = hubM ? db.machines.find(x => x.id == hubM) : null;
   if (hubM && !m) { hubM = null; hubV = null; }
-  return `<h2 class="text-xl font-bold text-teal-800 mb-2">🏭 ${tr('tabAll')}</h2>` + hubCrumb() + (!hubS && !hubM ? hubSections() : hubS && !hubM ? hubMachines() : hubV == 'parts' ? hubParts(m) : hubV == 'log' ? hubLog(m) : hubV == 'manual' ? hubManual(m) : hubMachine(m));
+  return `<h2 class="text-xl font-bold text-teal-800 mb-2">🏭 ${tr('tabAll')}</h2>` + hubCrumb() + (!hubS && !hubM ? hubSections() : hubS && !hubM ? (hubV == 'pm' ? hubPm(hubS, null) : hubMachines()) : hubV == 'parts' ? hubParts(m) : hubV == 'log' ? hubLog(m) : hubV == 'manual' ? hubManual(m) : hubV == 'pm' ? hubPm(hubS, m) : hubV == 'file' ? hubFile(m) : hubMachine(m));
 }
 const hubSearch = () => `<input type="search" id="hubQ" placeholder="${esc(tr('hubFind'))}" oninput="hubFilter(this.value)" class="w-full mb-3">`;
 function hubSections() {
-  const secs = [...new Set([...db.depts, ...db.machines.map(m => m.d)].filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const card = sec => { const ms = db.machines.filter(m => m.d == sec), al = ms.reduce((a, m) => a + spAl(m.id), 0); return `<button onclick="hubGo(${js(sec)})" data-sec="${esc(sec)}" class="text-start bg-white rounded-xl shadow p-4 flex justify-between items-center gap-2"><span><b class="text-lg">${esc(sec)}</b><span class="block text-xs text-gray-500">${ms.length} ${tr('hubMachN')}</span></span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`; };
+  const secs = [...new Set([...db.depts, ...db.machines.map(m => m.d)].filter(Boolean))].sort((a, b) => a.localeCompare(b)), S = machStates(), tot = msCount(db.machines, S);
+  const chip = (k, label, n) => `<button onclick="hubSetFl('${k}')" data-fl="${k}" class="px-3 py-2 rounded-xl text-sm font-bold border ${hubFl == k ? 'bg-teal-700 text-white border-teal-700' : 'bg-white'}">${label} <span class="${hubFl == k ? 'bg-white text-teal-800' : k ? MS_UI[k][1] : 'bg-gray-100'} rounded-full px-2 mx-1">${n}</span></button>`;
+  const chips = `<div class="np flex flex-wrap gap-2 mb-3" id="hubFl">${chip('', tr('hubAllSt'), db.machines.length)}${['ok', 'bd', 'pm'].map(k => chip(k, MS_UI[k][2] + ' ' + tr('hubSt_' + k), tot[k])).join('')}</div>`;
+  const card = sec => { const ms = db.machines.filter(m => m.d == sec), al = ms.reduce((a, m) => a + spAl(m.id), 0); return `<button onclick="hubGo(${js(sec)})" data-sec="${esc(sec)}" class="text-start bg-white rounded-xl shadow p-4 flex justify-between items-center gap-2"><span><b class="text-lg">${esc(sec)}</b><span class="block text-xs text-gray-500">${ms.length} ${tr('hubMachN')}</span><span class="block text-xs mt-1" data-sc>${msLine(msCount(ms, S))}</span></span>${al ? `<span class="text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${al}</span>` : ''}</button>`; };
+  const board = secs.map(sec => { const ms = db.machines.filter(m => m.d == sec && (!hubFl || msOf(m.id, S) == hubFl)).sort(byName); return ms.length ? `<div class="mt-4" data-bsec="${esc(sec)}"><h3 class="font-bold text-teal-800 mb-2">${esc(sec)} <span class="text-xs font-normal text-gray-500">(${ms.length})</span></h3><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">${ms.map(m => hubBoardCard(m, S)).join('')}</div></div>` : ''; }).join('');
   const clr = me.r == 'admin' && db.sp.on && db.sp.parts.some(p => p.sm) ? `<button onclick="spClear()" class="np mt-4 text-xs text-red-700 font-semibold">🗑 ${tr('spClear')}</button>` : '';
-  return `<p class="text-sm text-gray-500 mb-3">${tr('hubPick')}</p>${hubSearch()}
-<div id="hubSecs" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">${secs.map(card).join('')}</div>
-<div id="hubAllM" style="display:none" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${db.machines.slice().sort((a, b) => a.n.localeCompare(b.n)).map(m => hubMachCard(m, true)).join('')}</div>
+  return `<p class="text-sm text-gray-500 mb-3">${tr('hubPick')}</p>${chips}${hubSearch()}
+${hubFl ? '' : `<div id="hubSecs" class="grid grid-cols-2 lg:grid-cols-3 gap-3">${secs.map(card).join('')}</div>`}
+<div id="hubBoard">${board || `<p class="text-gray-500 mt-3">${tr('hubNoSt')}</p>`}</div>
+<div id="hubAllM" style="display:none" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${db.machines.slice().sort(byName).map(m => hubMachCard(m, true, S)).join('')}</div>
 <p id="hubNoFound" style="display:none" class="text-gray-500">${tr('hubNoFound')}</p>${clr}`;
 }
 function hubMachines() {
-  const ms = db.machines.filter(m => m.d == hubS).sort((a, b) => a.n.localeCompare(b.n));
-  return `${hubSearch()}<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${ms.length ? ms.map(m => hubMachCard(m, false)).join('') : `<p class="text-gray-500">${tr('hubNoMach')}</p>`}</div><p id="hubNoFound" style="display:none" class="text-gray-500">${tr('hubNoFound')}</p>`;
+  const S = machStates(), ms = db.machines.filter(m => m.d == hubS).sort(byName);
+  return `<div class="np flex flex-wrap items-center gap-3 mb-3"><span class="text-sm" data-sc>${msLine(msCount(ms, S))}</span><span class="flex-1"></span><button onclick="hubGo(${js(hubS)},null,'pm')" data-hub="pm" class="bg-white border rounded-xl px-4 py-2 text-sm font-bold">🗓 ${tr('hub_pm')}</button></div>${hubSearch()}<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">${ms.length ? ms.map(m => hubMachCard(m, false, S)).join('') : `<p class="text-gray-500">${tr('hubNoMach')}</p>`}</div><p id="hubNoFound" style="display:none" class="text-gray-500">${tr('hubNoFound')}</p>`;
 }
+// the maintenance schedule entries (the yearly master plan) of a machine or of a whole section, and how many are done / not done
+const pmOf = (sec, m) => {
+  const mc = id => db.machines.find(q => String(q.id) == String(id));
+  return db.link.filter(k => !k.sk && (m ? String(k.mid) == String(m.id) : k.sec == sec || (k.mid && (mc(k.mid) || {}).d == sec)));
+};
+const pmNums = ks => { const nm = new Set(ks.map(k => k.nm)), e = db.sched.filter(x => nm.has(x.nm) && x.y == pmCY()); return { done: e.filter(x => x.s == 'done').length, open: e.filter(x => ['registered', 'planned', 'past'].includes(x.s)).length, e }; };
 function hubMachine(m) {
-  const sps = db.sp.parts.filter(p => p.mid == m.id), al = spAl(m.id), docs = db.sp.docs.filter(d => d.mid == m.id), lg = db.requests.filter(r => String(r.mid) == String(m.id) && r.s == 'done' && r.k != 'pm').length;
+  const S = machStates(), c = S[String(m.id)], sps = db.sp.parts.filter(p => p.mid == m.id), al = spAl(m.id), docs = db.sp.docs.filter(d => d.mid == m.id);
+  const all = db.requests.filter(r => String(r.mid) == String(m.id)), lg = all.filter(r => r.s == 'done' && r.k != 'pm').length, op = all.filter(r => r.s != 'done' && !isHeld(r)).length;
+  const t = mst(all.filter(r => r.k != 'pm')), f = v => v == null ? tr('na') : dhm(v), pn = db.pmOn ? pmNums(pmOf(hubS, m)) : null;
+  const url = location.origin + location.pathname + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d);
+  const kp = (v, l) => `<div class="bg-gray-50 rounded-lg p-2 text-center"><div class="font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
   const big = (v, ic, sub, warn) => `<button onclick="hubGo(${js(hubS)},${js(hubM)},'${v}')" data-hub="${v}" class="bg-white rounded-xl shadow p-5 text-start"><div class="text-3xl">${ic}</div><b class="text-lg block mt-1">${tr('hub_' + v)}</b><span class="text-xs text-gray-600">${sub}</span>${warn ? `<span class="ms-2 text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${warn}</span>` : ''}</button>`;
-  return `<div class="bg-white rounded-xl shadow p-4 mb-3"><b class="text-xl">${esc(m.n)}</b><span class="text-sm text-gray-500"> · ${esc(m.d)}</span></div>
-<div class="grid sm:grid-cols-3 gap-3">${big('parts', '🔩', db.sp.on ? sps.length + ' ' + tr('hubPartsN') : '—', al)}${big('log', '📋', lg + ' ' + tr('hubClosedN'))}${big('manual', '📖', docs.length + ' ' + tr('hubDocsN'))}</div>`;
+  return `<div class="bg-white rounded-xl shadow p-4 mb-3 border-s-4 ${MS_UI[msOf(m.id, S)][0]}" id="hubMHead"><div class="flex justify-between items-start gap-3"><div><b class="text-xl">${esc(m.n)}</b><span class="text-sm text-gray-500"> · ${esc(m.d)}</span><div class="mt-2">${msBadge(m.id, S)}${c && c.stop ? ` <span class="text-xs text-red-700">${tr('hubSince')} <bdi dir="ltr">${esc(fd(c.stop))}</bdi></span>` : ''}</div></div>
+<div class="req text-center shrink-0" id="hubQrBox"><b class="text-sm block">${esc(m.n)}</b><div data-qr="${esc(url)}" data-qs="112" class="mx-auto my-1 w-fit"></div><div class="text-xs text-gray-500">${esc(m.d)}</div><div class="np text-xs text-gray-500">${tr('hubQr')}</div><button onclick="pr(1,this)" class="np text-xs text-teal-700 font-semibold mt-1">🖨 ${tr('hubPrintQr')}</button></div></div>
+<div class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3">${kp(t.c, tr('total'))}${kp(t.s, tr('stops'))}${kp(dhm(t.dt), tr('stopDur'))}${kp(f(t.mttr), 'MTTR')}${kp(f(t.mtbf), 'MTBF')}</div>
+<button onclick="hubGo(${js(hubS)},${js(hubM)},'file')" data-hub="file" class="mt-3 text-sm font-bold text-teal-700 border border-teal-700 rounded-lg px-3 py-2">📁 ${tr('hub_file')}</button></div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">${big('manual', '📖', docs.length + ' ' + tr('hubDocsN'))}${big('log', '📋', lg + ' ' + tr('hubClosedN') + (op ? ' · ' + op + ' ' + tr('hubOpenN') : ''))}${big('parts', '🔩', db.sp.on ? sps.length + ' ' + tr('hubPartsN') : '—', al)}${big('pm', '🗓', pn ? pn.done + ' ' + tr('hubPmDone') + ' · ' + pn.open + ' ' + tr('hubPmOpen') : '—')}</div>`;
+}
+// the machine file (the same page the statistics open), inside this section / machine path
+function hubFile(m) {
+  const SN = {}; db.requests.forEach(r => { if (r.s != 'done' && r.st == 'Yes' && (!SN[r.mid] || r.ra < SN[r.mid])) SN[r.mid] = r.ra; });
+  const keep = mview; mview = m.id;
+  try { return machView({ SN }, `hubGo(${js(hubS)},${js(hubM)})`); } finally { mview = keep; }
+}
+// the maintenance schedule of a section (this month) or of one machine (the whole year): what was done and what was not
+function hubPm(sec, m) {
+  if (!db.pmOn) return `<p class="text-gray-500">${tr('pmNoSched')}</p>`;
+  const td = ymd(new Date()), hy = hubY == null ? pmCY() : hubY, cur = pmMonthOf(td, hy), mon = hubMon == null ? (m ? -1 : cur) : hubMon, inM = x => mon < 0 || pmMonthOf(x.d, x.y) == mon;
+  const K = pmOf(sec, m), nm = new Set(K.map(k => k.nm)), E = db.sched.filter(x => nm.has(x.nm) && x.y == hy && inM(x)), cn = st => E.filter(x => x.s == st).length;
+  const pf = x => !hubPf || (hubPf == 'done' ? x.s == 'done' : ['registered', 'planned', 'past'].includes(x.s));
+  const tile = (n, l, c) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-2xl font-bold ${c || ''}">${n}</div><div class="text-xs text-gray-600">${l}</div></div>`;
+  const tiles = `<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3" id="hubPmTiles">${tile(cn('done'), tr('pmTDone'), 'text-green-700')}${tile(cn('registered'), tr('pmTReg'), 'text-blue-700')}${tile(cn('planned'), tr('pmTPlanned'))}${tile(cn('past'), tr('hubPmMiss'), cn('past') ? 'text-red-600' : '')}</div>`;
+  const cl = on => `px-2 py-1 rounded-lg text-xs font-bold ${on ? 'bg-teal-700 text-white' : 'bg-white border'}`;
+  const mons = `<div class="flex flex-wrap gap-1 mb-2 np" id="hubPmMons">${[...Array(12).keys()].map(i => `<button onclick="hubSetMon(${i})" data-mon="${i}" class="${cl(mon == i)}">${esc(pmMN(i))}${i == cur ? ' •' : ''}</button>`).join('')}<button onclick="hubSetMon(-1)" data-mon="-1" class="${cl(mon < 0)}">${tr('pmAll')}</button></div>`;
+  const fl = `<div class="flex flex-wrap gap-2 mb-3 np" id="hubPmFl">${[['', 'hubAllSt'], ['done', 'hubPmDone'], ['open', 'hubPmOpen']].map(([k, l]) => `<button onclick="hubSetPf('${k}')" data-pf="${k}" class="px-3 py-1.5 rounded-full text-sm border ${hubPf == k ? 'bg-teal-700 text-white border-teal-700' : 'bg-white'}">${tr(l)}</button>`).join('')}</div>`;
+  const rows = K.map(k => ({ k, e: db.sched.filter(x => x.nm == k.nm && x.y == hy && inM(x) && pf(x)).sort((a, b) => a.d.localeCompare(b.d) || a.sq - b.sq) })).filter(x => x.e.length);
+  return pmYearBar('hubSetY', hy, false) + tiles + mons + fl + `<p class="text-xs text-gray-500 mb-2">${tr('pmLegend')}</p>` + (rows.length ? `<div class="cols2" id="hubPmList">${rows.map(x => pmMach(x.k, x.e, false)).join('')}</div>` : `<p class="text-gray-500">${tr('pmNoEntries')}</p>`);
 }
 // one installed piece with its countdown
 function spInstRow(i, canW) {
@@ -2882,10 +3104,11 @@ function dashData() {
   const mo = td.slice(0, 7), lm = ymd(new Date(d0.getFullYear(), d0.getMonth() - 1, 15)).slice(0, 7);
   const rep = m => av(R.filter(r => r.fa && r.ta && r.fa.startsWith(m)).map(r => Math.max(0, (new Date(r.fa) - new Date(r.ta)) / 60000)));
   const G = {}, T30 = {}, load = {};
-  R.filter(r => inR(r, ago(29), td)).forEach(r => { (G[r.mid] = G[r.mid] || []).push(r); T30[r.pt] = (T30[r.pt] || 0) + 1; });
+  const a29 = ago(29), a6 = ago(6), a13 = ago(13), a7 = ago(7);
+  R.filter(r => inR(r, a29, td)).forEach(r => { (G[r.mid] = G[r.mid] || []).push(r); T30[r.pt] = (T30[r.pt] || 0) + 1; });
   live.filter(r => r.s == 'prog').forEach(r => { load[r.ts] = (load[r.ts] || 0) + 1; });
   const risk = Object.entries(G).map(([id, l]) => { const c = l.length, s = l.filter(r => r.st == 'Yes').length, sn = stopped.has(id), lt = lateM.has(id); return { id, n: l[0].mn, c, s, sn, lt, score: c * 2 + s * 3 + (sn ? 5 : 0) + (lt ? 2 : 0) }; }).sort((a, b) => b.score - a.score).slice(0, 5);
-  const weeks = [...Array(8).keys()].map(i => ({ i, from: ago(6 + 7 * i), n: R.filter(r => inR(r, ago(6 + 7 * i), ago(7 * i))).length })).reverse();
+  const weeks = [...Array(8).keys()].map(i => { const f = ago(6 + 7 * i), t = ago(7 * i); return { i, from: f, n: R.filter(r => inR(r, f, t)).length }; }).reverse();
   const pmOpen = AL.filter(r => r.k == 'pm' && r.s != 'done'), due = r => (r.ra || '').slice(0, 10), in7 = ago(-7);
   const pmLate = pmOpen.filter(r => due(r) < td).length;
   const pmWeek = pmOpen.filter(r => due(r) >= td && due(r) <= in7).length + (db.plans || []).filter(p => p.ac && p.nd > td && p.nd <= in7 && !pmOpen.some(r => r.pl == p.id)).length;
@@ -2893,7 +3116,7 @@ function dashData() {
   return {
     pmLate, pmWeek, pmDone, stopped: stopped.size, openN: live.filter(r => r.s == 'open').length, progN: live.filter(r => r.s == 'prog').length, lateN: lateL.length,
     closedToday: R.filter(r => r.s == 'done' && (r.fa || '').startsWith(td)).length,
-    w0: R.filter(r => inR(r, ago(6), td)).length, w1: R.filter(r => inR(r, ago(13), ago(7))).length,
+    w0: R.filter(r => inR(r, a6, td)).length, w1: R.filter(r => inR(r, a13, a7)).length,
     mttrM: rep(mo), mttrL: rep(lm), risk, weeks, types: Object.entries(T30).sort((a, b) => b[1] - a[1]).slice(0, 5), load: Object.entries(load)
   };
 }
