@@ -464,6 +464,12 @@ noSec|بدون قسم|No section
 secOf2|القسم|Section
 xlTrBusy|جارٍ ترجمة النصوص إلى الإنجليزية…|Translating the texts to English…
 xlTrLeft|بقيت نصوص عربية لم تُترجم بسبب حد الترجمة المجانية. اضغط تصدير مرة أخرى لاحقاً لإكمالها. عدد النصوص المتبقية:|Some Arabic texts are not translated yet (limit of the free translation service). Press export again later to finish them. Texts left:
+xlTrLimit|وصلت خدمة الترجمة المجانية إلى حدها اليومي (5000 حرف في اليوم لكل الأجهزة المتصلة بنفس الشبكة). ما تُرجم تم حفظه والباقي يكتمل لاحقاً.|The free translation service has reached its daily limit (5,000 characters a day for all devices on the same network). What was translated is saved; the rest will be finished later.
+xlTrWait|يتجدد الحد بعد (ساعة:دقيقة)|It is available again in (hours:minutes)
+xlTrMail|لرفع الحد إلى 50,000 حرف في اليوم اضغط زر ✉ بجانب «نسخة كاملة» وأدخل بريداً إلكترونياً.|To raise the limit to 50,000 characters a day, press the ✉ button next to "Full backup" and enter an e-mail address.
+xlTrBad|نصوص لم تستطع الخدمة ترجمتها وبقيت كما كُتبت:|Texts the service could not translate (kept as written):
+trEmailAsk|بريد إلكتروني لخدمة الترجمة (اختياري): يرفع حد الترجمة المجانية من 5000 إلى 50,000 حرف في اليوم. يُرسل لخدمة الترجمة (MyMemory) ويُحفظ في هذا المتصفح فقط ولا يُكتب في الموقع. اتركه فارغاً لإلغائه.|E-mail for the translation service (optional): raises the free limit from 5,000 to 50,000 characters a day. It is sent to the translation service (MyMemory) and kept in this browser only; it is not written into the site. Leave empty to remove it.
+trEmailBad|البريد غير صحيح|That e-mail address is not valid
 pickType|اختر نوع العطل|Select the problem type
 morePartsOpt|… جزء آخر (عرض كل الأجزاء)|… Another part (show all parts)
 urgentT|عاجل / متأخر|Urgent / late
@@ -472,6 +478,12 @@ thisYear|هذه السنة|This year
 tfOpen|المفتوحة وطلباتي|Open and mine
 tfAllSt|كل الحالات|All statuses
 tfClosed|المغلقة فقط|Closed only
+tabPrevT|الطلبات السابقة|Previous requests
+pvY2|أمس واليوم|Yesterday and today
+pvPeriod|الفترة|Period
+pvDone|مغلقة|Closed
+pvNow|الآن|now
+pvHint|أعطال الفترة المختارة بكل حالاتها (جديدة، قيد التنفيذ، مغلقة) لتطّلع على ما حصل في الشفت السابق. «الشفت السابق» هو الشفت الذي قبل الحالي (من 7 إلى 7).|Breakdowns of the chosen period in every state (new, in progress, closed), to see what happened in the previous shift. "Previous shift" is the shift before the current one (7:00 to 19:00).
 tfMore|يعرض أول 150 طلباً. ضيّق الفلتر أو نزّل الملف لتحصل على كل النتائج|Showing the first 150. Narrow the filter or download the file for all results
 sfHint|لتحديد يوم واحد اختر نفس التاريخ في «من» و«إلى». التواريخ تتجاوز اختيار الفترة|For a single day pick the same date in From and To. Dates override the period
 lifeT|العمر الافتراضي لقطع الغيار|Spare parts life
@@ -496,7 +508,7 @@ const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', dadm: 'dep
 let me = (() => { try { const v = JSON.parse(LS.get('napco_me') || 'null'); return v && typeof v === 'object' && [...STAFF, 'admin', 'workshop'].includes(v.r) && (!STAFF.includes(v.r) || /^[0-9a-f]{64}$/.test(v.t || '')) ? v : null; } catch (e) { return null; } })();
 let step = { s: 'emp', e: '' }, tab = '', period = 'all', shOff = 0, editId = null, mview = null, tv = false, medit = false, pmEdit = null, sxPanel = false, pwPanel = false, qrWarned = false, rpEmp = null, sfR = '', sfD = '', sxTaps = [], pf = { r: 'all', from: '', to: '', m: '', k: '', bm: 'last', bs: '' }, showResp = false, sel = new Set();
 let dirty = false, lastSync = '', lastDel = '', smallSig = '', polls = 0;
-let sv = 'tables', cf = { r: '30d', from: '', to: '', d: '', m: '' }, chartAnim = false, tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), sf = { d: '', m: '', from: '', to: '' }, trCache = {}, trAc = {}, trStr = new Map(), snReq = '', snKind = 'done', snText = '';
+let sv = 'tables', cf = { r: '30d', from: '', to: '', d: '', m: '' }, chartAnim = false, tf = { d: [], r: 'all', from: '', to: '', st: 'open' }, tsel = new Set(), pv = { r: 'y2', from: '', to: '', st: '', d: '' }, sf = { d: '', m: '', from: '', to: '' }, trCache = {}, trAc = {}, trStr = new Map(), snReq = '', snKind = 'done', snText = '';
 const DT = ['overheating', 'electrical', 'mechanical', 'hydraulic', 'leak', 'noise'];
 const pcol = { low: 'bg-gray-100', medium: 'bg-amber-100', high: 'bg-orange-100', critical: 'bg-red-100' };
 const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
@@ -1184,7 +1196,14 @@ function dupchk() {
 const hasAr = t => /[؀-ۿ]/.test(String(t || ''));
 // Arabic -> English for the technician, with the free MyMemory service (one call takes about 500 bytes, so a longer text goes in pieces).
 // Any failure just means "no translation": the report is still sent, and the technician can press Translate on it later.
+// why the last translation failed: 'limit' (the free daily quota is used up: 5000 characters a day for every device on the same network), 'net' (no answer) or 'bad' (no usable translation);
+// trWait = when the quota comes back, as hours:minutes, when the service says so
+let trWhy = '', trWait = '';
+// an e-mail typed by the admin (the ✉ button) raises the free quota to 50,000 characters a day; it is kept in this browser only and is never put in the page
+const trDe = () => { const e = (LS.get('trde') || '').trim(); return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) ? e : ''; };
+const trUsable = s => { const a = (s.match(/[؀-ۿ]/g) || []).length, l = (s.match(/[A-Za-z؀-ۿ]/g) || []).length; return l > 0 && a / l <= 0.3; };
 async function translateAr(text) {
+  trWhy = ''; trWait = '';
   text = String(text || '').trim();
   if (!hasAr(text)) return '';
   const chunks = [];
@@ -1194,27 +1213,48 @@ async function translateAr(text) {
     const l = chunks[chunks.length - 1];
     if (l && l.length + p.length < 220) chunks[chunks.length - 1] = l + p; else chunks.push(p);
   });
-  if (!chunks.length || chunks.length > 6) return '';
-  const ac = new AbortController(), to = setTimeout(() => ac.abort(), 8000), out = [];
+  if (!chunks.length || chunks.length > 6) { trWhy = 'bad'; return ''; }
+  const ac = new AbortController(), to = setTimeout(() => ac.abort(), 8000), out = [], de = trDe();
   try {
     for (const c of chunks) {
-      const r = await fetch('https://api.mymemory.translated.net/get?langpair=ar%7Cen&q=' + encodeURIComponent(c), { signal: ac.signal });
-      const j = await r.json(), t = j && j.responseData && j.responseData.translatedText;
-      if (!r.ok || !t || (j.responseStatus && j.responseStatus != 200) || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID/i.test(t)) return '';
+      const r = await fetch('https://api.mymemory.translated.net/get?langpair=ar%7Cen&q=' + encodeURIComponent(c) + (de ? '&de=' + encodeURIComponent(de) : ''), { signal: ac.signal });
+      const j = await r.json().catch(() => null), t = j && j.responseData && j.responseData.translatedText;
+      if (r.status == 429 || (j && j.responseStatus == 429) || /MYMEMORY WARNING/i.test(String(t || ''))) {
+        const m = /NEXT AVAILABLE IN\s+(\d+)\s+HOURS?\s+(\d+)\s+MINUTES?/i.exec(String(t || ''));
+        trWhy = 'limit'; trWait = m ? m[1] + ':' + m[2].padStart(2, '0') : ''; return '';
+      }
+      if (!r.ok || !t || (j.responseStatus && j.responseStatus != 200) || /QUERY LENGTH LIMIT|INVALID/i.test(t)) { trWhy = 'net'; return ''; }
       out.push(String(t).replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim());
     }
-    return out.join(' ').slice(0, 2000);
-  } catch (e) { return ''; } finally { clearTimeout(to); }
+    const res = out.join(' ').slice(0, 2000);
+    if (!trUsable(res)) { trWhy = 'bad'; return ''; }   // the service gave the same Arabic back, or nothing readable: not a translation
+    return res;
+  } catch (e) { trWhy = 'net'; return ''; } finally { clearTimeout(to); }
+}
+// the message after an export that could not translate everything
+const trLeftMsg = left => {
+  const pend = left - trBadN;
+  return (trWhy == 'limit' ? tr('xlTrLimit') + (trWait ? ' ' + tr('xlTrWait') + ' ' + trWait + '.' : '') + (me && me.r == 'admin' && !trDe() ? ' ' + tr('xlTrMail') : '') + '\n' : '')
+    + (pend > 0 ? tr('xlTrLeft') + ' ' + pend : '') + (trBadN ? (pend > 0 ? '\n' : '') + tr('xlTrBad') + ' ' + trBadN : '');
+};
+function setTrEmail() {
+  const v = prompt(tr('trEmailAsk'), trDe());
+  if (v === null) return;
+  const e = v.trim();
+  if (e && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return alert(tr('trEmailBad'));
+  LS.set('trde', e); render();
 }
 async function trNow(id) {
   const r = db.requests.find(x => x.id == id); if (!r) return;
   const t = await translateAr(r.ds);
-  if (t) { trCache[id] = t; rpc('save_translations', { p_tok: stTok(), p_data: [{ id: +id, d: t }] }).catch(() => {}); render(); } else alert(tr('trFail'));
+  if (t) { trCache[id] = t; rpc('save_translations', { p_tok: stTok(), p_data: [{ id: +id, d: t }] }).catch(() => {}); render(); } else alert(tr(trWhy == 'limit' ? 'xlTrLimit' : 'trFail'));
 }
 // Before an English file: translate the Arabic texts that have no English yet. The free service allows only a few thousand characters a day, so a click translates a limited
 // number of texts and stops at the first refusal; what is translated is saved (requests keep their own English columns, every other text goes to the shared dictionary,
 // update 13), and the next click continues where this one stopped. Returns how many texts are still untranslated.
-const needEn = r => (hasAr(r.ds) && !r.de && !trCache[r.id]) || (hasAr(r.ac) && !r.ae && !trAc[r.id]);
+const trBad = new Set();   // texts the service could not translate (it gave nothing readable): they are not asked again in this session
+let trBadN = 0;            // how many of the texts left at the end of the last run are of that kind
+const needEn = r => (hasAr(r.ds) && !r.de && !trCache[r.id] && !trBad.has('d' + r.id)) || (hasAr(r.ac) && !r.ae && !trAc[r.id] && !trBad.has('a' + r.id));
 // the typed texts of a request that have no English column of their own: problem type, root cause, machine part, approval note, spare parts, checklist items and notes
 const reqStrs = r => [r.pt, r.rc, r.mp, r.okt, ...(r.sp || []).map(p => p.n), ...(r.ck || []).flatMap(c => [c.t, c.n])];
 // and the rest of the site: plan titles and checklists, machine details, problem types added, shift notes
@@ -1239,34 +1279,36 @@ async function ensureEnglish(list, force, opt = {}) {
   if (opt.all) siteStrs().forEach(add);
   if (!need.length && !strs.size) return 0;
   const bar = document.createElement('div'); bar.className = 'np fixed bottom-4 inset-x-4 z-50 mx-auto max-w-md bg-gray-900 text-white rounded-lg px-4 py-3 text-sm text-center'; document.body.appendChild(bar);
-  const out = [], CAP = opt.cap || 60, SCAP = opt.strCap || 80, todo = Math.min(need.length, CAP) + Math.min(strs.size, SCAP); let n = 0, stop = false;
+  // the short texts go first (part names, root causes, checklist items: many, cheap, and every sheet of the file needs them); the long descriptions of requests come after.
+  // Before, the descriptions went first and used the whole free quota, so the other sheets were never reached.
+  const out = [], CAP = opt.cap || 60, SCAP = opt.strCap || 80, sl = [...strs].filter(t => !trBad.has(t)).sort((a, b) => a.length - b.length).slice(0, SCAP), rl = need.slice(0, CAP), todo = rl.length + sl.length; let n = 0, stop = false;
   try {
-    for (const r of need.slice(0, CAP)) {
+    for (const t of sl) {
+      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + todo;
+      const x = await translateAr(t);
+      if (x) { trStr.set(t, x); dictQ.set(t, x); } else if (trWhy == 'bad') trBad.add(t); else { stop = true; break; }
+    }
+    for (const r of rl) {
+      if (stop) break;
       bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + todo;
       const rec = { id: r.id };
-      if (hasAr(r.ds) && !r.de && !trCache[r.id]) { const t = await translateAr(r.ds); if (t) { trCache[r.id] = t; rec.d = t; } else stop = true; }
-      if (!stop && hasAr(r.ac) && !r.ae && !trAc[r.id]) { const t = await translateAr(r.ac); if (t) { trAc[r.id] = t; rec.a = t; } else stop = true; }
+      if (hasAr(r.ds) && !r.de && !trCache[r.id]) { const t = await translateAr(r.ds); if (t) { trCache[r.id] = t; rec.d = t; } else if (trWhy == 'bad') trBad.add('d' + r.id); else stop = true; }
+      if (!stop && hasAr(r.ac) && !r.ae && !trAc[r.id]) { const t = await translateAr(r.ac); if (t) { trAc[r.id] = t; rec.a = t; } else if (trWhy == 'bad') trBad.add('a' + r.id); else stop = true; }
       if (rec.d || rec.a) out.push(rec);
-      if (stop) break;
-    }
-    for (const t of [...strs].slice(0, SCAP)) {
-      if (stop) break;
-      bar.textContent = '⏳ ' + tr('xlTrBusy') + ' ' + (++n) + '/' + todo;
-      const x = await translateAr(t); if (!x) break;
-      trStr.set(t, x); dictQ.set(t, x);
     }
     if (out.length) await rpc('save_translations', { p_tok: stTok(), p_data: out }).catch(() => {});
     await saveDict();
   } finally { bar.remove(); }
-  return list.filter(needEn).length + [...strs].filter(t => !trStr.has(t)).length;
+  // what is still Arabic: the texts waiting for the service, and the ones it could not translate
+  const dOpen = r => hasAr(r.ds) && !r.de && !trCache[r.id], aOpen2 = r => hasAr(r.ac) && !r.ae && !trAc[r.id];
+  trBadN = list.reduce((a, r) => a + (dOpen(r) && trBad.has('d' + r.id) ? 1 : 0) + (aOpen2(r) && trBad.has('a' + r.id) ? 1 : 0), 0) + [...strs].filter(t => !trStr.has(t) && trBad.has(t)).length;
+  return list.reduce((a, r) => a + (dOpen(r) && !trBad.has('d' + r.id) ? 1 : 0) + (aOpen2(r) && !trBad.has('a' + r.id) ? 1 : 0), 0) + [...strs].filter(t => !trStr.has(t) && !trBad.has(t)).length + trBadN;
 }
 // the English text of a request (translated and saved earlier, or translated in this session); the original when there is none
 const descOut = r => (lang == 'en' ? r.de || trCache[r.id] : '') || r.ds || '';
 const actOut = r => (lang == 'en' ? r.ae || trAc[r.id] : '') || r.ac || '';
 // any other typed text (custom problem types, parts, checklist notes ...): English in an English file when it was translated
 const enx = t => { if (lang != 'en' || !t || !hasAr(t)) return t; return trStr.get(t) || trStr.get(String(t).trim()) || t; };
-// the English text only when there is one (for the paired "original / English" columns)
-const enOnly = t => { const e = enx(t); return e && e !== t ? e : ''; };
 const actHtml = r => { const en = lang == 'en' ? r.ae || trAc[r.id] || '' : ''; return en && en != r.ac ? `${esc(en)}<div class="text-xs text-gray-500 border-t mt-1 pt-1" dir="auto">${tr('origText')}: ${esc(r.ac)}</div>` : esc(r.ac); };
 async function sendReq(e) {
   e.preventDefault();
@@ -1392,6 +1434,39 @@ function techMine() {
   return `<h2 class="text-xl font-bold text-teal-800 mb-3">🔧 ${tr('mineProg')} (${mine.length})</h2>${mine.length ? grid(mine, one) : `<p class="text-gray-500">${tr('mineNone')}</p>`}
 <h2 class="text-xl font-bold text-teal-800 mt-6 mb-3">✅ ${tr('mineDone')} (${fin.length})</h2>${fin.length ? grid(fin, dn) : `<p class="text-gray-500">${tr('none')}</p>`}`;
 }
+// "Previous requests": what happened in the previous shift or yesterday, in every state, so the technician coming on duty can read the night shift's problems
+function setPV(k, v) { pv[k] = v; if (k == 'r') pv.d = ''; render(); }
+const pvDay = n => ymd(new Date(Date.now() - n * 864e5)) + 'T00:00';
+// the window [from, to) in local time; an empty end means "until now"
+function pvWin() {
+  const td = ymd(new Date());
+  if (pv.r == 'shift') return shiftWin(1);
+  if (pv.r == 'today') return [td + 'T00:00', ''];
+  if (pv.r == 'yday') return [pvDay(1), td + 'T00:00'];
+  if (pv.r == 'w') return [pvDay(6), ''];
+  if (pv.r == 'custom') return [pv.from ? pv.from + 'T00:00' : '', pv.to ? dAdd(pv.to, 1) + 'T00:00' : ''];
+  return [pvDay(1), ''];
+}
+// a breakdown belongs to the window when it was reported, taken or finished in it (preventive tasks are not problems, and requests still waiting for the section head are not his yet)
+function pvBase() {
+  const [a, b] = pvWin(), inW = t => !!t && (!a || t >= a) && (!b || t < b);
+  return db.requests.filter(r => r.k != 'pm' && !isHeld(r) && (inW(r.ra) || inW(r.ta) || inW(r.fa)));
+}
+function techPrev() {
+  const [a, b] = pvWin(), base = pvBase(), depts = [...new Set(base.map(r => r.d).filter(Boolean))].sort(), dsel = depts.includes(pv.d) ? pv.d : '';
+  const inD = base.filter(r => !dsel || r.d == dsel), cnt = { '': inD.length, open: 0, prog: 0, done: 0 };
+  inD.forEach(r => { cnt[r.s]++; });
+  const all = inD.filter(r => !pv.st || r.s == pv.st).sort((x, y) => (y.ra || '').localeCompare(x.ra || '')), rs = all.slice(0, 150);
+  const chip = (on, label, fn) => `<button onclick="${fn}" class="px-3 py-1.5 rounded-full text-sm border ${on ? 'bg-teal-700 text-white border-teal-700' : 'bg-white'}">${label}</button>`;
+  const bar = `<div class="np bg-white rounded-xl shadow p-3 mb-4 space-y-2">
+<div class="flex flex-wrap gap-2 items-center"><b class="text-sm">${tr('pvPeriod')}:</b>${[['y2', 'pvY2'], ['shift', 'prevShift'], ['yday', 'yesterday'], ['today', 'today'], ['w', 'last7'], ['custom', 'custom']].map(([k, l]) => chip(pv.r == k, tr(l), `setPV('r','${k}')`)).join('')}</div>
+${pv.r == 'custom' ? `<div class="grid grid-cols-2 gap-2"><label class="text-xs">${tr('from')}<input type="date" value="${esc(pv.from)}" onchange="setPV('from',this.value)"></label><label class="text-xs">${tr('to')}<input type="date" value="${esc(pv.to)}" onchange="setPV('to',this.value)"></label></div>` : ''}
+<div class="text-xs text-gray-500">${a ? fd(a) : '…'} → ${b ? fd(b) : tr('pvNow')}</div>
+<div class="flex flex-wrap gap-2 items-center"><b class="text-sm">${tr('dept')}:</b>${chip(!dsel, tr('allDepts'), "setPV('d','')")}${depts.map(d => chip(dsel == d, esc(d), `setPV('d',${js(d)})`)).join('')}</div>
+<div class="flex flex-wrap gap-2 items-center">${[['', 'tfAllSt'], ['open', 'sOpen'], ['prog', 'sProg'], ['done', 'pvDone']].map(([k, l]) => chip(pv.st == k, `${tr(l)} (${cnt[k]})`, `setPV('st','${k}')`)).join('')}</div></div>`;
+  const one = r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.pr == 'critical' ? 'border-red-500' : r.s == 'done' ? 'border-green-500' : 'border-teal-600'}">${card(r)}${noteLines(r)}${r.s == 'done' ? done(r) + apprBadge(r) : openBadge(r)}</div>`;
+  return `<h2 class="text-xl font-bold text-teal-800 mb-1">🕘 ${tr('tabPrevT')}</h2><p class="text-xs text-gray-500 mb-3">${tr('pvHint')}</p>${bar}${rs.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${rs.map(one).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`}${all.length > rs.length ? `<p class="text-xs text-gray-500 mt-3">${tr('tfMore')}</p>` : ''}`;
+}
 // when a technician takes a request he fills in what the operator no longer writes: priority, problem type, electrical / mechanical, machine part
 const typeOptsT = (mid, cur) => {
   const c = Object.values(db.custom).filter(x => x.m === mid && x.n >= 2), known = DT.includes(cur) || c.some(x => x.l == cur);
@@ -1510,7 +1585,7 @@ function adminView() {
   if (!tab || !A.includes(tab)) tab = A[0];
   const N = { appr: 'tabAppr', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
   const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length;
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<button onclick="exportAll(this)" title="${tr('bkHint')}" class="ms-auto bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button>` : ''}</div>` : '') + ({ appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</div>` : '') + ({ appr: aAppr, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs text-teal-700 font-semibold">✔ ${tr('approve')}</button>` : ''}<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 // the badge under an open / in-progress request: waiting for the department, pickup timer, preventive due date, or who is working on it
@@ -1564,7 +1639,7 @@ function printSel() {
 async function exportPrev() {
   const l = prevList(), rs = sel.size ? l.filter(r => sel.has(r.id)) : l;
   if (!rs.length) return alert(tr('none'));
-  try { const left = await ensureEnglish(rs), bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); if (left) alert(tr('xlTrLeft') + ' ' + left); } catch (err) { alert(tr('xlErr')); }
+  try { const left = await ensureEnglish(rs), bk = XW.Book(lang == 'ar'); reqTable(bk, rs); await saveXl(bk, 'napco-requests-' + ymd(new Date()) + '.xlsx'); if (left) alert(trLeftMsg(left)); } catch (err) { alert(tr('xlErr')); }
 }
 /* ---------- BREAKDOWN LOG: the same table as the Breakdowns sheet of the maintenance workbook ---------- */
 const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -1659,7 +1734,7 @@ async function exportBd() {
     let bk; lang = 'en';
     try { bk = XW.Book(false); bdSheet(bk, mo ? 'Breakdowns (' + MON[+mo.slice(5) - 1] + ')' : 'Breakdowns', rows, showResp); } finally { lang = keep; }
     await saveXl(bk, 'Breakdowns-' + (mo || 'all') + '.xlsx');
-    if (left) alert(tr('xlTrLeft') + ' ' + left);
+    if (left) alert(trLeftMsg(left));
   } catch (err) { alert(tr('xlErr')); }
 }
 /* ---------- FULL BACKUP: every table of the site in one Excel file (English headings, no passwords, no secrets) ---------- */
@@ -1676,7 +1751,7 @@ async function exportAll(btn) {
     let bk;
     try { bk = backupBook(now); } finally { lang = keep; }
     await saveXl(bk, 'napco-full-backup-' + ymd(now) + '.xlsx');
-    if (left) alert(tr('xlTrLeft') + ' ' + left);
+    if (left) alert(trLeftMsg(left));
   } catch (err) { alert(tr('xlErr')); }
   finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
 }
@@ -1693,19 +1768,19 @@ function backupBook(now) {
   // every request: open, in progress and closed; breakdowns and preventive tasks
   table('Requests (all)', 'Every request with all its details: breakdowns and preventive tasks, open and closed', [
     { h: 'ID', w: 8, t: 'int' }, { h: 'Type', w: 12, t: 'mid' }, { h: 'Status', w: 12, t: 'mid' }, { h: 'Machine ID', w: 11 }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Problem type', w: 18 }, { h: 'Priority', w: 10, t: 'mid' },
-    { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 42, t: 'wrap' }, { h: 'Description (English)', w: 42, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' }, { h: 'Saved on server', w: 18, t: 'date' }, { h: 'Released by section head', w: 18, t: 'date' },
+    { h: 'Machine stopped (at report)', w: 18, t: 'mid' }, { h: 'Description', w: 52, t: 'wrap' }, { h: 'Reported by', w: 18 }, { h: 'Reported at', w: 18, t: 'date' }, { h: 'Saved on server', w: 18, t: 'date' }, { h: 'Released by section head', w: 18, t: 'date' },
     { h: 'Taken by', w: 20 }, { h: 'With him', w: 22, t: 'wrap' }, { h: 'Taken at', w: 18, t: 'date' }, { h: 'Finished at', w: 18, t: 'date' }, { h: 'Repair (min)', w: 11, t: 'int' }, { h: 'Response (min)', w: 11, t: 'int' },
-    { h: 'Action(s) taken', w: 42, t: 'wrap' }, { h: 'Action(s) taken (English)', w: 42, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
+    { h: 'Action(s) taken', w: 52, t: 'wrap' }, { h: 'Root cause', w: 20 }, { h: 'Cleaning', w: 9, t: 'mid' }, { h: 'Machine stopped (at closing)', w: 18, t: 'mid' }, { h: 'Mechanical or Electrical BD', w: 16, t: 'mid' }, { h: 'Machine part', w: 24 },
     { h: 'Spare parts', w: 34, t: 'wrap' }, { h: 'Checklist', w: 44, t: 'wrap' }, { h: 'Plan ID', w: 9, t: 'int' },
-    { h: 'Approval', w: 12, t: 'mid' }, { h: 'Approved / sent back by', w: 20 }, { h: 'Approval date', w: 18, t: 'date' }, { h: 'Approval note', w: 34, t: 'wrap' }, { h: 'Approval note (English)', w: 34, t: 'wrap' }, { h: 'Re-opened from request', w: 12, t: 'int' }
+    { h: 'Approval', w: 12, t: 'mid' }, { h: 'Approved / sent back by', w: 20 }, { h: 'Approval date', w: 18, t: 'date' }, { h: 'Approval note', w: 40, t: 'wrap' }, { h: 'Re-opened from request', w: 12, t: 'int' }
   ], reqs.map(r => [
     r.no, r.k == 'pm' ? 'Preventive' : 'Breakdown', r.s == 'done' ? 'Closed' : r.s == 'open' ? 'Open' : 'In progress', r.mid, r.mn, r.d, enx(tl(r.pt)), tr(r.pr),
-    yn(r.st), r.ds, r.de || trCache[r.id] || '', r.by, dt(r.ra), dt(r.cr), dt(r.ap),
+    yn(r.st), enx(descOut(r)), r.by, dt(r.ra), dt(r.cr), dt(r.ap),
     stf(r.ts), cw(r).map(stf).join(', '), dt(r.ta), dt(r.fa), mins(r.ta, r.fa) ?? '', mins(r.ra, r.ta) ?? '',
-    r.ac || '', r.ae || trAc[r.id] || '', enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', enx(r.mp) || '',
+    enx(actOut(r)), enx(rl(r.rc)), yn(r.cl), ({ Yes: 'YES', No: 'NO', Job: 'Job change' })[r.s2] || '', r.bc || '', enx(r.mp) || '',
     (r.sp || []).map(x => enx(x.n) + (x.q ? ' ×' + x.q : '') + (x.p ? ' (' + x.p + ')' : '')).join(', '),
     (r.ck || []).filter(c => c.r).map(c => ({ ok: 'OK', bad: 'Problem', na: 'N/A' })[c.r] + ': ' + enx(c.t) + (c.n ? ' (' + enx(c.n) + ')' : '')).join(' | '), r.pl == null ? '' : r.pl,
-    r.ok ? ({ pending: 'Waiting', approved: 'Approved', rejected: 'Sent back' })[r.ok] : '', r.okn || '', dt(r.oka), r.okt || '', enOnly(r.okt), r.rf == null ? '' : r.rf
+    r.ok ? ({ pending: 'Waiting', approved: 'Approved', rejected: 'Sent back' })[r.ok] : '', r.okn || '', dt(r.oka), enx(r.okt || ''), r.rf == null ? '' : r.rf
   ]));
 
   // the breakdown log: one sheet per month, exactly the layout of the workbook's "Breakdowns (JAN)" sheet
@@ -1739,11 +1814,11 @@ function backupBook(now) {
   if (cu.length) table('Problem types added', 'Problem types typed by operators that were added to the lists', [{ h: 'Machine', w: 24 }, { h: 'Problem type', w: 30 }, { h: 'Times', w: 8, t: 'int' }],
     cu.map(([, c]) => [(db.machines.find(m => m.id == c.m) || {}).n || c.m, enx(c.l), c.n]));
 
-  // shift handover notes (what was fixed, what to watch): original text and its English
+  // shift handover notes (what was fixed, what to watch), in English
   if (db.notes.length) {
     const KN = { done: 'Fixed this shift', watch: 'Watch', info: 'Info' };
-    table('Shift notes', 'Handover notes written by technicians and supervisors (kept 90 days)', [{ h: 'ID', w: 8, t: 'int' }, { h: 'Written at', w: 18, t: 'date' }, { h: 'Request ID', w: 11, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Type', w: 16, t: 'mid' }, { h: 'Note', w: 44, t: 'wrap' }, { h: 'Note (English)', w: 44, t: 'wrap' }, { h: 'By', w: 24 }],
-      db.notes.slice().sort((a, b) => a.id - b.id).map(n => { const r = n.rid == null ? null : db.requests.find(x => x.id == n.rid); return [n.id, dt(n.at), n.rid == null ? '' : n.rid, r ? r.mn : '', KN[n.k] || n.k, n.t, enOnly(n.t), (n.n ? n.n + ' ' : '') + (n.e ? '#' + n.e : '')]; }));
+    table('Shift notes', 'Handover notes written by technicians and supervisors (kept 90 days)', [{ h: 'ID', w: 8, t: 'int' }, { h: 'Written at', w: 18, t: 'date' }, { h: 'Request ID', w: 11, t: 'int' }, { h: 'Machine', w: 22 }, { h: 'Type', w: 16, t: 'mid' }, { h: 'Note', w: 56, t: 'wrap' }, { h: 'By', w: 24 }],
+      db.notes.slice().sort((a, b) => a.id - b.id).map(n => { const r = n.rid == null ? null : db.requests.find(x => x.id == n.rid); return [n.id, dt(n.at), n.rid == null ? '' : n.rid, r ? r.mn : '', KN[n.k] || n.k, enx(n.t), (n.n ? n.n + ' ' : '') + (n.e ? '#' + n.e : '')]; }));
   }
 
   // the first sheet: what is inside
@@ -2101,7 +2176,7 @@ async function exportXl() {
       { h: tr('tech'), w: 26 }, { h: tr('taken'), w: 12, t: 'int' }, { h: tr('closedN'), w: 12, t: 'int' }, { h: tr('repMin'), w: 16, t: 'int' }
     ], Object.entries(S.T).map(([e, t]) => [stf(e), t.n, t.d, t.d ? Math.round(t.ms / t.d / 60000) : '']));
     await saveXl(bk, 'napco-' + (sfRange() ? (sf.from || 'start') + '_' + (sf.to || 'now') : period == 'all' ? 'all' : period) + (sf.m ? '-machine' : sf.d ? '-dept' : '') + '.xlsx');
-    if (left) alert(tr('xlTrLeft') + ' ' + left);
+    if (left) alert(trLeftMsg(left));
   } catch (err) { alert(tr('xlErr')); }
 }
 
@@ -2134,7 +2209,7 @@ let ttab = 'work';
 function setTT(k) { ttab = k; render(); }
 const techHome = () => {
   const w = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, n = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'mine' ? techMine() : techView());
+  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
 };
 function shiftWin(off) {
   const d = new Date(), h = d.getHours();
