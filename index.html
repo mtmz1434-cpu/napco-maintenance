@@ -2661,7 +2661,7 @@ function mst(list) {
 // how long a spare part lasts: the time between two replacements of the same part (same name and number) on the same machine, averaged
 function partLife() {
   const G = {};
-  db.requests.filter(r => r.s == 'done' && r.fa && (r.k == 'pm' || apprOk(r))).forEach(r => (r.sp || []).forEach(x => {
+  db.requests.filter(r => r.s == 'done' && r.fa).forEach(r => (r.sp || []).forEach(x => {   // a part that was replaced is replaced: it does not wait for the production approval
     if (!x.n) return;
     const k = r.mid + '|' + x.n.trim().toLowerCase() + '|' + (x.p || '').trim().toLowerCase();
     (G[k] = G[k] || { mid: r.mid, m: r.mn, n: x.n, p: x.p, t: [] }).t.push(r.fa);
@@ -2682,7 +2682,7 @@ function calc(fl) {
   rs.forEach(r => (G[r.mid] = G[r.mid] || []).push(r));
   Object.entries(G).forEach(([id, l]) => { M[id] = { n: l[0].mn, d: l[0].d, ...mst(l) }; });
   db.requests.filter(r => r.s != 'done' && r.st == 'Yes').forEach(r => { if (!SN[r.mid] || r.ra < SN[r.mid]) SN[r.mid] = r.ra; });
-  db.requests.filter(r => r.s == 'done' && (r.k == 'pm' || apprOk(r)) && inP(r.fa) && okR(r)).forEach(r => {
+  db.requests.filter(r => r.s == 'done' && inP(r.fa) && okR(r)).forEach(r => {   // parts used and root causes: the work was done, so it is counted whatever the approval state
     if (r.rc) RCc[r.rc] = (RCc[r.rc] || 0) + 1;
     (r.sp || []).forEach(x => {
       const k = (x.n + '|' + x.p).toLowerCase(), o = P[k] = P[k] || { n: x.n, p: x.p, c: 0, m: new Set() };
