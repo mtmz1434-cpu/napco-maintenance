@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#08111a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Napco">
+<script>try{var _t=localStorage.getItem("theme"),_f=+localStorage.getItem("fs");document.documentElement.setAttribute("data-theme",_t=="light"?"light":"dark");if(_f==1||_f==2)document.documentElement.style.fontSize=["","112.5%","125%"][_f];if(_t=="light")document.querySelector("meta[name=theme-color]").content="#115e59"}catch(e){}</script>
 <title>Napco Maintenance</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body{font-family:Cairo,system-ui,sans-serif;background:#f3f6f5;color:#1f2937}
-input,select,textarea{border:1px solid #cbd5d1;border-radius:.5rem;padding:.6rem;width:100%;background:#fff;font:inherit;transition:border-color .15s,box-shadow .15s}
+:root{--bg:#f3f6f5;--tx:#1f2937;--mu:#566070;--mu2:#616b7a;--inbg:#fff;--inbd:#b6c2bd;--ac:#0f766e;--acr:rgba(15,118,110,.22);--pop:#fff;--popbd:#d1d5db;--gp:#0f766e;--ln:#e5e7eb;--ln2:#d1d5db;--card:#fff;--c1:#2563eb;--c2:#b45309}
+@media screen{html[data-theme=dark]{--bg:#0b1722;--tx:#e8eef4;--mu:#a9b8c7;--mu2:#8fa2b4;--inbg:#0e1c29;--inbd:#3a5772;--ac:#f5a524;--acr:rgba(245,165,36,.3);--pop:#152636;--popbd:#2f4b66;--gp:#f5a524;--ln:#2b455d;--ln2:#3a5772;--card:#122231;--c1:#60a5fa;--c2:#f5a524}}
+html{color-scheme:light;-webkit-text-size-adjust:100%}@media screen{html[data-theme=dark]{color-scheme:dark}}
+body{font-family:Cairo,system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+input,select,textarea{border:1px solid var(--inbd);border-radius:.5rem;padding:.6rem;width:100%;background:var(--inbg);color:var(--tx);font:inherit;transition:border-color .15s,box-shadow .15s}
 input,select{min-height:2.75rem}
 input[type=checkbox]{width:auto;padding:0;min-height:0}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#0f766e;box-shadow:0 0 0 3px rgba(15,118,110,.18)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--acr)}
+::placeholder{color:var(--mu2);opacity:1}
+input[type=checkbox],input[type=radio]{accent-color:var(--ac)}
 select{-webkit-appearance:none;appearance:none;cursor:pointer;background-repeat:no-repeat;background-size:1rem;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E")}
 [dir=rtl] select{background-position:left .75rem center;padding-left:2.25rem}
@@ -21,7 +31,11 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button:disabled{opacity:.55;cursor:not-allowed}
 #app{min-height:100vh;min-height:100dvh}
 @media (max-width:639px){
-  .tabs>button{flex:1 1 calc(50% - .25rem);text-align:center}
+  .tabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:.5rem;margin-inline:-1rem;padding:.1rem 1rem .5rem;scroll-snap-type:x proximity;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs>*{flex:0 0 auto;white-space:nowrap;min-height:2.75rem;scroll-snap-align:center}
+  .tabs2{display:grid!important;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:max-content}
+  .al:not(.open) .al-x{display:none}
   .grid.grid-cols-2.sm\:grid-cols-5>:last-child{grid-column:span 2}
 }
 @media print{.np{display:none!important}body.p1 .req:not(.only){display:none}}
@@ -43,20 +57,116 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .pmg-wrap{overflow:auto;max-height:72vh;background:#fff;border-radius:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .pmg{border-collapse:separate;border-spacing:0;font-size:11px;direction:ltr}
 .pmg th,.pmg td{border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;text-align:center;padding:0}
-.pmg thead th{position:sticky;top:0;background:#0f766e;color:#fff;z-index:2;padding:3px 2px;font-weight:700;height:24px}
-.pmg thead tr:nth-child(2) th{top:24px;background:#14b8a6;font-size:10px}
+.pmg thead th{position:sticky;top:0;background:#134e4a;color:#fff;z-index:2;padding:3px 2px;font-weight:700;height:24px}
+.pmg thead tr:nth-child(2) th{top:24px;background:#0f766e;font-size:10px}
 .pmg .pmg-n{position:sticky;left:0;background:#fff;z-index:1;min-width:112px;max-width:150px;text-align:left;padding:4px 6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pmg thead .pmg-n{z-index:3;background:#0f766e}
+.pmg thead .pmg-n{z-index:3;background:#134e4a}
 .pmg td{min-width:30px;height:32px;padding:1px}
 .pmg td.pmg-now{background:#fffbeb}.pmg th.pmg-now{outline:2px solid #f59e0b;outline-offset:-2px}
 .pmg tr.pmg-sec td{background:#ccfbf1;font-weight:700;text-align:left;padding:3px 8px}.pmg .pmg-sl{position:sticky;left:8px;display:inline-block}
-.pmg td.pmg-idle{background:#f3f4f6;color:#6b7280;font-weight:700;letter-spacing:.1em}
+.pmg td.pmg-idle{background:#f3f4f6;color:#4b5563;font-weight:700;letter-spacing:.1em}
 .pmg-c{display:block;width:100%;min-height:28px;border:1px solid;border-radius:5px;font-weight:700;font-size:10px;line-height:1.1}
 .pmg-cap{caption-side:top;text-align:left;font-weight:700;font-size:13px;color:#0f766e;padding:6px 8px;position:sticky;left:0}
 @media print{.pmg-wrap{max-height:none;overflow:visible;box-shadow:none}.pmg{font-size:7px}.pmg td{min-width:12px;height:16px;padding:0}.pmg-c{min-height:13px;font-size:6px;border-radius:2px}.pmg .pmg-n{position:static;min-width:60px;max-width:90px;padding:1px 3px}.pmg thead th{position:static;padding:1px;height:auto}.pmg .pmg-sl{position:static}}
+
+/* ---- update 26: look and accessibility ---- */
+.bdw,.bd{color:#111827}
+.hb{min-height:2.5rem;min-width:2.5rem;padding:0 .5rem;border-radius:.5rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.hb:hover{background:rgba(255,255,255,.14)}
+.hdt{font-size:1rem;white-space:nowrap}
+.skip{position:absolute;inset-inline-start:.5rem;top:-5rem;z-index:60;background:#fff;color:#111827;padding:.6rem 1rem;border-radius:.5rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.skip:focus{top:.5rem}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+header :focus-visible{outline-color:#fff}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none}
+main:focus{outline:none}
+.greet{display:flex;flex-wrap:wrap;align-items:baseline;gap:.1rem .75rem;margin-bottom:1rem}
+.greet h1{font-size:1.5rem;font-weight:700;line-height:1.35}
+.gpos{font-weight:700;color:var(--gp)}
+.gid{font-size:.85rem;color:var(--mu)}
+.look-pop{position:absolute;top:calc(100% + 6px);inset-inline-end:1rem;z-index:40;width:15.5rem;background:var(--pop);color:var(--tx);border:1px solid var(--popbd);border-radius:.75rem;padding:.75rem;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.look-pop .lp-t{font-size:.8rem;font-weight:700;color:var(--mu);margin:.25rem 0 .4rem}
+.look-pop .lp-r{display:flex;gap:.4rem;margin-bottom:.5rem}
+.look-pop .lp-r button{flex:1;min-height:2.75rem;border:1px solid var(--popbd);border-radius:.5rem;font-weight:700;background:transparent;color:var(--tx)}
+.look-pop .lp-r button[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:#fff}
+@media screen{html[data-theme=dark] .look-pop .lp-r button[aria-pressed=true]{color:#0b1722}}
+.pwr{position:relative}.pwr>input{padding-inline-end:3rem}
+.pwt{position:absolute;top:0;bottom:0;inset-inline-end:.15rem;min-width:2.75rem;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.85;font-size:1.1rem}
+.pwt[aria-pressed=true]{opacity:1}
+.al-t{font-weight:700;text-decoration:underline;min-height:2.5rem;padding:0 .5rem}
+@media (prefers-reduced-motion:reduce){*,::before,::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.skip,.look-pop{display:none!important}}
 </style>
 <style id="tw-static">
-*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.relative{position:relative}.inset-x-4{left:1rem;right:1rem}.bottom-4{bottom:1rem}.left-2{left:0.5rem}.top-2{top:0.5rem}.z-10{z-index:10}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.col-span-3{grid-column:span 3 / span 3}.col-span-4{grid-column:span 4 / span 4}.mx-1{margin-left:0.25rem;margin-right:0.25rem}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:0.25rem;margin-bottom:0.25rem}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-3{margin-top:0.75rem;margin-bottom:0.75rem}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ms-2{margin-inline-start:0.5rem}.ms-auto{margin-inline-start:auto}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-8{height:2rem}.h-fit{height:-moz-fit-content;height:fit-content}.min-h-screen{min-height:100vh}.\!w-auto{width:auto !important}.w-10{width:2.5rem}.w-16{width:4rem}.w-28{width:7rem}.w-32{width:8rem}.w-8{width:2rem}.w-auto{width:auto}.w-fit{width:-moz-fit-content;width:fit-content}.w-full{width:100%}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-\[1600px\]{max-width:1600px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.list-disc{list-style-type:disc}.list-none{list-style-type:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-6{grid-template-columns:repeat(6, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-0\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.125rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t{border-top-left-radius:0.25rem;border-top-right-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-s-4{border-inline-start-width:4px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-amber-400{--tw-border-opacity:1;border-color:rgb(251 191 36 / var(--tw-border-opacity, 1))}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254 / var(--tw-border-opacity, 1))}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-green-700{--tw-border-opacity:1;border-color:rgb(21 128 61 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-teal-600{--tw-border-opacity:1;border-color:rgb(13 148 136 / var(--tw-border-opacity, 1))}.border-teal-700{--tw-border-opacity:1;border-color:rgb(15 118 110 / var(--tw-border-opacity, 1))}.border-white\/50{border-color:rgb(255 255 255 / 0.5)}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-200{--tw-bg-opacity:1;background-color:rgb(191 219 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237 / var(--tw-bg-opacity, 1))}.bg-orange-600{--tw-bg-opacity:1;background-color:rgb(234 88 12 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-teal-100{--tw-bg-opacity:1;background-color:rgb(204 251 241 / var(--tw-bg-opacity, 1))}.bg-teal-50{--tw-bg-opacity:1;background-color:rgb(240 253 250 / var(--tw-bg-opacity, 1))}.bg-teal-700{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.bg-teal-800{--tw-bg-opacity:1;background-color:rgb(17 94 89 / var(--tw-bg-opacity, 1))}.bg-teal-900{--tw-bg-opacity:1;background-color:rgb(19 78 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.ps-5{padding-inline-start:1.25rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.text-start{text-align:start}.text-end{text-align:end}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-normal{font-weight:400}.font-semibold{font-weight:600}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-800{--tw-text-opacity:1;color:rgb(154 52 18 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110 / var(--tw-text-opacity, 1))}.text-teal-800{--tw-text-opacity:1;color:rgb(17 94 89 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.opacity-60{opacity:0.6}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-red-400{--tw-ring-opacity:1;--tw-ring-color:rgb(248 113 113 / var(--tw-ring-opacity, 1))}.ring-teal-600{--tw-ring-opacity:1;--tw-ring-color:rgb(13 148 136 / var(--tw-ring-opacity, 1))}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.disabled\:opacity-40:disabled{opacity:0.4}@media (min-width: 640px){.sm\:w-44{width:11rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.sm\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}}@media (min-width: 1280px){.xl\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.xl\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}
+*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.relative{position:relative}.inset-x-4{left:1rem;right:1rem}.bottom-4{bottom:1rem}.left-2{left:0.5rem}.top-2{top:0.5rem}.z-10{z-index:10}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.col-span-3{grid-column:span 3 / span 3}.col-span-4{grid-column:span 4 / span 4}.mx-1{margin-left:0.25rem;margin-right:0.25rem}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:0.25rem;margin-bottom:0.25rem}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-3{margin-top:0.75rem;margin-bottom:0.75rem}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ms-2{margin-inline-start:0.5rem}.ms-auto{margin-inline-start:auto}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-8{height:2rem}.h-fit{height:-moz-fit-content;height:fit-content}.min-h-screen{min-height:100vh}.\!w-auto{width:auto !important}.w-10{width:2.5rem}.w-16{width:4rem}.w-28{width:7rem}.w-32{width:8rem}.w-8{width:2rem}.w-auto{width:auto}.w-fit{width:-moz-fit-content;width:fit-content}.w-full{width:100%}.w-px{width:1px}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-\[1600px\]{max-width:1600px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.list-disc{list-style-type:disc}.list-none{list-style-type:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-6{grid-template-columns:repeat(6, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-0\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.125rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre{white-space:pre}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t{border-top-left-radius:0.25rem;border-top-right-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-s-4{border-inline-start-width:4px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-amber-400{--tw-border-opacity:1;border-color:rgb(251 191 36 / var(--tw-border-opacity, 1))}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254 / var(--tw-border-opacity, 1))}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-green-700{--tw-border-opacity:1;border-color:rgb(21 128 61 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-teal-600{--tw-border-opacity:1;border-color:rgb(13 148 136 / var(--tw-border-opacity, 1))}.border-teal-700{--tw-border-opacity:1;border-color:rgb(15 118 110 / var(--tw-border-opacity, 1))}.border-white\/50{border-color:rgb(255 255 255 / 0.5)}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-200{--tw-bg-opacity:1;background-color:rgb(191 219 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237 / var(--tw-bg-opacity, 1))}.bg-orange-600{--tw-bg-opacity:1;background-color:rgb(234 88 12 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-teal-100{--tw-bg-opacity:1;background-color:rgb(204 251 241 / var(--tw-bg-opacity, 1))}.bg-teal-50{--tw-bg-opacity:1;background-color:rgb(240 253 250 / var(--tw-bg-opacity, 1))}.bg-teal-700{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.bg-teal-800{--tw-bg-opacity:1;background-color:rgb(17 94 89 / var(--tw-bg-opacity, 1))}.bg-teal-900{--tw-bg-opacity:1;background-color:rgb(19 78 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-1{padding:0.25rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-1{padding-bottom:0.25rem}.ps-5{padding-inline-start:1.25rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.text-start{text-align:start}.text-end{text-align:end}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-normal{font-weight:400}.font-semibold{font-weight:600}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-800{--tw-text-opacity:1;color:rgb(154 52 18 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-teal-700{--tw-text-opacity:1;color:rgb(15 118 110 / var(--tw-text-opacity, 1))}.text-teal-800{--tw-text-opacity:1;color:rgb(17 94 89 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.opacity-60{opacity:0.6}.opacity-70{opacity:0.7}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-red-400{--tw-ring-opacity:1;--tw-ring-color:rgb(248 113 113 / var(--tw-ring-opacity, 1))}.ring-teal-600{--tw-ring-opacity:1;--tw-ring-color:rgb(13 148 136 / var(--tw-ring-opacity, 1))}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.disabled\:opacity-40:disabled{opacity:0.4}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:hidden{display:none}.sm\:w-44{width:11rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.sm\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.sm\:gap-3{gap:0.75rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}}@media (min-width: 1280px){.xl\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.xl\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}
+</style>
+<style id="theme">
+/* contrast fixes for the light look (and print) */
+.bg-orange-600{background-color:#c2410c}
+.text-orange-600{color:#c2410c}
+.text-amber-600{color:#b45309}
+.text-gray-400{color:#616b7a}
+.text-gray-500{color:#566070}
+/* dark navy look (default). Only on screen, so printing stays light */
+@media screen{
+:where(html[data-theme=dark]) :where(*,::before,::after){border-color:#2b455d}
+html[data-theme=dark] *{scrollbar-color:#3a5a78 #0f1d2b}
+html[data-theme=dark] .bg-white{background-color:#122231}
+html[data-theme=dark] .bg-gray-50{background-color:#17293a}
+html[data-theme=dark] .bg-gray-100{background-color:#1b3043}
+html[data-theme=dark] .bg-gray-200{background-color:#264359}
+html[data-theme=dark] .bg-gray-800{background-color:#2a4259}
+html[data-theme=dark] .bg-gray-900{background-color:#0f1d2b}
+html[data-theme=dark] .border-gray-200,html[data-theme=dark] .border-gray-300{border-color:#2b455d}
+html[data-theme=dark] .text-gray-800,html[data-theme=dark] .text-gray-700{color:#e8eef4}
+html[data-theme=dark] .text-gray-600,html[data-theme=dark] .text-gray-500{color:#a9b8c7}
+html[data-theme=dark] .text-gray-400{color:#8fa2b4}
+html[data-theme=dark] .text-teal-700,html[data-theme=dark] .text-teal-800{color:#5eead4}
+html[data-theme=dark] .bg-teal-700{background-color:#f5a524;color:#0b1722}
+html[data-theme=dark] .bg-teal-700.text-white{color:#0b1722}
+html[data-theme=dark] .bg-teal-800{background-color:#08111a}
+html[data-theme=dark] .bg-teal-900{background-color:#17293a}
+html[data-theme=dark] .bg-teal-50{background-color:rgba(45,212,191,.1)}
+html[data-theme=dark] .bg-teal-100{background-color:rgba(45,212,191,.18)}
+html[data-theme=dark] .border-teal-600,html[data-theme=dark] .border-teal-700{border-color:#2dd4bf}
+html[data-theme=dark] .ring-teal-600{--tw-ring-color:#f5a524}
+html[data-theme=dark] .bg-red-50{background-color:rgba(248,113,113,.12)}
+html[data-theme=dark] .bg-red-100{background-color:rgba(248,113,113,.2)}
+html[data-theme=dark] .text-red-600,html[data-theme=dark] .text-red-700,html[data-theme=dark] .text-red-800{color:#fca5a5}
+html[data-theme=dark] .bg-red-600.text-white,html[data-theme=dark] .bg-red-600{color:#fff}
+html[data-theme=dark] .border-red-300,html[data-theme=dark] .border-red-400,html[data-theme=dark] .border-red-500{border-color:rgba(248,113,113,.6)}
+html[data-theme=dark] .bg-amber-50{background-color:rgba(245,158,11,.12)}
+html[data-theme=dark] .bg-amber-100{background-color:rgba(245,158,11,.2)}
+html[data-theme=dark] .text-amber-600,html[data-theme=dark] .text-amber-700,html[data-theme=dark] .text-amber-800,html[data-theme=dark] .text-amber-900{color:#fcd34d}
+html[data-theme=dark] .border-amber-300,html[data-theme=dark] .border-amber-400,html[data-theme=dark] .border-amber-500{border-color:rgba(245,158,11,.6)}
+html[data-theme=dark] .bg-amber-500.text-white,html[data-theme=dark] .bg-amber-500{color:#0b1722}
+html[data-theme=dark] .bg-blue-50{background-color:rgba(96,165,250,.12)}
+html[data-theme=dark] .bg-blue-100{background-color:rgba(96,165,250,.2)}
+html[data-theme=dark] .bg-blue-200{background-color:rgba(96,165,250,.24)}
+html[data-theme=dark] .text-blue-700,html[data-theme=dark] .text-blue-800,html[data-theme=dark] .text-blue-900{color:#93c5fd}
+html[data-theme=dark] .text-blue-900{color:#bfdbfe}
+html[data-theme=dark] .border-blue-100,html[data-theme=dark] .border-blue-300,html[data-theme=dark] .border-blue-500{border-color:rgba(96,165,250,.55)}
+html[data-theme=dark] .bg-green-50{background-color:rgba(74,222,128,.12)}
+html[data-theme=dark] .bg-green-100{background-color:rgba(74,222,128,.2)}
+html[data-theme=dark] .text-green-700,html[data-theme=dark] .text-green-800{color:#86efac}
+html[data-theme=dark] .border-green-500,html[data-theme=dark] .border-green-700{border-color:rgba(74,222,128,.65)}
+html[data-theme=dark] .bg-orange-50{background-color:rgba(251,146,60,.12)}
+html[data-theme=dark] .bg-orange-100{background-color:rgba(251,146,60,.2)}
+html[data-theme=dark] .text-orange-600,html[data-theme=dark] .text-orange-800{color:#fdba74}
+html[data-theme=dark] .bg-purple-100{background-color:rgba(192,132,252,.2)}
+html[data-theme=dark] .text-purple-800{color:#d8b4fe}
+html[data-theme=dark] .shadow{box-shadow:0 0 0 1px #243d54,0 6px 16px rgba(0,0,0,.35)}
+html[data-theme=dark] select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23a9b8c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E")}
+html[data-theme=dark] option{background-color:#122231;color:#e8eef4}
+html[data-theme=dark] .pmg-wrap{background:#122231}
+html[data-theme=dark] .pmg th,html[data-theme=dark] .pmg td{border-color:#2b455d}
+html[data-theme=dark] .pmg .pmg-n{background:#122231}
+html[data-theme=dark] .pmg tr.pmg-sec td{background:rgba(45,212,191,.16)}
+html[data-theme=dark] .pmg td.pmg-now{background:rgba(245,158,11,.14)}
+html[data-theme=dark] .pmg td.pmg-idle{background:#1b3043;color:#8fa2b4}
+html[data-theme=dark] .pmg-cap{color:#5eead4}
+html[data-theme=dark] .hb:hover{background:rgba(255,255,255,.1)}
+}
 </style>
 </head>
 <body>
@@ -229,6 +339,100 @@ prevShift|الشفت السابق|Previous shift
 stillOpen|أعطال لم تُغلق (تُسلَّم للشفت القادم)|Faults still open (hand over to next shift)
 doneShift|أعطال أُنجزت في هذا الشفت|Faults completed in this shift
 credit|صنع بواسطة محمد الزهراني|Made by Mohammed Al-Zahrani
+hi|مرحباً|Hello
+wsRole|الورك شوب|Workshop
+skipT|انتقل إلى المحتوى|Skip to content
+lookT|المظهر وحجم الخط|Appearance and text size
+themeT|المظهر|Appearance
+darkT|داكن|Dark
+lightT|فاتح|Light
+fszT|حجم الخط|Text size
+fszS|عادي|Normal
+fszM|كبير|Large
+fszL|كبير جداً|Extra large
+showPw|إظهار كلمة المرور|Show password
+hidePw|إخفاء كلمة المرور|Hide password
+moreAl|عرض {n} أخرى ▾|Show {n} more ▾
+lessAl|إخفاء ▴|Hide ▴
+tabsT|التبويبات|Tabs
+availT|الجاهزية|Availability
+mtbfS|بين الأعطال|Between failures
+mttrS|وقت الإصلاح|Repair time
+nMach|{n} آلة|{n} machines
+paretoT|باريتو: أكبر أسباب التوقف|Pareto: biggest causes of downtime
+pdMach|الآلة|Machine
+pdDept|القسم|Section
+pdType|نوع العطل|Fault type
+pdRc|السبب الجذري|Root cause
+pmH|ساعات التوقف|Downtime hours
+pmC|عدد الأعطال|Breakdowns
+paretoNote|الأعمدة مرتبة من الأكبر، والخط الأصفر هو النسبة التراكمية، وخط 80% يوضح القلة التي تسبب أغلب التوقف.|Bars are sorted biggest first; the line is the cumulative share, and the 80% line shows the few causes behind most of the downtime.
+perf30|الأداء آخر 30 يوماً|Performance, last 30 days
+perfNote|الجاهزية = 1 − ساعات التوقف ÷ (عدد الآلات × ساعات الفترة) على أساس تشغيل 24 ساعة. تُحسب التذاكر المغلقة والمعتمدة من الإنتاج فقط.|Availability = 1 − downtime hours ÷ (machines × hours in the period), on a 24-hour day. Only closed tickets approved by production are counted.
+statWait|بانتظار اعتماد الإنتاج (غير محسوبة بعد): {n}|Waiting for production approval (not counted yet): {n}
+tabLight|الصيانة الخفيفة|Light maintenance
+tabLApp|اعتماد الصيانة الخفيفة|Approve light maintenance
+tabOpRep|بلاغ عطل|Report a fault
+tabOpLight|الصيانة الخفيفة|Light maintenance
+lmDueT|مهام الصيانة المطلوبة الآن|Maintenance tasks due now
+lmNone|ما فيه مهام مستحقة الحين 👍|No tasks are due now 👍
+lmStart|ابدأ|Start
+lmClose|إغلاق|Close
+lmOk|سليم|OK
+lmBad|يحتاج انتباه|Needs attention
+lmBadNote|اكتب المشكلة (مطلوب)|Write the problem (required)
+lmAllOk|الكل سليم (للمتبقي)|All OK (for the rest)
+lmSend|إرسال لمشرف الإنتاج للاعتماد|Send to the production supervisor for approval
+lmLeft|باقي {n} نقطة بدون إجابة.|{n} point(s) not answered yet.
+lmNeedNote|{n} نقطة تحتاج وصف المشكلة.|{n} point(s) need the problem written.
+lmWaitT|بانتظار اعتماد مشرف الإنتاج|Waiting for the production supervisor
+lmDoneT|آخر المعتمد|Recently approved
+lmBackT|أعادها مشرف الإنتاج: {note}|Sent back by the production supervisor: {note}
+lmNew|مهمة جديدة|New task
+lmEditT|تعديل المهمة|Edit the task
+lmKind|النوع|Type
+lmKLight|صيانة خفيفة|Light maintenance
+lmKDeep|تنظيف عميق|Deep cleaning
+lmTitle|اسم المهمة|Task name
+lmMach|الآلات|Machines
+lmMachHint|لا تختر شيئاً = كل آلات القسم|choose none = every machine of the section
+lmFreq|التكرار|How often
+lmDaily|يومياً|Every day
+lmEvery2|كل يومين|Every 2 days
+lmWeekly|أسبوعياً|Every week
+lmBiweekly|كل أسبوعين|Every 2 weeks
+lmMonthly|شهرياً|Every month
+lmQuarterly|كل 3 أشهر|Every 3 months
+lmEveryN|كل {n} يوم|Every {n} days
+lmPts|النقاط التي يسويها المشغّل|The points the operator does
+lmPtsHint|كل سطر نقطة. اكتب الطريقة والملاحظة بعد الخط العمودي مثل المثال تحت (الطريقة والملاحظة اختياريتين). السطر اللي يبدأ بعلامة # يحدد المنطقة للنقاط اللي تحته.|One point per line. Write the method and the remark after the vertical bar, like the example below (both are optional). A line that starts with # sets the area of the points below it.
+lmActive|المهمة فعّالة|The task is active
+lmSaveT|حفظ المهمة|Save the task
+lmDel|حذف|Delete
+lmDelConf|حذف المهمة؟ إذا لها سجلات فقط تتوقف وتبقى السجلات.|Delete the task? If it has records it is only switched off and the records stay.
+lmAllM|كل آلات القسم|Every machine of the section
+lmPtsN|{n} نقطة|{n} points
+lmOff|متوقفة|Off
+lmN30|نُفّذت {n} مرة آخر 30 يوم|done {n} time(s) in 30 days
+lmRecent|آخر ما نُفّذ|Latest records
+lmPendApp|بانتظار الاعتماد|Waiting for approval
+lmApproved|معتمدة|Approved
+lmRejected|أُعيدت|Sent back
+lmApprove|اعتماد|Approve
+lmSendBack|إرجاع|Send back
+lmBackNote|سبب الإرجاع (مطلوب عند الإرجاع)|Reason (required to send back)
+lmNoteReq|اكتب سبب الإرجاع.|Write the reason for sending it back.
+lmStale|تغيّر الوضع، حدّثنا الصفحة.|Things changed, the page was refreshed.
+lmQueue|بانتظار اعتمادك|Waiting for your approval
+lmNoQueue|ما فيه شي بانتظار الاعتماد.|Nothing is waiting for approval.
+lmOffDb|الصيانة الخفيفة غير مفعّلة في قاعدة البيانات (شغّل تحديث 21 في Supabase).|Light maintenance is not set up in the database (run update 21 in Supabase).
+lmOkN|{n} نقطة سليمة|{n} point(s) OK
+lmBadN|{n} نقطة فيها مشكلة|{n} point(s) with a problem
+lmNoTasks|ما أضفت مهام بعد.|No tasks yet.
+lmWaitAll|{n} مهمة بانتظار اعتماد مشرف الإنتاج.|{n} task(s) waiting for the production supervisor.
+lmSupHint|أنت تحدد للمشغّل النقاط اللي يسويها لكل قسم وكل كم يوم، وتقدر تعدّلها بأي وقت. المشغّل ينفذها، ومشرف الإنتاج يعتمد.|You decide the points the operator does for each section and how often, and you can change them any time. The operator does them and the production supervisor approves.
+lmBadForm|اكتب اسم المهمة (حرفين على الأقل) واختر القسم.|Write the task name (2 letters at least) and choose the section.
+lmNoPts|أضف نقطة واحدة على الأقل.|Add at least one point.
 edit|تعديل|Edit
 saveEdit|حفظ التعديل|Save changes
 cancel|إلغاء|Cancel
@@ -649,6 +853,35 @@ otherPart|أخرى|Other
 partTypeIt|اكتب اسم الجزء|Type the part name
 tabParts|اعتماد القطع|Parts review
 prNoDb|شغّل ملف التحديث ١٩ في Supabase|Run update 19 in Supabase
+tabNa|لا ينطبق|Not applicable
+ckNaHint|اختر «لا ينطبق» فقط إذا كانت المكينة لا تحتوي هذه القطعة. المشرف يتأكد: إذا كانت القطعة موجودة ترجع لك الصيانة لتفحصها.|Choose "N/A" only if the machine does not have this part. The supervisor checks it: if the part exists, the maintenance comes back to you to inspect it.
+naBackNote|أعاد المشرف هذا البند، افحصه|The supervisor sent this item back: inspect it
+naHint|بنود اختارها الفني «لا ينطبق» (المكينة لا تحتوي القطعة). تأكد منها: إذا صحيح يُحذف البند من قوائم هذه المكينة، وإذا القطعة موجودة تُفتح الصيانة من جديد للفني ويبقى كل شيء مفحوصاً إلا هذا البند.|Items the technician marked "N/A" (the machine has no such part). Check each one: if true, the item is removed from this machine's checklists; if the part exists, the maintenance opens again for the technician with everything checked except this item.
+naNoDb|شغّل ملف التحديث ٢٠ في Supabase|Run update 20 in Supabase
+naNone|لا توجد بنود «لا ينطبق» تنتظر المراجعة|No "N/A" items are waiting for review
+naTechNote|ملاحظة الفني|Technician's note
+naNote|ملاحظة للفني (اختيارية)|Note for the technician (optional)
+naYes|لا ينطبق فعلاً (تأكيد)|Really N/A (confirm)
+naNo|القطعة موجودة (إعادة فتح)|Part exists (reopen)
+naSure|تأكيد: سيُحذف هذا البند من قوائم هذه المكينة (الآن وفي الصيانات القادمة). متأكد؟|Confirm: this item will be removed from this machine's checklists (now and for the next maintenances). Sure?
+naSentBack|أُعيدت الصيانة للفني، وبقية البنود كما هي.|The maintenance was sent back to the technician; the other items keep their answers.
+naStale|تغيّرت حالة هذا البند، تم تحديث الصفحة.|This item has changed; the page was refreshed.
+naRemovedT|بنود محذوفة من قوائم المكائن|Items removed from machines' checklists
+naRestore|إرجاع البند للمكينة|Put it back for the machine
+naRestoreAsk|إرجاع هذا البند لقوائم هذه المكينة في الصيانات القادمة؟|Put this item back into this machine's checklists for the next maintenances?
+naRecentT|آخر القرارات|Latest decisions
+naConf|أكّد المشرف: لا ينطبق|Supervisor confirmed: N/A
+naBack|المشرف: القطعة موجودة، أُعيد الفحص|Supervisor: the part exists, sent back
+naWait|بانتظار مراجعة المشرف|Waiting for the supervisor
+pmSecHint|اختر القسم لتعديل قوائم فحصه (Q = ٣ و٩ أشهر، MD = ٦ أشهر، Y = ١٢ شهراً). التعديل يسري على الصيانات التي تُسجَّل بعد الحفظ.|Choose a section to edit its checklists (Q = 3 and 9 months, MD = 6 months, Y = 12 months). A change applies to the maintenances registered after saving.
+pmSecGen|القوائم العامة (للأقسام التي ليس لها قوائم خاصة)|General lists (for the sections without their own)
+pmSecOwn|قائمة خاصة بالقسم|The section's own list
+pmSecGeneral|تستخدم القائمة العامة|Uses the general list
+pmSecPh|بند في كل سطر. اتركها فارغة لاستخدام القائمة العامة.|One item per line. Leave it empty to use the general list.
+pmSecBack|رجوع للقائمة العامة|Back to the general list
+pmSecBackAsk|إرجاع هذا القسم للقائمة العامة؟ (الصيانات القادمة فقط)|Give this section back to the general list? (next maintenances only)
+pmSecEmpty|اكتب بنداً واحداً على الأقل، أو اضغط «رجوع للقائمة العامة».|Write at least one item, or press "Back to the general list".
+pmSecNoDb|شغّل ملف التحديث ٢٠ في Supabase|Run update 20 in Supabase
 prHint|الجزء أو القطعة اللي كتبها الفني تحت «أخرى». إذا هي موجودة بالقائمة اختر الموجودة، وإذا فعلاً جديدة سجّلها وتطلع بالقائمة بعدين.|What a technician typed under "Other". If it is already in the list pick the existing one; if it really is new, register it and it appears in the list from then on.
 prMach|أجزاء المكينة بانتظار التأكيد|Machine parts waiting
 prSpare|قطع الغيار بانتظار التأكيد|Spare parts waiting
@@ -699,7 +932,7 @@ D.split('\n').forEach(l => { const [k, a, e] = l.split('|'); L.ar[k] = a; L.en[k
 const LS = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* private mode: the app still works, it just will not remember */ } } };
 let lang = LS.get('lang') == 'en' ? 'en' : 'ar';
 const tr = k => L[lang][k] ?? esc(k);
-let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [], sched: [], link: [], lv: {}, pmOn: false, sbr: new Map(), sp: { on: false, parts: [], inst: [], docs: [] }, po: { on: false, from: 0, opts: [], known: new Set() } };
+let db = { machines: [], requests: [], techs: [], staff: [], depts: [], custom: {}, plans: [], notes: [], sched: [], link: [], lv: {}, pmOn: false, sbr: new Map(), lm: { on: false, tasks: [], runs: [] }, sp: { on: false, parts: [], inst: [], docs: [] }, po: { on: false, from: 0, opts: [], known: new Set() }, na: { on: false, rev: new Map(), skip: [] }, sl: {}, slOn: false };
 // signed-in staff (operator, technician, supervisor, department admin) carry a session token; an old saved sign-in without one is dropped
 const STAFF = ['operator', 'technician', 'supervisor', 'prodsup', 'deptadmin'];
 const ROLE = { op: 'operator', tech: 'technician', sup: 'supervisor', psup: 'prodsup', dadm: 'deptadmin' };
@@ -713,7 +946,7 @@ const btn = 'w-full bg-teal-700 text-white font-bold py-3 rounded-lg';
 // the preventive maintenance master plan: its weeks start on Sunday (W1 = 28 Dec 2025); its months are 4-4-5 weeks (January = W1-5 ... December = W49-52)
 const PM_MST = [1, 6, 10, 14, 19, 23, 27, 32, 36, 41, 45, 49, 53], PM_W1 = '2025-12-28', PM_LV = ['Q', 'MD', 'Y', 'M'], PM_SEC = ['Extrusion', 'Printing', 'Cutting', 'Thermoforming', 'Workshop', 'Premises'];
 const LV_DEF = { Q: 'Quarterly preventive maintenance (Q)', MD: 'Mid-year preventive maintenance (MD)', Y: 'Yearly preventive maintenance (Y)', M: 'Monthly preventive maintenance (M)' };
-let pmLoaded = false, pmSig = '', spLoaded = false, spSig = '', poLoaded = false, poSig = '';
+let pmLoaded = false, pmSig = '', spLoaded = false, spSig = '', poLoaded = false, poSig = '', naLoaded = false, naSig = '';
 
 const $ = id => document.getElementById(id);
 const save = () => { if (!(me && me.sx)) LS.set('napco_me', JSON.stringify(me)); };
@@ -1100,7 +1333,7 @@ function alerts() {
   Object.values(C).filter(o => o.c >= 3).sort((a, b) => b.c - a.c).forEach(o => out.push(`🔁 ${tr('repAlert')}: ${esc(o.n)} — ${esc(tl(o.t))} × ${o.c} ${tr('inDays')}`));
   pmAlerts().forEach(x => out.push(x));
   spAlerts().forEach(x => out.push(x));
-  return out.length ? `<div class="np flex flex-wrap items-center gap-2 mb-4 text-sm"><b class="text-red-800">⚠ ${tr('alertsT')}</b>${out.map(x => `<span class="bg-red-50 border border-red-300 text-red-800 rounded-lg px-3 py-1">${x}</span>`).join('')}</div>` : '';
+  return out.length ? `<div class="np al mb-4 text-sm${alOpen ? ' open' : ''}"><div class="flex flex-wrap items-center gap-2"><b class="text-red-800">⚠ ${tr('alertsT')}</b>${out.map((x, i) => `<span class="${i > 2 ? 'al-x ' : ''}bg-red-50 border border-red-300 text-red-800 rounded-lg px-3 py-1">${x}</span>`).join('')}${out.length > 3 ? `<button type="button" class="al-t sm:hidden text-red-800" data-n="${out.length - 3}" aria-expanded="${alOpen}" onclick="alT(this)">${alOpen ? tr('lessAl') : tr('moreAl').replace('{n}', out.length - 3)}</button>` : ''}</div></div>` : '';
 }
 // earlier fixes for the same machine + fault type, shown to the technician
 function sol(r) {
@@ -1149,7 +1382,7 @@ const fromReq = x => {
   const s = oneOf(x.status, ['open', 'prog', 'done'], 'open'), ta = dts(x.taken_at);
   let ra = dts(x.reported_at); if (!ra) { try { ra = loc(x.created_at); } catch (e) { ra = '1970-01-01T00:00'; } }
   const fa = dts(x.finished_at) || (s == 'done' ? (ta || ra) : null);
-  return { id: Number(x.id), no: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), pt: txt(x.problem_type), ds: txt(x.description), de: txt(x.description_en), pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), st: x.stopped == 'Yes' ? 'Yes' : 'No', ra, by: txt(x.reported_by), s, ts: txt(x.taken_by), ta, tw: arr(x.companions).map(txt).filter(Boolean), fa, ac: txt(x.action), cl: yesNo(x.cleaning), s2: stop3(x.stopped_after), bc: oneOf(x.bd_class, BDCLS, null), mp: txt(x.machine_part), sp: arr(x.parts).map(p => ({ n: txt(p && p.n) || '', p: txt(p && p.p) || '', q: Number(p && p.q) > 0 ? Math.min(9999, Math.round(Number(p.q))) : null, o: !!p && p.o === true })), rc: txt(x.root_cause), cr: txt(x.created_at), hd: x.hold === true, ap: txt(x.approved_at), k: x.kind == 'pm' ? 'pm' : 'bd', pl: x.plan_id == null ? null : Number(x.plan_id), ck: arr(x.checklist).map(c => ({ t: txt(c && c.t) || '', r: oneOf(c && c.r, ['ok', 'bad', 'na'], null), n: txt(c && c.n) || '' })),
+  return { id: Number(x.id), no: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), pt: txt(x.problem_type), ds: txt(x.description), de: txt(x.description_en), pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), st: x.stopped == 'Yes' ? 'Yes' : 'No', ra, by: txt(x.reported_by), s, ts: txt(x.taken_by), ta, tw: arr(x.companions).map(txt).filter(Boolean), fa, ac: txt(x.action), cl: yesNo(x.cleaning), s2: stop3(x.stopped_after), bc: oneOf(x.bd_class, BDCLS, null), mp: txt(x.machine_part), sp: arr(x.parts).map(p => ({ n: txt(p && p.n) || '', p: txt(p && p.p) || '', q: Number(p && p.q) > 0 ? Math.min(9999, Math.round(Number(p.q))) : null, o: !!p && p.o === true })), rc: txt(x.root_cause), cr: txt(x.created_at), hd: x.hold === true, ap: txt(x.approved_at), k: x.kind == 'pm' ? 'pm' : 'bd', pl: x.plan_id == null ? null : Number(x.plan_id), ck: arr(x.checklist).map(c => ({ t: txt(c && c.t) || '', r: oneOf(c && c.r, ['ok', 'bad', 'na'], null), n: txt(c && c.n) || '', s: c && typeof c.s === 'string' ? (txt(c.s) || '') : null })),
     ae: txt(x.action_en), ok: oneOf(x.ok_state, ['pending', 'approved', 'rejected'], null), okn: txt(x.ok_name), oka: (() => { try { return x.ok_at ? loc(x.ok_at) : null; } catch (e) { return null; } })(), okt: txt(x.ok_note), rf: x.reopened_from == null ? null : Number(x.reopened_from) };
 };
 
@@ -1179,15 +1412,18 @@ async function load(full) {
     n = ch.length + dl.length;
   }
   db.requests.sort((a, b) => b.id - a.id);
+  // "Not applicable" decisions (update 20): asked now so that it runs together with the other reads below
+  const naP = me && me.r != 'operator' && (!naLoaded || full || n > 0 || tab == 'na') ? Promise.all([api('pm_na_review?select=*&order=at.desc').catch(() => null), api('pm_na_skip?select=*&order=at.desc').catch(() => null)]) : null;
   // the preventive maintenance master plan (a database without update 14 simply has none); read once, then again when requests changed, on the plan tab and every 30th round
   if (me && me.r != 'operator' && me.r != 'prodsup' && (!pmLoaded || full || n > 0 || (tab == 'pm' && (me.r == 'admin' || me.r == 'supervisor')))) {
-    const [ps, pk, pv] = await Promise.all([api('pm_sched?select=*&order=due,id').catch(() => null), api('pm_link?select=*&order=name').catch(() => null), api('pm_levels?select=*').catch(() => null)]);
-    pmLoaded = true; pmSig = JSON.stringify([ps, pk, pv]);
+    const [ps, pk, pv, pl] = await Promise.all([api('pm_sched?select=*&order=due,id').catch(() => null), api('pm_link?select=*&order=name').catch(() => null), api('pm_levels?select=*').catch(() => null), api('pm_sec_levels?select=*').catch(() => null)]);
+    pmLoaded = true; pmSig = JSON.stringify([ps, pk, pv, pl]);
     db.pmOn = Array.isArray(ps) && Array.isArray(pk);
     db.pmYr = db.pmOn && ps.length > 0 && 'plan_year' in ps[0];   // update 17 (the yearly renewal) is in the database
     db.sched = db.pmOn ? ps.map(x => ({ id: Number(x.id), nm: txt(x.name) || '', l: oneOf(x.level, PM_LV, 'Q'), d: dts(x.due) || '1970-01-01', sq: Number(x.seq) || 0, w: x.plan_week == null ? null : Number(x.plan_week), s: oneOf(x.state, ['planned', 'registered', 'done', 'past', 'skipped'], 'planned'), rid: x.request_id == null ? null : Number(x.request_id), da: txt(x.done_at), y: x.plan_year == null ? Number(String(dts(x.due) || '1970').slice(0, 4)) : Number(x.plan_year) })) : [];
     db.link = db.pmOn ? pk.map(x => ({ nm: txt(x.name) || '', sec: txt(x.section) || '', mid: txt(x.machine_id), sk: !!x.skip, h: txt(x.hint) })) : [];
     db.lv = {}; (Array.isArray(pv) ? pv : []).forEach(x => { db.lv[x.level] = { t: txt(x.title) || '', ck: arr(x.checklist).map(txt).filter(Boolean) }; });
+    db.slOn = Array.isArray(pl); db.sl = {}; (db.slOn ? pl : []).forEach(x => { db.sl[(txt(x.section) || '') + '|' + x.level] = arr(x.checklist).map(txt).filter(Boolean); });   // update 20: the checklists of a section
     // the state that is shown: a maintenance whose day has passed and that is not done shows as "past" (not done); idle machines show as skipped
     const tdE = ymd(new Date()), idleN = new Set(db.link.filter(k => k.sk).map(k => k.nm));
     db.sched.forEach(x => { x.e = idleN.has(x.nm) && x.s != 'done' ? 'skipped' : (x.s == 'planned' || x.s == 'registered') && x.d < tdE ? 'past' : x.s; });
@@ -1213,6 +1449,27 @@ async function load(full) {
     db.po.opts = db.po.on ? po.map(x => ({ id: Number(x.id), s: txt(x.section) || '', n: txt(x.name) || '' })) : [];
     const mf = db.po.on ? pmt.find(x => x.k == 'mp_from') : null; db.po.from = mf ? Number(mf.v) || 0 : 0;
   }
+  // "Not applicable" (update 20; a database without it simply has none): what the maintenance supervisor decided and the tasks taken out of a machine's checklists; read again when requests changed and on its tab
+  if (naP) {
+    const [nr, ns] = await naP;
+    naLoaded = true; naSig = JSON.stringify([nr, ns]);
+    db.na.on = Array.isArray(nr) && Array.isArray(ns);
+    db.na.rev = new Map(db.na.on ? nr.map(x => [Number(x.request_id) + '|' + (txt(x.item) || ''), { st: x.state == 'confirmed' ? 'confirmed' : 'back', nt: txt(x.note) || '', by: txt(x.by_name) || '', at: txt(x.at) || '', rid: Number(x.request_id), t: txt(x.item) || '' }]) : []);
+    db.na.skip = db.na.on ? ns.map(x => ({ m: String(x.machine_id), t: txt(x.item) || '', by: txt(x.by_name) || '', at: txt(x.at) || '' })) : [];
+  }
+  // light maintenance (update 21; a database without it simply has none): the tasks and the operators' records. The answers of a record (items) are read only for the people who check them
+  if (me && ['operator', 'supervisor', 'admin', 'prodsup', 'deptadmin'].includes(me.r) && (!lmLoaded || lmWho != me.e + me.r || full || me.r == 'operator' || n > 0 || tab == 'light' || tab == 'lapp')) {
+    const since = ymd(new Date(Date.now() - 30 * 864e5)), need = me.r != 'operator';
+    const [lt, lr, li, lp] = await Promise.all([api('light_tasks?select=*&order=id').catch(() => null),
+      api('light_runs?select=id,task_id,machine_id,machine_name,dept,by_emp,by_name,done_at,state,ok_name,ok_at,ok_note&order=id.desc&limit=800').catch(() => null),
+      need ? api('light_runs?select=id,items&done_at=gte.' + since + '&order=id.desc&limit=300').catch(() => null) : null,
+      need ? api('light_runs?select=id,items&state=eq.pending').catch(() => null) : null]);
+    lmLoaded = true; lmWho = me.e + me.r; lmSig = JSON.stringify([lt, lr, li, lp]);
+    const im = new Map(); [li, lp].forEach(a => arr(a).forEach(x => im.set(Number(x.id), x.items)));
+    db.lm.on = Array.isArray(lt) && Array.isArray(lr);
+    db.lm.tasks = db.lm.on ? lt.map(x => ({ id: Number(x.id), k: x.kind == 'deep' ? 'deep' : 'light', t: txt(x.title) || '', d: txt(x.dept) || '', ms: arr(x.machines).map(String), ev: Number(x.every_days) || 1, it: lmItems(x.items), ac: x.active !== false })) : [];
+    db.lm.runs = db.lm.on ? lr.map(x => ({ id: Number(x.id), tid: Number(x.task_id), mid: String(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept) || '', it: lmItems(im.get(Number(x.id))), by: txt(x.by_emp) || '', bn: txt(x.by_name) || '', at: lmAt(x.done_at), st: ['approved', 'rejected'].includes(x.state) ? x.state : 'pending', okn: txt(x.ok_name) || '', oka: lmAt(x.ok_at), okt: txt(x.ok_note) || '' })) : [];
+  }
   db.po.known = new Set(Object.keys(BDPARTS).flatMap(k => partCat(k)));
   db.machines = m.map(x => ({ id: String(x.id), n: txt(x.name) || '', d: txt(x.dept) || '', sn: txt(x.serial), md: txt(x.model), lc: txt(x.location), ins: txt(x.installed), nt: txt(x.notes) }));
   db.techs = u.filter(x => x.role != 'op').map(x => ({ e: String(x.emp), nm: txt(x.name) || '', st: x.status == 'approved' ? 'approved' : 'pending', r: x.role == 'sup' ? 'sup' : 'tech' }));
@@ -1222,7 +1479,7 @@ async function load(full) {
   else if (!me || !(me.r == 'admin' || me.r == 'deptadmin')) db.staff = [];
   db.custom = Object.fromEntries(c.map(x => [String(x.k), { m: txt(x.machine_id), l: txt(x.label) || '', n: Number(x.n) || 0 }]));
   db.plans = pp.map(x => ({ id: Number(x.id), mid: txt(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept), t: txt(x.title) || '', iv: Number(x.interval_days) || 1, pr: oneOf(x.priority, ['low', 'medium', 'high', 'critical'], 'medium'), ck: arr(x.checklist).map(txt).filter(Boolean), nd: dts(x.next_due) || '1970-01-01', ac: !!x.active, ld: dts(x.last_done) }));
-  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]) + pmSig + spSig + poSig;
+  const sig = JSON.stringify([m, u, c, pp, dpt, sl, sn]) + pmSig + spSig + poSig + naSig + lmSig;
   const changed = n > 0 || sig !== smallSig;
   smallSig = sig;
   return changed;
@@ -1267,7 +1524,9 @@ function logout() {
   if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
   else if (me && me.r == 'admin') rpc('admin_sign_out', { p_tok: me.h }).catch(() => {});
   else if (me && me.t) rpc('staff_sign_out', { p_tok: me.t }).catch(() => {});
-  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' }; save(); render();
+  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' };
+  lmLoaded = false; lmOpen = ''; lmAns = {}; lmEdit = null; lmF = null; otab = 'rep'; db.lm = { on: false, tasks: [], runs: [] };   // the next account starts with its own light-maintenance data
+  save(); render();
 }
 function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; bdLim = BD_FIRST; bdAll = false; render(); }
 function setPeriod(v) { period = v; render(); }
@@ -1278,6 +1537,49 @@ const sfRange = () => !!(sf.from || sf.to);
 function periodLbl() {
   const mn = sf.m ? ((db.machines.find(x => String(x.id) == sf.m) || {}).n || sf.m) : '';
   return (sfRange() ? (sf.from || '…') + ' → ' + (sf.to || '…') : period == 'all' ? tr('all') : period) + (sf.d ? ' · ' + sf.d : '') + (mn ? ' · ' + mn : '');
+}
+
+/* ---------- look: dark navy (default) or light, text size, greeting ---------- */
+let theme = LS.get('theme') == 'light' ? 'light' : 'dark', fsz = [1, 2].includes(+LS.get('fs')) ? +LS.get('fs') : 0, setOpen = false, alOpen = false;
+function applyLook() {
+  const r = document.documentElement;
+  r.setAttribute('data-theme', theme); r.style.fontSize = ['', '112.5%', '125%'][fsz];
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = theme == 'dark' ? '#08111a' : '#115e59';
+  document.querySelectorAll('#lookPop [data-th]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.th == theme)));
+  document.querySelectorAll('#lookPop [data-fs]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.fs == fsz)));
+}
+// pure CSS changes: nothing is redrawn, so a half-typed form is never lost
+function setTheme(t) { theme = t == 'light' ? 'light' : 'dark'; LS.set('theme', theme); applyLook(); if (document.querySelector('[data-charts]')) render(); }   // charts carry their colours inline, so only they are redrawn
+function setFsz(n) { fsz = Math.max(0, Math.min(2, +n || 0)); LS.set('fs', String(fsz)); applyLook(); }
+function lookShow(on) {
+  setOpen = on;
+  const p = $('lookPop'), b = $('lookBtn');
+  if (p) p.classList.toggle('hidden', !on);
+  if (b) b.setAttribute('aria-expanded', String(on));
+}
+function lookToggle() { lookShow(!setOpen); if (setOpen) { const f = document.querySelector('#lookPop button'); if (f) f.focus(); } }
+document.addEventListener('click', e => { if (setOpen && !e.target.closest('#lookPop,#lookBtn')) lookShow(false); });
+document.addEventListener('keydown', e => { if (e.key == 'Escape' && setOpen) { lookShow(false); const b = $('lookBtn'); if (b) b.focus(); } });
+function alT(b) {
+  alOpen = !alOpen;
+  const a = b.closest('.al'); if (a) a.classList.toggle('open', alOpen);
+  b.setAttribute('aria-expanded', String(alOpen)); b.textContent = alOpen ? tr('lessAl') : tr('moreAl').replace('{n}', b.dataset.n);
+}
+function pwShow(id, b) {
+  const i = $(id); if (!i) return;
+  const on = i.type == 'password'; i.type = on ? 'text' : 'password';
+  b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', tr(on ? 'hidePw' : 'showPw'));
+}
+const pwFld = (id, auto) => `<div class="pwr"><input id="${id}" type="password" autocomplete="${auto}" enterkeyhint="go" required><span role="button" tabindex="0" class="pwt" onclick="pwShow('${id}',this)" onkeydown="if(event.key=='Enter'||event.key==' '){event.preventDefault();pwShow('${id}',this)}" aria-label="${tr('showPw')}" aria-pressed="false">👁</span></div>`;
+// the line at the top of every account's page: "Welcome <first name>" with the position beside it
+function posTxt() {
+  if (me.sx || me.r == 'admin') return tr('adminT');
+  if (me.r == 'workshop') return tr('wsRole');
+  return tr(me.r) + (['operator', 'prodsup', 'deptadmin'].includes(me.r) && me.dp ? ' · ' + esc(me.dp) : '');
+}
+function greet() {
+  const fn = esc(String(me.nm || '').trim().split(/\s+/)[0] || '');
+  return `<div class="np greet"><h1>${tr('hi')}${fn ? ' ' + fn : ''}</h1><span class="gpos">${posTxt()}</span>${me.e && !me.sx ? `<span class="gid sm:hidden" dir="ltr">#${esc(me.e)}</span>` : ''}</div>`;
 }
 
 let rendered = false;
@@ -1292,12 +1594,13 @@ function renderNow() {
   dirty = false;
   document.documentElement.lang = lang;
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
-  let h = `<header class="bg-teal-800 text-white np"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-3 flex justify-between items-center gap-2"><b>🛠 ${tr('app')}</b><div class="flex items-center gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()">${tr('logout')}</button>` : ''}<button onclick="setLang()" class="border border-white/50 rounded px-2 py-1">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div></header><main class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
+  const pop = `<div id="lookPop" role="dialog" aria-label="${tr('lookT')}" class="look-pop np${setOpen ? '' : ' hidden'}"><div class="lp-t">${tr('themeT')}</div><div class="lp-r"><button type="button" data-th="dark" aria-pressed="${theme == 'dark'}" onclick="setTheme('dark')">🌙 ${tr('darkT')}</button><button type="button" data-th="light" aria-pressed="${theme == 'light'}" onclick="setTheme('light')">☀ ${tr('lightT')}</button></div><div class="lp-t">${tr('fszT')}</div><div class="lp-r">${[['fszS', '1em'], ['fszM', '1.15em'], ['fszL', '1.3em']].map(([k, z], i) => `<button type="button" data-fs="${i}" aria-pressed="${fsz == i}" aria-label="${tr(k)}" onclick="setFsz(${i})" style="font-size:${z}">A</button>`).join('')}</div></div>`;
+  let h = `<a href="#main" class="skip np" onclick="event.preventDefault();const m=$('main');if(m)m.focus()">${tr('skipT')}</a><header class="bg-teal-800 text-white np relative"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-2 flex justify-between items-center gap-2"><b class="hdt">🛠 ${tr('app')}</b><div class="flex items-center gap-1 sm:gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded hidden sm:inline">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" class="hb" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" class="hb" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()" class="hb">${tr('logout')}</button>` : ''}<button type="button" id="lookBtn" onclick="lookToggle()" class="hb" aria-label="${tr('lookT')}" aria-haspopup="dialog" aria-expanded="${setOpen}">Aa</button><button onclick="setLang()" class="hb border border-white/50 rounded px-2">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div>${pop}</header><main id="main" tabindex="-1" class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
-  h += !me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : me.r == 'prodsup' ? psView() : adminView();
-  const og = document.getElementById('pmGrid'), gs = og ? [og.scrollLeft, og.scrollTop] : null;   // the yearly table keeps its place when the page is redrawn
-  $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px 22px;font-size:10px;color:#9ca3af"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
-  if (me && me.r == 'operator' && !pwPanel) {
+  h += (me && !tv ? greet() : '') + (!me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : me.r == 'prodsup' ? psView() : adminView());
+  const og = document.getElementById('pmGrid'), gs = og ? [og.scrollLeft, og.scrollTop] : null, otb = document.querySelector('.tabs'), tsx = otb ? otb.scrollLeft : null;   // the yearly table keeps its place when the page is redrawn
+  $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px 22px;font-size:11px;color:var(--mu2)"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
+  if (me && me.r == 'operator' && !pwPanel && $('m')) {
     const qn = new URLSearchParams(location.search).get('m');
     const m = qn ? db.machines.find(x => x.n.toLowerCase() == qn.toLowerCase()) : null;
     if (m && m.d && m.d != me.dp) { mchg(); if (!qrWarned) { qrWarned = true; alert(tr('otherDept')); } }   // a QR code of another department's machine
@@ -1313,6 +1616,11 @@ function renderNow() {
     else { const c = ng.querySelector('th.pmg-now'); if (c) ng.scrollLeft = Math.max(0, c.getBoundingClientRect().left - ng.getBoundingClientRect().left + ng.scrollLeft - ng.clientWidth / 2); }   // first time: the table opens at the current week
   }
   if (!me) { const f = document.querySelector('#app input'); if (f) f.focus(); }
+  const atb = document.querySelector('.tabs'), act = atb && atb.querySelector('[aria-current]');   // the tab strip keeps its place; the first time it opens on the current tab
+  if (atb && atb.scrollWidth > atb.clientWidth) {
+    if (tsx != null) atb.scrollLeft = tsx;
+    else if (act) atb.scrollLeft += (act.getBoundingClientRect().left + act.offsetWidth / 2) - (atb.getBoundingClientRect().left + atb.clientWidth / 2);
+  }
 }
 
 /* ---------- LOGIN ---------- */
@@ -1320,7 +1628,7 @@ function loginView() {
   const s = step.s;
   const bk = `<button type="button" onclick="step={s:'emp',e:''};render()" class="text-sm text-gray-500 mt-3">← ${tr('back')}</button>`;
   const wrap = b => `<div class="max-w-sm mx-auto bg-white rounded-xl shadow p-6 mt-8">${b}</div>`;
-  if (s == 'emp') return wrap(`<form onsubmit="doLogin(event)" class="space-y-3"><label class="font-semibold">${tr('empNo')}</label><input id="emp" inputmode="numeric" autocomplete="username" required><label class="block font-semibold">${tr('password')}</label><input id="pw" type="password" autocomplete="current-password" required><button class="${btn}">${tr('login')}</button></form><button type="button" onclick="step={s:'reg',e:''};render()" class="w-full border rounded-lg py-3 font-bold mt-3">${tr('newAccount')}</button>`);
+  if (s == 'emp') return wrap(`<form onsubmit="doLogin(event)" class="space-y-3"><label for="emp" class="block font-semibold">${tr('empNo')}</label><input id="emp" inputmode="numeric" autocomplete="username" enterkeyhint="next" required><label for="pw" class="block font-semibold">${tr('password')}</label>${pwFld('pw', 'current-password')}<button class="${btn}">${tr('login')}</button></form><button type="button" onclick="step={s:'reg',e:''};render()" class="w-full border rounded-lg py-3 font-bold mt-3">${tr('newAccount')}</button>`);
   if (s == 'reg') return wrap(`<form onsubmit="doReg(event)" class="space-y-3"><b>${tr('newAccount')}</b><input id="emp" inputmode="numeric" placeholder="${tr('empNo')}" autocomplete="off" required><input id="nm" placeholder="${tr('fullName')}" required autocomplete="off"><select id="rr" onchange="$('rdw').classList.toggle('hidden',!['op','psup'].includes(this.value))"><option value="op">${tr('operator')}</option><option value="tech">${tr('technician')}</option><option value="sup">${tr('supervisor')}</option><option value="psup">${tr('prodsup')}</option></select><div id="rdw"><label class="block font-semibold">${tr('dept')}</label><select id="rd">${db.depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('') || `<option value="">${tr('noDepts')}</option>`}</select></div><input id="pw" type="password" placeholder="${tr('password')}" required autocomplete="new-password"><input id="pw2" type="password" placeholder="${tr('confirmPw')}" required autocomplete="new-password"><button class="${btn}">${tr('register')}</button></form>${bk}`);
   if (s == 'sx') return wrap(`<form onsubmit="doSx(event)" class="space-y-3" autocomplete="off"><label class="font-semibold">${tr('empNo')}</label><input id="xe" inputmode="numeric" autocomplete="off" required><label class="block font-semibold">${tr('password')}</label><input id="xp" type="password" autocomplete="off" required><button class="${btn}">${tr('next')}</button></form>${bk}`);
   return wrap(`<p class="text-center py-4">⏳ ${tr('waiting')}</p>${bk}`);
@@ -1431,7 +1739,14 @@ async function doReg(e) {
 
 /* ---------- OPERATOR ---------- */
 const opMachines = () => db.machines.filter(m => !m.d || m.d == me.dp);   // the operator's department (and machines with no department yet)
+let otab = 'rep';
+function setOT(k) { otab = k; render(); }
 function opView() {
+  const has = db.lm.on && db.lm.tasks.some(t => t.ac && t.d == me.dp), due = has ? lmDueList().length : 0;
+  const bar = has ? `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${[['rep', 'tabOpRep', 0], ['light', 'tabOpLight', due]].map(([k, l, c]) => `<button onclick="setOT('${k}')" ${otab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${otab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</nav>` : '';
+  return bar + (has && otab == 'light' ? lmOpView() : opForm());
+}
+function opForm() {
   return `<form onsubmit="sendReq(event)" class="bg-white rounded-xl shadow p-5 space-y-3 max-w-xl mx-auto">
 <h2 class="text-xl font-bold text-teal-800">⚠ ${tr('report')}</h2>
 <p class="text-sm text-gray-500">${tr('opNote')}</p>
@@ -1608,7 +1923,9 @@ const card = r => `<div class="flex justify-between gap-2"><b class="text-lg">${
 <div class="text-sm text-gray-600">${tr('dept')}: ${esc(r.d)} · ${tr('ptype')}: ${esc(tl(r.pt))}${r.k == 'pm' ? '' : ' · ' + tr('stopped') + ' ' + tr(r.st == 'Yes' ? 'yes' : 'no')}</div>${r.rf ? `<div class="text-xs font-bold text-red-700">↩ ${tr('reopenedFrom')} #${r.rf}</div>` : ''}
 ${descBlock(r)}
 <div class="text-xs text-gray-500 space-y-0.5"><div>${r.k == 'pm' ? tr('pmDue') + ': ' + esc((r.ra || '').slice(0, 10)) : tr('reportedAt') + ': ' + fd(r.ra) + ' (#' + esc(r.by) + ')'}</div>${r.ta ? `<div>${tr('takenAt')}: ${fd(r.ta)} (${who(r.ts)}${crewTxt(r)})</div>` : ''}${r.fa ? `<div>${tr('finishedAt')}: ${fd(r.fa)}</div>` : ''}</div>`;
-const ckRes = r => (r.ck || []).some(c => c.r) ? `<div class="mt-1"><b>${tr('ckTitle')}:</b>${r.ck.map(c => `<div class="text-xs ${c.r == 'bad' ? 'text-red-700 font-semibold' : ''}">${c.r == 'ok' ? '✅' : c.r == 'bad' ? '⚠' : '—'} ${esc(c.t)}${c.n ? ' — ' + esc(c.n) : ''}</div>`).join('')}</div>` : '';
+// "not applicable" in a finished task: confirmed by the maintenance supervisor, or still waiting for him
+const naTag = (r, c) => { if (c.r != 'na' || r.k != 'pm' || !db.na.on) return ''; const v = db.na.rev.get(r.id + '|' + c.t); return v && v.st == 'confirmed' ? ` <span class="text-green-700 font-semibold">✔ ${tr('naConf')}</span>` : ` <span class="text-amber-700 font-semibold">⏳ ${tr('naWait')}</span>`; };
+const ckRes = r => (r.ck || []).some(c => c.r) ? `<div class="mt-1"><b>${tr('ckTitle')}:</b>${r.ck.map(c => `<div class="text-xs ${c.r == 'bad' ? 'text-red-700 font-semibold' : ''}">${c.r == 'ok' ? '✅' : c.r == 'bad' ? '⚠' : c.r == 'na' ? '🚫' : '—'} ${esc(c.t)}${c.n ? ' — ' + esc(c.n) : ''}${naTag(r, c)}</div>`).join('')}</div>` : '';
 const pmBadge = r => { const n = Math.floor((new Date(ymd(new Date())) - new Date((r.ra || '').slice(0, 10))) / 864e5); return `<span class="text-xs font-bold ${n > 0 ? 'text-white bg-red-600' : 'text-blue-800 bg-blue-100'} rounded-full px-2 py-1">🗓 ${tr('pm')} · ${n > 0 ? tr('pmOverdueBy') + ' ' + n + ' ' + tr('days') : tr('pmToday')}</span>`; };
 // preventive-maintenance picture: open tasks plus plans that have no open task yet, each with days left (negative = overdue)
 const pmDue = r => (r.ra || '').slice(0, 10);
@@ -1757,7 +2074,7 @@ ${bd ? `<div class="grid grid-cols-2 gap-2"><div><label class="text-sm font-semi
 <label class="text-sm font-semibold">${tr('takenAt')}</label><input type="datetime-local" id="ta${r.id}" value="${now()}" max="${now()}" onfocus="this.max=now()" required>
 <div id="tw${r.id}" class="border rounded-lg p-2 text-sm space-y-1"><div class="font-semibold">${tr('withMe')}</div>${db.techs.filter(t => t.st == 'approved' && t.e != me.e).map(t => `<label class="flex items-center gap-2"><input type="checkbox" value="${esc(t.e)}"> ${who(t.e)}</label>`).join('') || `<span class="text-gray-500">${tr('none')}</span>`}</div>
 <button class="${btn}">${tr('take')}</button></form>`; };
-const ckForm = r => (r.ck || []).length ? `<div class="border rounded-lg p-2 space-y-2"><div class="font-bold text-teal-800 text-sm">☑ ${tr('ckTitle')}</div>${r.ck.map((c, i) => `<div class="text-sm"><div class="font-semibold">${i + 1}. ${esc(c.t)}</div><div class="grid grid-cols-3 gap-2 mt-1"><select id="ck${r.id}_${i}"><option value="">—</option><option value="ok">✅ ${tr('ckOk')}</option><option value="bad">⚠ ${tr('ckBad')}</option><option value="na">${tr('ckNa')}</option></select><input id="cn${r.id}_${i}" class="col-span-2" placeholder="${tr('ckNote')}"></div></div>`).join('')}</div>` : '';
+const ckForm = r => (r.ck || []).length ? `<div class="border rounded-lg p-2 space-y-2"><div class="font-bold text-teal-800 text-sm">☑ ${tr('ckTitle')}</div><div class="text-xs text-gray-600">${tr('ckNaHint')}</div>${r.ck.map((c, i) => `<div class="text-sm"><div class="font-semibold">${i + 1}. ${esc(c.t)}</div>${c.s != null ? `<div class="text-xs font-bold text-red-700 bg-red-50 rounded p-1 mt-1" dir="auto">↩ ${tr('naBackNote')}${c.s ? ': ' + esc(c.s) : ''}</div>` : ''}<div class="grid grid-cols-3 gap-2 mt-1"><select id="ck${r.id}_${i}"><option value="">—</option><option value="ok" ${c.r == 'ok' ? 'selected' : ''}>✅ ${tr('ckOk')}</option><option value="bad" ${c.r == 'bad' ? 'selected' : ''}>⚠ ${tr('ckBad')}</option><option value="na" ${c.r == 'na' ? 'selected' : ''}>${tr('ckNa')}</option></select><input id="cn${r.id}_${i}" class="col-span-2" placeholder="${tr('ckNote')}" value="${esc(c.n || '')}"></div></div>`).join('')}</div>` : '';
 const finForm = r => { const bd = r.k != 'pm'; return `<form class="mt-3 space-y-2 border-t pt-3" onsubmit="fin(event,${r.id})">
 <textarea id="ac${r.id}" required rows="2" placeholder="${tr('action')}"></textarea>
 ${bd && r.pt == 'unspec' ? `<div><label class="text-sm font-semibold">${tr('ptype')} *</label><select id="ty${r.id}" required onchange="$('tyo${r.id}').classList.toggle('hidden',this.value!='other')">${typeOptsT(r.mid, r.pt)}</select><input id="tyo${r.id}" class="hidden mt-1" placeholder="${tr('otherType')}"></div>` : ''}
@@ -1884,6 +2201,45 @@ async function apprGo(id, ok) {
   catch (e) { if (isDenied(e)) { alert(tr('sessExp')); logout(); } else { await refresh().catch(() => {}); alert(tr('netErr')); } }
 }
 
+/* ---------- "NOT APPLICABLE" REVIEW (update 20): the technician says the machine has no such part; the maintenance supervisor (or the admin) checks it ---------- */
+// every N/A task of a finished (or reopened) preventive task that the supervisor has not confirmed yet
+const naPend = () => !db.na.on ? [] : db.requests.filter(r => r.k == 'pm' && (r.s == 'done' || r.s == 'prog'))
+  .map(r => ({ r, items: (r.ck || []).map((c, i) => ({ c, i })).filter(x => x.c.r == 'na' && (db.na.rev.get(r.id + '|' + x.c.t) || {}).st != 'confirmed') }))
+  .filter(g => g.items.length).sort((a, b) => (a.r.fa || '').localeCompare(b.r.fa || ''));
+const naWaitN = () => naPend().reduce((a, g) => a + g.items.length, 0);
+function aNa() {
+  if (!db.na.on) return `<p class="text-sm text-amber-800 bg-amber-50 border border-amber-300 rounded-lg p-3">${tr('naNoDb')}</p>`;
+  const L = naPend(), mn = id => { const m = db.machines.find(x => String(x.id) == String(id)); return m ? m.n : '#' + id; };
+  const card = g => `<div class="bg-white rounded-xl shadow p-4 border-s-4 border-amber-500 space-y-2"><div class="flex justify-between gap-2"><b dir="auto">${esc(g.r.mn)}</b><span class="text-xs text-gray-500">${tr('reqNo')} ${g.r.no}${g.r.s == 'prog' ? ' · ' + tr('sProg') : ''}</span></div>
+<div class="text-xs text-gray-600" dir="auto">${esc(descOut(g.r))} · ${tr('byTech')} ${who(g.r.ts)}${g.r.fa ? ' · ' + fd(g.r.fa) : ''}</div>
+${g.items.map(x => `<div class="border rounded-lg p-2 space-y-2 bg-amber-50"><div class="text-sm font-semibold" dir="auto">🚫 ${esc(x.c.t)}</div>${x.c.n ? `<div class="text-xs text-gray-700" dir="auto">${tr('naTechNote')}: ${esc(x.c.n)}</div>` : ''}
+<input id="nn${g.r.id}_${x.i}" maxlength="300" placeholder="${esc(tr('naNote'))}">
+<div class="flex gap-2"><button onclick="naGo(${g.r.id},${x.i},true)" class="flex-1 bg-green-700 text-white font-bold py-2 rounded-lg text-sm">✔ ${tr('naYes')}</button><button onclick="naGo(${g.r.id},${x.i},false)" class="flex-1 bg-red-600 text-white font-bold py-2 rounded-lg text-sm">↩ ${tr('naNo')}</button></div></div>`).join('')}</div>`;
+  const sk = db.na.skip, rec = [...db.na.rev.values()].slice(0, 12);
+  return `<p class="text-sm text-gray-500 mb-3">${tr('naHint')}</p>${L.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${L.map(card).join('')}</div>` : `<p class="text-gray-500">${tr('naNone')}</p>`}`
+    + (sk.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('naRemovedT')} (${sk.length})</h3><div class="grid md:grid-cols-2 xl:grid-cols-3 gap-3">${sk.map((x, i) => `<div class="bg-white rounded-lg shadow p-3 text-sm"><b dir="auto">${esc(mn(x.m))}</b><div class="text-xs text-gray-700" dir="auto">${esc(x.t)}</div><div class="text-xs text-gray-400">${x.by ? esc(x.by) + ' · ' : ''}${fd(x.at.slice(0, 16))}</div><button onclick="naRestore(${i})" class="np text-xs text-teal-700 font-semibold mt-1">↺ ${tr('naRestore')}</button></div>`).join('')}</div>` : '')
+    + (rec.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('naRecentT')}</h3><div class="grid md:grid-cols-2 xl:grid-cols-3 gap-3">${rec.map(v => { const r = db.requests.find(x => x.id == v.rid); return `<div class="bg-white rounded-lg shadow p-3 text-sm"><b dir="auto">${esc(r ? r.mn : '#' + v.rid)}</b> <span class="text-xs text-gray-400">${tr('reqNo')} ${v.rid}</span><div class="text-xs text-gray-700" dir="auto">${esc(v.t)}</div><div class="mt-1 text-xs rounded p-1 ${v.st == 'confirmed' ? 'text-green-800 bg-green-50' : 'text-red-800 bg-red-50'}"><b>${v.st == 'confirmed' ? '✔ ' + tr('naConf') : '↩ ' + tr('naBack')}</b>${v.by ? ' · ' + esc(v.by) : ''}${v.nt ? `<div dir="auto">${esc(v.nt)}</div>` : ''}</div></div>`; }).join('')}</div>` : '');
+}
+async function naGo(id, i, ok) {
+  const r = db.requests.find(x => x.id == id), c = r && (r.ck || [])[i];
+  if (!c || c.r != 'na') return;
+  if (ok && !confirm(tr('naSure'))) return;
+  const nt = (($('nn' + id + '_' + i) || {}).value || '').trim();
+  try {
+    const res = await rpc('pm_na_decide', { p_tok: stTok(), p_id: id, p_item: c.t, p_ok: ok, p_note: nt });
+    naLoaded = false; await refresh();
+    if (!ok && res && res.reopened) alert(tr('naSentBack'));
+  } catch (e) {
+    if (isDenied(e)) { alert(tr('sessExp')); logout(); }
+    else { naLoaded = false; await refresh().catch(() => {}); alert(/not waiting|already reviewed/.test(String(e && e.message)) ? tr('naStale') : tr('netErr')); }
+  }
+}
+async function naRestore(i) {
+  const x = db.na.skip[i]; if (!x || !confirm(tr('naRestoreAsk'))) return;
+  try { await rpc('pm_na_restore', { p_tok: stTok(), p_machine: x.m, p_item: x.t }); naLoaded = false; await refresh(); }
+  catch (e) { if (isDenied(e)) { alert(tr('sessExp')); logout(); } else alert(tr('netErr')); }
+}
+
 /* ---------- PARTS REVIEW (update 19): what technicians typed under "Other" waits for the maintenance supervisor (or the admin) ---------- */
 // machine parts that no list has yet, grouped by the typed name; spare parts typed under "Other", grouped by machine + name + number
 function partsWait() {
@@ -1946,12 +2302,12 @@ const spNew = i => {
 
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'parts', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'parts', 'shift', 'pm', 'stats'], workshop: ['all', 'open', 'prev'] }[me.r];
+  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'parts', 'na', 'light', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'parts', 'na', 'light', 'shift', 'pm', 'stats'], workshop: ['all', 'open', 'prev'] }[me.r];
   if (tv) tab = 'open';
   if (!tab || !A.includes(tab)) tab = me.r == 'workshop' ? 'open' : A[0];
-  const N = { all: 'tabAll', appr: 'tabAppr', parts: 'tabParts', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept' };
-  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length, npw = me.r == 'workshop' ? 0 : partsWaitN();
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'parts' && npw ? ' (' + npw + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</div>` : '') + ({ all: hubView, appr: aAppr, parts: aParts, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  const N = { all: 'tabAll', appr: 'tabAppr', parts: 'tabParts', na: 'tabNa', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept', light: 'tabLight' };
+  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length, npw = me.r == 'workshop' ? 0 : partsWaitN(), nna = me.r == 'workshop' ? 0 : naWaitN(), nlm = me.r == 'admin' ? lmPend().length : 0;
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<nav class="flex flex-wrap gap-2 mb-4 np tabs${A.length > 6 ? ' tabs2' : ''}" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'parts' && npw ? ' (' + npw + ')' : ''}${k == 'na' && nna ? ' (' + nna + ')' : ''}${k == 'light' && nlm ? ' (' + nlm + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</nav>` : '') + ({ all: hubView, appr: aAppr, parts: aParts, na: aNa, light: lmAdminView, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs text-teal-700 font-semibold">✔ ${tr('approve')}</button>` : ''}<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 // the badge under an open / in-progress request: waiting for the department, pickup timer, preventive due date, or who is working on it
@@ -2285,6 +2641,10 @@ async function rpSave(ev, e) {
 }
 
 /* ---------- STATISTICS + EXCEL ---------- */
+// a breakdown counts in the statistics only once it is closed AND approved by production (tickets closed before the approval step existed carry no state and still count)
+const apprOk = r => r.ok == null || r.ok == 'approved';
+const counted = r => r.k != 'pm' && r.s == 'done' && apprOk(r);
+const waitN = (d, m) => db.requests.filter(r => r.k != 'pm' && r.s == 'done' && r.ok == 'pending' && (!d || r.d == d) && (!m || String(r.mid) == String(m))).length;
 function mst(list) {
   const o = { c: list.length, s: 0, dt: 0, last: '', t: {}, rep: [], gap: [] }, ls = list.slice().sort((a, b) => a.ra.localeCompare(b.ra));
   ls.forEach((r, i) => {
@@ -2301,7 +2661,7 @@ function mst(list) {
 // how long a spare part lasts: the time between two replacements of the same part (same name and number) on the same machine, averaged
 function partLife() {
   const G = {};
-  db.requests.filter(r => r.s == 'done' && r.fa).forEach(r => (r.sp || []).forEach(x => {
+  db.requests.filter(r => r.s == 'done' && r.fa && (r.k == 'pm' || apprOk(r))).forEach(r => (r.sp || []).forEach(x => {
     if (!x.n) return;
     const k = r.mid + '|' + x.n.trim().toLowerCase() + '|' + (x.p || '').trim().toLowerCase();
     (G[k] = G[k] || { mid: r.mid, m: r.mn, n: x.n, p: x.p, t: [] }).t.push(r.fa);
@@ -2317,12 +2677,12 @@ const lifeTable = (l, withM) => `<div class="overflow-x-auto"><table class="w-fu
 function calc(fl) {
   const inP = fl ? fl.inP : s => sfRange() ? ((s || '').slice(0, 10) >= (sf.from || '') && (!sf.to || (s || '').slice(0, 10) <= sf.to)) : (period == 'all' || (s || '').startsWith(period));
   const okR = fl ? fl.okR : r => (!sf.d || r.d == sf.d) && (!sf.m || String(r.mid) == sf.m);
-  const rs = db.requests.filter(r => r.k != 'pm' && inP(r.ra) && okR(r));
+  const rs = db.requests.filter(r => counted(r) && inP(r.ra) && okR(r));
   const G = {}, M = {}, SN = {}, P = {}, T = {}, RCc = {};
   rs.forEach(r => (G[r.mid] = G[r.mid] || []).push(r));
   Object.entries(G).forEach(([id, l]) => { M[id] = { n: l[0].mn, d: l[0].d, ...mst(l) }; });
   db.requests.filter(r => r.s != 'done' && r.st == 'Yes').forEach(r => { if (!SN[r.mid] || r.ra < SN[r.mid]) SN[r.mid] = r.ra; });
-  db.requests.filter(r => r.s == 'done' && inP(r.fa) && okR(r)).forEach(r => {
+  db.requests.filter(r => r.s == 'done' && (r.k == 'pm' || apprOk(r)) && inP(r.fa) && okR(r)).forEach(r => {
     if (r.rc) RCc[r.rc] = (RCc[r.rc] || 0) + 1;
     (r.sp || []).forEach(x => {
       const k = (x.n + '|' + x.p).toLowerCase(), o = P[k] = P[k] || { n: x.n, p: x.p, c: 0, m: new Set() };
@@ -2332,6 +2692,7 @@ function calc(fl) {
   db.requests.filter(r => r.ts && inP(r.ta) && okR(r)).forEach(r => {
     const t = T[r.ts] = T[r.ts] || { n: 0, d: 0, ms: 0, p: 0 };
     if (r.k == 'pm') { t.p++; return; }
+    if (!counted(r)) return;
     t.n++; if (r.fa) { t.d++; t.ms += new Date(r.fa) - new Date(r.ta); }
   });
   // per department: machines that broke down in the period, breakdowns, stops, downtime (same definition as the machine file), machines stopped right now
@@ -2350,7 +2711,7 @@ async function saveMach(e, id) {
   await adm('admin_update_machine', { p_id: id, p_dept: $('mfd').value.trim(), p_serial: $('mfs').value.trim(), p_model: $('mfm').value.trim(), p_location: $('mfl').value.trim(), p_installed: $('mfi').value, p_notes: $('mfn').value.trim() });
 }
 function machView(S, back) {
-  const mc = db.machines.find(x => String(x.id) == String(mview)) || {}, all = db.requests.filter(r => String(r.mid) == String(mview)), m = mst(all.filter(r => r.k != 'pm')), f = v => v == null ? tr('na') : dhm(v);
+  const mc = db.machines.find(x => String(x.id) == String(mview)) || {}, all = db.requests.filter(r => String(r.mid) == String(mview)), m = mst(all.filter(counted)), f = v => v == null ? tr('na') : dhm(v);
   const nm = mc.n || (all.length ? all[0].mn : ''), dp = mc.d || (all.length ? all[0].d : ''), base = location.origin + location.pathname;
   const kp = (v, l) => `<div class="bg-white rounded-xl shadow p-3 text-center"><div class="text-lg font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
   const P = {}, RCm = {}, mplans = (db.plans || []).filter(p => String(p.mid) == String(mview));
@@ -2374,7 +2735,11 @@ ${(() => { const l = partLife().filter(x => String(x.mid) == String(mview)); ret
 ${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 border-s-4 ${r.s == 'done' ? 'border-green-500' : 'border-red-500'}" style="break-inside:avoid">${card(r)}${r.s == 'done' ? done(r) : `<span class="text-xs font-bold text-red-700">${tr(r.s == 'open' ? 'sOpen' : 'sProg')}</span>`}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
 }
 /* ---------- STATISTICS: CHARTS (a separate view from the tables, with its own period) ---------- */
-const CC = { cnt: '#2563eb', hrs: '#ea580c', pal: ['#2563eb', '#ea580c', '#0f766e', '#7c3aed', '#db2777', '#ca8a04', '#0891b2', '#6b7280'], pr: { critical: '#dc2626', high: '#ea580c', medium: '#ca8a04', low: '#16a34a' } };
+const CC = {
+  get cnt() { return theme == 'dark' ? '#60a5fa' : '#2563eb'; }, get hrs() { return theme == 'dark' ? '#fb923c' : '#ea580c'; },
+  get pal() { return theme == 'dark' ? ['#60a5fa', '#fb923c', '#2dd4bf', '#a78bfa', '#f472b6', '#facc15', '#22d3ee', '#9ca3af'] : ['#2563eb', '#ea580c', '#0f766e', '#7c3aed', '#db2777', '#ca8a04', '#0891b2', '#6b7280']; },
+  get pr() { return theme == 'dark' ? { critical: '#f87171', high: '#fb923c', medium: '#facc15', low: '#4ade80' } : { critical: '#dc2626', high: '#ea580c', medium: '#ca8a04', low: '#16a34a' }; }
+};
 const CPER = [['today', 'today'], ['yesterday', 'yesterday'], ['7d', 'last7'], ['30d', 'last30'], ['month', 'thisMonth'], ['90d', 'last90'], ['year', 'thisYear'], ['all', 'all'], ['custom', 'custom']];
 const CUNIT = { hour: 'chPerHour', day: 'chPerDay', week: 'chPerWeek', month: 'chPerMonth', year: 'chPerYear' };
 function setSV(v) { sv = v; chartAnim = v == 'charts'; render(); }
@@ -2423,7 +2788,7 @@ const niceTop = mx => { if (mx <= 0) return 1; const g = 10 ** Math.floor(Math.l
 function colChart(items, color) {
   const mx = Math.max(0, ...items.map(i => i.v)), top = niceTop(mx), step = Math.ceil(items.length / 12), showV = items.length <= 16, H = 150;
   return `<div dir="ltr" class="flex gap-2" role="img" aria-label="${esc(items.map(i => i.t + ': ' + i.v).join(', '))}"><div class="flex flex-col justify-between text-xs text-gray-400 text-end" style="height:${H}px"><span>${top}</span><span>0</span></div>
-<div class="flex-1 min-w-0"><div class="relative" style="height:${H}px;border-bottom:1px solid #d1d5db"><div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none"><i style="border-top:1px dashed #e5e7eb"></i><i style="border-top:1px dashed #e5e7eb"></i><i></i></div>
+<div class="flex-1 min-w-0"><div class="relative" style="height:${H}px;border-bottom:1px solid var(--ln2)"><div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none"><i style="border-top:1px dashed var(--ln)"></i><i style="border-top:1px dashed var(--ln)"></i><i></i></div>
 <div class="flex items-end gap-1 relative" style="height:100%">${items.map(i => `<div class="flex-1 min-w-0 flex flex-col justify-end items-center" style="height:100%" title="${esc(i.t)}: ${i.v}">${showV && i.v ? `<span class="text-[10px] text-gray-600">${i.v}</span>` : ''}<div class="cbar w-full rounded-t" style="height:${i.v / top * 100}%;min-height:${i.v ? 3 : 0}px;background:${color}"></div></div>`).join('')}</div></div>
 <div class="flex gap-1 text-[10px] text-gray-500 mt-1">${items.map((i, j) => `<span class="flex-1 min-w-0 relative" style="height:1rem">${j % step == 0 ? `<b class="font-normal" style="position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap">${esc(i.l)}</b>` : ''}</span>`).join('')}</div></div></div>`;
 }
@@ -2435,8 +2800,56 @@ function donut(arr) {
   if (arr.length > 8) arr = [...arr.slice(0, 7), [tr('chOther'), arr.slice(7).reduce((a, x) => a + x[1], 0)]];
   const tot = arr.reduce((a, x) => a + x[1], 0); if (!tot) return `<p class="text-gray-500 text-sm">${tr('none')}</p>`;
   let at = 0; const col = (x, i) => x[2] || CC.pal[i % CC.pal.length], stops = arr.map((x, i) => { const a = at / tot * 360; at += x[1]; return `${col(x, i)} ${a}deg ${at / tot * 360}deg`; }).join(',');
-  return `<div class="flex flex-wrap items-center gap-4"><div class="cdon relative shrink-0" style="width:130px;height:130px;border-radius:50%;background:conic-gradient(${stops})" role="img" aria-label="${esc(arr.map(x => x[0] + ': ' + x[1]).join(', '))}"><div style="position:absolute;inset:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center" class="text-xl font-bold text-gray-700">${tot}</div></div>
+  return `<div class="flex flex-wrap items-center gap-4"><div class="cdon relative shrink-0" style="width:130px;height:130px;border-radius:50%;background:conic-gradient(${stops})" role="img" aria-label="${esc(arr.map(x => x[0] + ': ' + x[1]).join(', '))}"><div style="position:absolute;inset:30px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center" class="text-xl font-bold text-gray-700">${tot}</div></div>
 <ul class="text-sm space-y-1 flex-1" style="min-width:11rem">${arr.map((x, i) => `<li class="flex items-center gap-2"><i style="width:.75rem;height:.75rem;border-radius:3px;background:${col(x, i)};flex:none"></i><span class="truncate flex-1">${esc(x[0])}</span><b>${x[1]}</b><span class="text-gray-400 w-10 text-end">${Math.round(x[1] / tot * 100)}%</span></li>`).join('')}</ul></div>`;
+}
+/* ---------- performance numbers: availability, MTBF, MTTR and the Pareto chart ---------- */
+let pto = { d: 'mach', m: 'h' };
+const PTO_D = [['mach', 'pdMach'], ['dept', 'pdDept'], ['type', 'pdType'], ['rc', 'pdRc']], PTO_M = [['h', 'pmH'], ['c', 'pmC']];
+function setPto(k, v) { pto[k] = v; render(); }
+const stopH = r => r.st == 'Yes' && r.fa ? Math.max(0, (new Date(r.fa) - new Date(r.ra)) / 3600000) : 0;
+// the biggest causes first: by machine, section, fault type or root cause, in downtime hours or in number of breakdowns (the 8 biggest and "other")
+function paretoData(rs) {
+  const key = r => pto.d == 'mach' ? r.mn : pto.d == 'dept' ? (r.d || '—') : pto.d == 'type' ? (enx(tl(r.pt)) || '—') : (r.rc ? rl(r.rc) : ''), o = {};
+  rs.forEach(r => { const k = key(r); if (k) o[k] = (o[k] || 0) + (pto.m == 'c' ? 1 : stopH(r)); });
+  let a = Object.entries(o).map(([k, v]) => [k, Math.round(v * 10) / 10]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]);
+  if (a.length > 9) a = [...a.slice(0, 8), [tr('chOther'), Math.round(a.slice(8).reduce((t, x) => t + x[1], 0) * 10) / 10]];
+  return a;
+}
+function paretoSvg(a) {
+  const tot = a.reduce((t, x) => t + x[1], 0);
+  if (!tot) return `<p class="text-gray-500 text-sm">${tr('none')}</p>`;
+  const vw = Math.max(300, Math.min(760, (document.documentElement.clientWidth || 390) - 56)), H = 290, L = 40, R = 42, T = 20, B = 90, pw = vw - L - R, ph = H - T - B, n = a.length, st = pw / n, bw = Math.min(46, st * .62);
+  const mx = niceTop(Math.max(...a.map(x => x[1]))), y = v => T + ph - v / mx * ph, yp = p => T + ph - p / 100 * ph, unit = pto.m == 'h' ? ' ' + tr('hr') : '';
+  let acc = 0; const Q = a.map(([l, v], i) => { acc += v; return { l, v, x: L + st * i + st / 2, c: Math.round(acc / tot * 1000) / 10 }; });
+  const cut = t => t.length > 15 ? t.slice(0, 14) + '…' : t, tx = 'font-size="11" style="fill:var(--mu)"';
+  return `<div dir="ltr" class="pareto flex justify-center"><svg width="${vw}" height="${H}" viewBox="0 0 ${vw} ${H}" role="img" aria-label="${esc(Q.map(p => p.l + ': ' + p.v + unit + ' (' + p.c + '%)').join(', '))}" style="max-width:100%;overflow:visible;font-family:inherit">
+<g style="stroke:var(--ln);stroke-width:1">${[0, 50, 100].map(p => `<line x1="${L}" x2="${vw - R}" y1="${yp(p)}" y2="${yp(p)}"/>`).join('')}</g>
+<line x1="${L}" x2="${vw - R}" y1="${yp(80)}" y2="${yp(80)}" style="stroke:var(--mu2);stroke-width:1;stroke-dasharray:4 4"/>
+<text x="${vw - R + 4}" y="${yp(80) + 4}" ${tx}>80%</text><text x="${vw - R + 4}" y="${T + 4}" ${tx}>100%</text><text x="${vw - R + 4}" y="${T + ph + 4}" ${tx}>0%</text>
+<text x="${L - 5}" y="${T + 4}" text-anchor="end" ${tx}>${mx}</text><text x="${L - 5}" y="${T + ph + 4}" text-anchor="end" ${tx}>0</text>
+${Q.map(p => `<g><title>${esc(p.l)}: ${p.v}${unit} · ${p.c}%</title><rect x="${p.x - bw / 2}" y="${y(p.v)}" width="${bw}" height="${T + ph - y(p.v)}" rx="3" style="fill:var(--c1)"/><text x="${p.x}" y="${y(p.v) - 5}" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--tx)">${p.v}</text><text transform="translate(${p.x + 4},${T + ph + 12}) rotate(-40)" text-anchor="end" ${tx}>${esc(cut(p.l))}</text></g>`).join('')}
+<polyline points="${Q.map(p => p.x + ',' + yp(p.c)).join(' ')}" fill="none" style="stroke:var(--c2);stroke-width:2.5"/>
+${Q.map(p => `<circle cx="${p.x}" cy="${yp(p.c)}" r="3.5" style="fill:var(--c2)"/>`).join('')}
+</svg></div>`;
+}
+const ptoBtns = (key, list) => list.map(([k, l]) => `<button type="button" onclick="setPto('${key}','${k}')" aria-pressed="${pto[key] == k}" class="px-3 py-1.5 rounded-lg text-sm font-semibold ${pto[key] == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('');
+const paretoBox = rs => box('📊 ' + tr('paretoT'), `<div class="np flex flex-wrap gap-2 mb-3" role="group" aria-label="${tr('paretoT')}">${ptoBtns('d', PTO_D)}<span class="w-px bg-gray-200 mx-1"></span>${ptoBtns('m', PTO_M)}</div>${paretoSvg(paretoData(rs))}<p class="text-xs text-gray-500 mt-2">${tr('paretoNote')}</p>`);
+// availability = 1 - downtime / (machines x hours of the period), counting a 24-hour day; MTBF and MTTR are the machine-file numbers
+function perfOf(S, f, t, nM) {
+  const td = ymd(new Date()), last = t && t < td ? t : td, first = f || (S.rs.length ? S.rs.reduce((a, r) => r.ra < a ? r.ra : a, S.rs[0].ra).slice(0, 10) : last);
+  const hrs = Math.max(1, Math.round((new Date(last) - new Date(first)) / 864e5) + 1) * 24, dt = Object.values(S.M).reduce((a, m) => a + m.dt, 0) / 60;
+  return { av: nM ? Math.max(0, Math.min(100, (1 - dt / (nM * hrs)) * 100)) : null, dt, nM };
+}
+const perfTiles = (S, P) => {
+  const tile = (l, v, sub) => `<div class="bg-white rounded-xl shadow p-3"><div class="text-xs font-bold text-gray-600">${l}</div><div class="text-xl sm:text-2xl font-bold text-teal-800 mt-1">${v}</div><div class="text-xs text-gray-500 mt-1">${sub}</div></div>`;
+  return `<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-3">${tile(tr('availT'), P.av == null ? tr('na') : P.av.toFixed(1) + '%', P.nM ? tr('nMach').replace('{n}', P.nM) : '')}${tile('MTBF', S.mtbf == null ? tr('na') : dhm(S.mtbf), tr('mtbfS'))}${tile('MTTR', S.mttr == null ? tr('na') : dhm(S.mttr), tr('mttrS'))}</div>`;
+};
+const perfNote = w => `<p class="text-xs text-gray-500 mb-4">${tr('perfNote')}${w ? ' · <b>' + tr('statWait').replace('{n}', w) + '</b>' : ''}</p>`;
+// the dashboard block: the last 30 days
+function dashPerf() {
+  const td = ymd(new Date()), a29 = ymd(new Date(Date.now() - 29 * 864e5)), S = calc({ inP: x => { const d = (x || '').slice(0, 10); return d >= a29 && d <= td; }, okR: () => true });
+  return `<h3 class="font-bold text-teal-800 mb-2">${tr('perf30')}</h3>${perfTiles(S, perfOf(S, a29, td, db.machines.length))}${paretoBox(S.rs)}${perfNote(waitN('', ''))}`;
 }
 const topN = (arr, fn, n = 8) => arr.map(fn).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, n);
 function chartsView() {
@@ -2452,8 +2865,9 @@ function chartsView() {
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-2"><select onchange="setCF('d',this.value)">${so('', tr('allDepts'), cf.d)}${sdepts.map(d => so(d, d, cf.d)).join('')}</select><select onchange="setCF('m',this.value)">${so('', tr('allMach'), cf.m)}${smach.map(([id, n]) => so(id, n, cf.m)).join('')}</select>
 ${cf.r == 'custom' ? `<label class="text-xs">${tr('from')}<input type="date" value="${esc(cf.from)}" onchange="setCF('from',this.value)"></label><label class="text-xs">${tr('to')}<input type="date" value="${esc(cf.to)}" onchange="setCF('to',this.value)"></label>` : ''}</div>
 <div class="text-sm text-gray-600 mt-2">${tr('chRange')}: <b><bdi dir="ltr">${f || '…'} → ${t || '…'}</bdi></b> · ${tr(CUNIT[B.unit])}</div></div>`;
-  const kp = `<div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-2">${kpi(S.rs.length, tr('total'))}${kpi(stops, tr('stops'))}${kpi(dtH, tr('dHrs'), 'text-orange-600')}${kpi(S.mttr == null ? tr('na') : dhm(S.mttr), 'MTTR')}${kpi(S.mtbf == null ? tr('na') : dhm(S.mtbf), 'MTBF')}</div><p class="text-xs text-gray-500 mb-5">${tr('chNote')}</p>`;
-  const body = !S.rs.length && !pt.length ? box(tr('chNone'), `<p class="text-gray-500 text-sm">${tr('none')}</p>`) : `<div class="cols2">
+  const PF = perfOf(S, f, t, db.machines.filter(m => (!cf.d || m.d == cf.d) && (!cf.m || String(m.id) == cf.m)).length);
+  const kp = perfTiles(S, PF) + `<div class="grid grid-cols-3 gap-2 sm:gap-3 mb-2">${kpi(S.rs.length, tr('total'))}${kpi(stops, tr('stops'))}${kpi(dtH, tr('dHrs'), 'text-orange-600')}</div><p class="text-xs text-gray-500 mb-1">${tr('chNote')}</p>${perfNote(waitN(cf.d, cf.m))}`;
+  const body = !S.rs.length && !pt.length ? box(tr('chNone'), `<p class="text-gray-500 text-sm">${tr('none')}</p>`) : paretoBox(S.rs) + `<div class="cols2">
 ${box(tr('chTrend') + ' · ' + tr(CUNIT[B.unit]), colChart(B.items.map(i => ({ l: i.l, t: i.t, v: i.c })), CC.cnt))}
 ${box(tr('chTrendH') + ' · ' + tr(CUNIT[B.unit]), colChart(B.items.map(i => ({ l: i.l, t: i.t, v: i.h })), CC.hrs))}
 ${box(tr('chSecCnt'), hbars(topN(ds, ([k, o]) => [k, o.c]), CC.cnt))}
@@ -2465,10 +2879,10 @@ ${box(tr('chMttr'), hbars(topN(ms.filter(m => m.mttr != null), m => [m.n, m.mttr
 ${box(tr('xlTypes'), donut(cnt(S.rs, r => enx(tl(r.pt)) || '—')))}
 ${box(tr('topRC'), hbars(topN(Object.entries(S.RC), ([k, v]) => [rl(k), v]), CC.pal[2]))}
 ${box(tr('chPrio'), donut(['critical', 'high', 'medium', 'low'].map(k => [tr(k), S.rs.filter(r => r.pr == k).length, CC.pr[k]])))}
-${box(tr('chStopped'), donut([[tr('yes'), stops, '#dc2626'], [tr('no'), S.rs.length - stops, '#16a34a']]))}
+${box(tr('chStopped'), donut([[tr('yes'), stops, CC.pr.critical], [tr('no'), S.rs.length - stops, CC.pr.low]]))}
 ${box(tr('topParts'), hbars(topN(pt, x => [enx(x.n) + (x.p ? ' (' + x.p + ')' : ''), x.c]), CC.pal[4]))}
 ${me.r == 'admin' ? box(tr('chTech'), hbars(topN(Object.entries(S.T), ([e, x]) => [tname(e), x.d]), CC.pal[2])) : ''}</div>`;
-  return `<div class="${anim ? 'anim' : ''}">${controls}${kp}${body}</div>`;
+  return `<div class="${anim ? 'anim' : ''}" data-charts>${controls}${kp}${body}</div>`;
 }
 const svSwitch = () => `<div class="np flex gap-2 mb-3">${[['tables', 'stTables'], ['charts', 'stCharts']].map(([k, l]) => `<button onclick="setSV('${k}')" class="px-4 py-2 rounded-lg font-bold text-sm ${sv == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}</button>`).join('')}</div>`;
 function aStats() {
@@ -2496,7 +2910,7 @@ ${S.SN[id] ? `<span class="inline-block mt-2 text-xs font-bold text-white bg-red
   const techs = tk.length ? `<div class="grid md:grid-cols-2 gap-3">${tk.map(([e, t]) => `<div class="border rounded-lg p-3"><b>${who(e)}</b><div class="text-sm text-gray-600">${tr('taken')}: ${t.n} · ${tr('closedN')}: ${t.d}${t.d ? ' · ' + tr('avg') + ': ' + hm(Math.round(t.ms / t.d / 60000)) : ''}${t.p ? ' · PM: ' + t.p : ''}</div></div>`).join('')}</div>` : none;
   const sdepts = [...new Set(db.requests.map(r => r.d).filter(Boolean))].sort(), smach = [...new Map(db.requests.filter(r => !sf.d || r.d == sf.d).map(r => [String(r.mid), r.mn]))].sort((a, b) => a[1].localeCompare(b[1]));
   const so = (v, l, cur) => `<option value="${esc(v)}" ${v == cur ? 'selected' : ''}>${esc(l)}</option>`;
-  return svSwitch() + `<div class="np bg-white rounded-xl shadow p-3 mb-4"><div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
+  return svSwitch() + perfNote(waitN(sf.d, sf.m)) + `<div class="np bg-white rounded-xl shadow p-3 mb-4"><div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
 <select onchange="setSF('d',this.value)">${so('', tr('allDepts'), sf.d)}${sdepts.map(d => so(d, d, sf.d)).join('')}</select>
 <select onchange="setSF('m',this.value)">${so('', tr('allMach'), sf.m)}${smach.map(([id, n]) => so(id, n, sf.m)).join('')}</select>
 <select onchange="setPeriod(this.value)" ${sfRange() ? 'disabled' : ''}>${['all', ...[...ps].sort()].map(p => `<option value="${p}" ${p == period ? 'selected' : ''}>${p == 'all' ? tr('all') : p}</option>`).join('')}</select>
@@ -2589,7 +3003,7 @@ let ttab = 'work';
 function setTT(k) { ttab = k; render(); }
 const techHome = () => {
   const w = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, n = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['all', 'tabAll', 0], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</div>` + (ttab == 'shift' ? aShift() : ttab == 'all' ? hubView() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
+  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['all', 'tabAll', 0], ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" ${ttab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</nav>` + (ttab == 'shift' ? aShift() : ttab == 'all' ? hubView() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
 };
 function shiftWin(off) {
   const d = new Date(), h = d.getHours();
@@ -2732,6 +3146,19 @@ async function pmRegister() {
   const r = await admT('admin_pm_register', { p_from: a, p_to: b });
   if (r.ok) { await refresh(); alert(tr('pmRegDone') + ': ' + r.r); }
 }
+let pmLvSec = '', pmLvOpen = false;   // the section whose checklists are shown in the box "Checklists" ('' = the general ones)
+function pmLvPick(v) { pmLvSec = v; pmLvOpen = true; render(); }
+async function pmSecSave(l) {
+  const ck = $('pmsc' + l).value.split('\n').map(x => x.trim()).filter(Boolean);
+  if (!ck.length) return alert(tr('pmSecEmpty'));
+  const r = await admT('admin_pm_sec_save', { p_section: pmLvSec, p_level: l, p_checklist: ck });
+  if (r.ok) { pmLvOpen = true; await refresh(); }
+}
+async function pmSecClear(l) {
+  if (!confirm(tr('pmSecBackAsk'))) return;
+  const r = await admT('admin_pm_sec_clear', { p_section: pmLvSec, p_level: l });
+  if (r.ok) { pmLvOpen = true; await refresh(); }
+}
 async function pmLvSave(l) {
   const t = $('pmlt' + l).value.trim(), ck = $('pmlc' + l).value.split('\n').map(x => x.trim()).filter(Boolean);
   if (!t) return;
@@ -2752,7 +3179,10 @@ function pmMaster() {
     return rows.length ? `<h3 class="font-bold text-teal-800 mt-4 mb-2">${esc(sec)}</h3><div class="cols2">${rows.map(x => pmMach(x.k, x.e, isA)).join('')}</div>` : '';
   }).join('');
   const regBox = `<details class="bg-white rounded-xl shadow p-3 mt-4 np" id="pmReg"><summary class="font-bold cursor-pointer">${tr('pmRegTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmRegAuto')}</p><div class="flex gap-2"><select id="pmrm" class="flex-1">${[...Array(12).keys()].map(i => `<option value="${i}" ${i == (cur < 0 ? 0 : cur) ? 'selected' : ''}>${esc(pmMN(i))}</option>`).join('')}</select><button onclick="pmRegister()" class="bg-teal-700 text-white px-3 rounded-lg text-sm">${tr('pmRegBtn')}</button></div></details>`;
-  const lvBox = `<details class="bg-white rounded-xl shadow p-3 mt-3 np" id="pmLv"><summary class="font-bold cursor-pointer">${tr('pmLvTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmLvHint')}</p>${PM_LV.filter(l => db.lv[l]).map(l => `<div class="border rounded-lg p-2 mt-2"><b>${l}</b><label class="block text-xs mt-1">${tr('pmLvName')}<input id="pmlt${l}" class="w-full" value="${esc(db.lv[l].t)}"></label><label class="block text-xs mt-1">${tr('planChecklist')}<textarea id="pmlc${l}" rows="6" class="w-full">${esc(db.lv[l].ck.join('\n'))}</textarea></label><button onclick="pmLvSave('${l}')" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm mt-2">${tr('pmSave')}</button></div>`).join('')}</details>`;
+  const secOpt = `<select class="w-full" onchange="pmLvPick(this.value)"><option value="">${tr('pmSecGen')}</option>${secs.map(x => `<option value="${esc(x)}" ${x == pmLvSec ? 'selected' : ''}>${esc(x)}${PM_LV.some(l => (db.sl[x + '|' + l] || []).length) ? ' ★' : ''}</option>`).join('')}</select>`;
+  const lvGen = PM_LV.filter(l => db.lv[l]).map(l => `<div class="border rounded-lg p-2 mt-2"><b>${l}</b><label class="block text-xs mt-1">${tr('pmLvName')}<input id="pmlt${l}" class="w-full" value="${esc(db.lv[l].t)}"></label><label class="block text-xs mt-1">${tr('planChecklist')}<textarea id="pmlc${l}" rows="6" class="w-full">${esc(db.lv[l].ck.join('\n'))}</textarea></label><button onclick="pmLvSave('${l}')" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm mt-2">${tr('pmSave')}</button></div>`).join('');
+  const lvSec = !db.slOn ? `<p class="text-sm text-amber-800 bg-amber-50 border border-amber-300 rounded-lg p-3 mt-2">${tr('pmSecNoDb')}</p>` : PM_LV.filter(l => db.lv[l]).map(l => { const own = db.sl[pmLvSec + '|' + l] || [], has = own.length > 0; return `<div class="border rounded-lg p-2 mt-2"><div class="flex justify-between gap-2"><b>${l} · ${esc(db.lv[l].t)}</b><span class="text-xs whitespace-nowrap ${has ? 'text-green-700 font-semibold' : 'text-gray-500'}">${has ? tr('pmSecOwn') + ' (' + own.length + ')' : tr('pmSecGeneral') + ' (' + db.lv[l].ck.length + ')'}</span></div><textarea id="pmsc${l}" rows="${has ? 10 : 4}" class="w-full mt-1" placeholder="${esc(tr('pmSecPh'))}">${esc(own.join('\n'))}</textarea><div class="flex gap-2 mt-2"><button onclick="pmSecSave('${l}')" class="bg-teal-700 text-white px-3 py-2 rounded-lg text-sm">${tr('pmSave')}</button>${has ? `<button onclick="pmSecClear('${l}')" class="border px-3 py-2 rounded-lg text-sm">${tr('pmSecBack')}</button>` : ''}</div></div>`; }).join('');
+  const lvBox = `<details class="bg-white rounded-xl shadow p-3 mt-3 np" id="pmLv" ${pmLvOpen ? 'open' : ''} ontoggle="pmLvOpen=this.open"><summary class="font-bold cursor-pointer">${tr('pmLvTitle')}</summary><p class="text-xs text-gray-500 my-2">${tr('pmLvHint')}</p><p class="text-xs text-gray-500 mb-2">${tr('pmSecHint')}</p>${secOpt}${pmLvSec ? lvSec : lvGen}</details>`;
   return tiles + (isA ? pmUnlBox() : '') + chips + `<p class="text-xs text-gray-500 mb-2">${tr('pmLegend')}</p>` + (body || `<p class="text-gray-500">${tr('pmNoEntries')}</p>`) + (isA ? regBox + lvBox : '');
 }
 // ---- the yearly table (the same layout as the workbook: machines down, weeks 1..52 across, months on top) and the yearly renewal
@@ -2769,7 +3199,7 @@ async function pmNewYear(y) {
   if (r.ok) { pmY = y; pmMon = null; await refresh(); alert(tr('pmYearMade') + ': ' + r.r); }
 }
 function setPMSec(v) { pmSec = v; pmSel = null; render(); }
-const PM_CELL = { planned: 'bg-white border-teal-600 text-teal-800', registered: 'bg-blue-200 border-blue-500 text-blue-900', done: 'bg-green-500 border-green-700 text-white', past: 'bg-red-100 border-red-400 text-red-700', skipped: 'bg-gray-100 border-gray-300 text-gray-400 line-through' };
+const PM_CELL = { planned: 'bg-white border-teal-600 text-teal-800', registered: 'bg-blue-200 border-blue-500 text-blue-900', done: 'bg-green-700 border-green-500 text-white', past: 'bg-red-100 border-red-400 text-red-700', skipped: 'bg-gray-100 border-gray-300 text-gray-400 line-through' };
 function pmGrid() {
   const y = pmYr(), S = db.sched.filter(x => x.y == y), td = ymd(new Date()), curW = y == pmCY() ? pmWk(td, y) : 0, isA = me.r == 'admin';
   const ord = (a, b) => (PM_SEC.indexOf(a) + 1 || 99) - (PM_SEC.indexOf(b) + 1 || 99) || a.localeCompare(b);
@@ -2989,7 +3419,7 @@ const pmNums = ks => { const nm = new Set(ks.map(k => k.nm)), e = db.sched.filte
 function hubMachine(m) {
   const S = machStates(), c = S[String(m.id)], sps = db.sp.parts.filter(p => p.mid == m.id), al = spAl(m.id), docs = db.sp.docs.filter(d => d.mid == m.id);
   const all = db.requests.filter(r => String(r.mid) == String(m.id)), lg = all.filter(r => r.s == 'done' && r.k != 'pm').length, op = all.filter(r => r.s != 'done' && !isHeld(r)).length;
-  const t = mst(all.filter(r => r.k != 'pm')), f = v => v == null ? tr('na') : dhm(v), pn = db.pmOn ? pmNums(pmOf(hubS, m)) : null;
+  const t = mst(all.filter(counted)), f = v => v == null ? tr('na') : dhm(v), pn = db.pmOn ? pmNums(pmOf(hubS, m)) : null;
   const url = location.origin + location.pathname + '?m=' + encodeURIComponent(m.n) + '&d=' + encodeURIComponent(m.d);
   const kp = (v, l) => `<div class="bg-gray-50 rounded-lg p-2 text-center"><div class="font-bold text-teal-800">${v}</div><div class="text-xs text-gray-500">${l}</div></div>`;
   const big = (v, ic, sub, warn) => `<button onclick="hubGo(${js(hubS)},${js(hubM)},'${v}')" data-hub="${v}" class="bg-white rounded-xl shadow p-5 text-start"><div class="text-3xl">${ic}</div><b class="text-lg block mt-1">${tr('hub_' + v)}</b><span class="text-xs text-gray-600">${sub}</span>${warn ? `<span class="ms-2 text-xs font-bold text-amber-800 bg-amber-100 rounded-full px-2 py-1">⚠ ${warn}</span>` : ''}</button>`;
@@ -3136,12 +3566,12 @@ async function docDel(id) { if (confirm(tr('docDelAsk'))) await spCall('admin_do
 /* ---------- DEPARTMENT ADMIN ---------- */
 const dReqs = () => db.requests.filter(r => r.k != 'pm' && r.d == me.dp);
 function deptView() {
-  const A = ['hold', 'dopen', 'appr', 'dstaff', 'dmach'];
+  const A = ['hold', 'dopen', 'appr', 'lapp', 'dstaff', 'dmach'];
   if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { hold: 'tabHold', dopen: 'tabDOpen', appr: 'tabAppr', dstaff: 'tabDStaff', dmach: 'tabDMach' };
-  const nh = dReqs().filter(isHeld).length, np = db.staff.filter(s => s.st == 'pending').length, na = apprPend().length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'hold' && nh ? ' (' + nh + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'dstaff' && np ? ' (' + np + ')' : ''}</button>`).join('')}</div>`
-    + { hold: dHold, dopen: dOpen, appr: aAppr, dstaff: dStaff, dmach: dMach }[tab]();
+  const N = { hold: 'tabHold', dopen: 'tabDOpen', appr: 'tabAppr', lapp: 'tabLApp', dstaff: 'tabDStaff', dmach: 'tabDMach' };
+  const nh = dReqs().filter(isHeld).length, np = db.staff.filter(s => s.st == 'pending').length, na = apprPend().length, nl = lmPend().length;
+  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'hold' && nh ? ' (' + nh + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'lapp' && nl ? ' (' + nl + ')' : ''}${k == 'dstaff' && np ? ' (' + np + ')' : ''}</button>`).join('')}</nav>`
+    + { hold: dHold, dopen: dOpen, appr: aAppr, lapp: lmApprView, dstaff: dStaff, dmach: dMach }[tab]();
 }
 const dBtns = r => `<span class="np flex gap-3 flex-wrap">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs bg-teal-700 text-white font-semibold rounded px-2 py-1">✔ ${tr('approve')}</button>` : ''}${r.s == 'open' ? `<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="cancelReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('cancelReq')}</button>` : ''}</span>`;
 function cancelReq(id) { if (confirm(tr('confirmCancel'))) act('dept_cancel_request', { p_id: id }); }
@@ -3160,12 +3590,12 @@ function dMach() {
 
 /* ---------- PRODUCTION SUPERVISOR: his section's machines and requests, and the approval of finished work (he does not take or close maintenance) ---------- */
 function psView() {
-  const A = ['dopen', 'dprev', 'appr', 'dmach'];
+  const A = ['dopen', 'dprev', 'appr', 'lapp', 'dmach'];
   if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { dopen: 'tabDOpen', dprev: 'tabPrev', appr: 'tabAppr', dmach: 'tabDMach' };
-  const no = dReqs().filter(r => r.s != 'done').length, na = apprPend().length;
-  return `<div class="flex flex-wrap gap-2 mb-4 np tabs">${A.map(k => `<button onclick="setTab('${k}')" class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'dopen' && no ? ' (' + no + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}</button>`).join('')}</div>`
-    + { dopen: psOpen, dprev: bdView, appr: aAppr, dmach: dMach }[tab]();
+  const N = { dopen: 'tabDOpen', dprev: 'tabPrev', appr: 'tabAppr', lapp: 'tabLApp', dmach: 'tabDMach' };
+  const no = dReqs().filter(r => r.s != 'done').length, na = apprPend().length, nl = lmPend().length;
+  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'dopen' && no ? ' (' + no + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'lapp' && nl ? ' (' + nl + ')' : ''}</button>`).join('')}</nav>`
+    + { dopen: psOpen, dprev: bdView, appr: aAppr, lapp: lmApprView, dmach: dMach }[tab]();
 }
 function psOpen() {
   const l = dReqs().filter(r => r.s != 'done').sort((a, b) => (a.s == 'open' ? 0 : 1) - (b.s == 'open' ? 0 : 1) || b.id - a.id);
@@ -3245,7 +3675,7 @@ function dashData() {
   const live = R.filter(r => r.s != 'done'), stopped = new Set(live.filter(r => r.st == 'Yes').map(r => String(r.mid)));
   const lateL = live.filter(r => r.s == 'open' && slaOf(r).late), lateM = new Set(lateL.map(r => String(r.mid)));
   const mo = td.slice(0, 7), lm = ymd(new Date(d0.getFullYear(), d0.getMonth() - 1, 15)).slice(0, 7);
-  const rep = m => av(R.filter(r => r.fa && r.ta && r.fa.startsWith(m)).map(r => Math.max(0, (new Date(r.fa) - new Date(r.ta)) / 60000)));
+  const rep = m => av(R.filter(r => r.fa && r.ta && apprOk(r) && r.fa.startsWith(m)).map(r => Math.max(0, (new Date(r.fa) - new Date(r.ta)) / 60000)));
   const G = {}, T30 = {}, load = {};
   const a29 = ago(29), a6 = ago(6), a13 = ago(13), a7 = ago(7);
   R.filter(r => inR(r, a29, td)).forEach(r => { (G[r.mid] = G[r.mid] || []).push(r); T30[r.pt] = (T30[r.pt] || 0) + 1; });
@@ -3278,11 +3708,144 @@ function aDash() {
   return `<div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-3">${kpi(d.stopped, tr('stoppedMach'), d.stopped ? 'text-red-600' : 'text-teal-800')}${kpi(d.openN, tr('notTaken'), d.openN ? 'text-orange-600' : 'text-teal-800')}${kpi(d.progN, tr('progN'))}${kpi(d.lateN, tr('lateN'), d.lateN ? 'text-red-600' : 'text-teal-800')}${kpi(d.closedToday, tr('closedToday'), 'text-green-700')}</div>
 <div class="grid grid-cols-2 gap-3 mb-5">${kpi(d.w0 + ' ' + arrow(d.w0, d.w1), tr('last7bk') + ' (' + tr('prev7') + ': ' + d.w1 + ')')}${kpi(mm(d.mttrM), tr('mttrMonth') + ' (' + tr('lastMonth') + ': ' + mm(d.mttrL) + ')')}</div>
 <div class="grid grid-cols-3 gap-3 mb-5">${kpi(d.pmLate, tr('pmLate'), d.pmLate ? 'text-red-600' : 'text-teal-800')}${kpi(d.pmWeek, tr('pmWeek'), 'text-blue-700')}${kpi(d.pmDone, tr('pmDoneM'), 'text-green-700')}</div>
+${dashPerf()}
 <div class="cols2">${pmBox()}
 ${box(tr('riskMach'), d.risk.length ? d.risk.map(x => `<div onclick="goM(${js(x.id)})" class="flex justify-between items-center gap-2 border-b py-2 cursor-pointer"><div><b>${esc(x.n)}</b><div class="text-xs text-gray-500">${tr('total')}: ${x.c} · ${tr('stops')}: ${x.s}</div></div><div class="flex flex-wrap gap-1 justify-end">${x.sn ? `<span class="text-xs font-bold text-white bg-red-600 rounded-full px-2 py-1">${tr('stoppedMach')}</span>` : ''}${x.lt ? `<span class="text-xs font-bold text-red-700 bg-red-100 rounded-full px-2 py-1">${tr('overdue')}</span>` : ''}<span class="text-xs font-bold rounded-full px-2 py-1 ${bd(x)}">${x.score}</span></div></div>`).join('') + `<p class="text-xs text-gray-500 mt-2">${tr('riskNote')}</p>` : none)}
 ${box(tr('weekly'), bars(d.weeks.map(w => [w.i == 0 ? tr('last7') : tr('wkOf') + ' ' + w.from.slice(5), w.n]), 'bg-orange-600'))}
 ${box(tr('typesRecent'), d.types.length ? bars(d.types.map(([k, v]) => [tl(k), v]), 'bg-blue-600') : none)}
 ${me.r == 'admin' ? box(tr('workload'), d.load.length ? d.load.map(([e, n]) => `<div class="flex justify-between border-b py-1 text-sm"><span>${who(e)}</span><b>${n}</b></div>`).join('') : none) : ''}</div>`;
+}
+
+/* ---------- LIGHT MAINTENANCE BY THE OPERATOR (update 21) ---------- */
+let lmLoaded = false, lmWho = '', lmSig = '', lmOpen = '', lmAns = {}, lmEdit = null, lmF = null, lmBusy = false;
+const lmItems = v => arr(v).filter(e => e && typeof e == 'object').map(e => ({ t: txt(e.t) || '', a: txt(e.a) || '', m: txt(e.m) || '', n: txt(e.n) || '', r: e.r == 'ok' ? 'ok' : e.r == 'bad' ? 'bad' : null }));
+const lmAt = v => { try { return v ? loc(v) : ''; } catch (e) { return ''; } };
+const LM_EV = [[1, 'lmDaily'], [2, 'lmEvery2'], [7, 'lmWeekly'], [14, 'lmBiweekly'], [30, 'lmMonthly'], [90, 'lmQuarterly']];
+const lmEvTxt = n => { const x = LM_EV.find(e => e[0] == n); return x ? tr(x[1]) : tr('lmEveryN').replace('{n}', n); };
+const dayNo = x => Math.floor(new Date(String(x).slice(0, 10) + 'T12:00:00') / 864e5);
+const lmTaskById = id => db.lm.tasks.find(t => t.id == id);
+const lmTaskMach = t => t.ms.length ? db.machines.filter(m => t.ms.includes(m.id)) : db.machines.filter(m => m.d == t.d);
+// due = nothing was done (or is waiting for approval) inside its period; a record that was sent back does not count
+const lmLast = (t, mid) => db.lm.runs.filter(r => r.tid == t.id && r.mid == mid && r.st != 'rejected').sort((a, b) => b.id - a.id)[0] || null;
+const lmIsDue = (t, mid) => { const r = lmLast(t, mid); return !r || dayNo(r.at) <= dayNo(ymd(new Date())) - t.ev; };
+function lmDueList() {
+  const out = [];
+  db.lm.tasks.filter(t => t.ac && t.d == me.dp).forEach(t => lmTaskMach(t).forEach(m => { if (lmIsDue(t, m.id)) out.push({ t, m }); }));
+  return out;
+}
+const lmPend = () => db.lm.on ? db.lm.runs.filter(r => r.st == 'pending' && (me.r == 'admin' || r.d == me.dp)) : [];
+const lmBadge = st => `<span class="text-xs font-bold rounded-full px-2 py-1 ${st == 'approved' ? 'bg-green-100 text-green-800' : st == 'rejected' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-800'}">${st == 'approved' ? '✔ ' + tr('lmApproved') : st == 'rejected' ? '↩ ' + tr('lmRejected') : '⏳ ' + tr('lmPendApp')}</span>`;
+const lmKindBadge = k => `<span class="text-xs font-bold rounded-full px-2 py-1 ${k == 'deep' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${k == 'deep' ? '🧹 ' + tr('lmKDeep') : '🔧 ' + tr('lmKLight')}</span>`;
+const lmRunRow = r => { const t = lmTaskById(r.tid); return `<div class="bg-white rounded-lg shadow p-3 mb-2 flex flex-wrap justify-between gap-2 text-sm"><div><b>${esc(r.mn)}</b> · ${esc(t ? t.t : '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)}${r.st == 'rejected' && r.okt ? ' · ' + esc(r.okt) : ''}</div></div>${lmBadge(r.st)}</div>`; };
+// ---- the operator
+function lmOpView() {
+  const due = lmDueList(), mine = db.lm.runs.filter(r => r.d == me.dp), wait = mine.filter(r => r.st == 'pending').slice(0, 10), okd = mine.filter(r => r.st == 'approved').slice(0, 5);
+  const card = ({ t, m }) => {
+    const key = t.id + '|' + m.id, bk = db.lm.runs.find(r => r.tid == t.id && r.mid == m.id), back = bk && bk.st == 'rejected' ? bk : null;
+    return `<div class="bg-white rounded-xl shadow p-4 mb-3 border-s-4 ${back ? 'border-red-500' : 'border-teal-600'}" data-lm="${key}"><div class="flex flex-wrap justify-between gap-2"><div><b class="text-lg">${esc(m.n)}</b><div class="text-sm text-gray-600">${esc(t.t)}</div></div><div class="flex flex-wrap gap-1 items-start">${lmKindBadge(t.k)}<span class="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-1">${lmEvTxt(t.ev)} · ${tr('lmPtsN').replace('{n}', t.it.length)}</span></div></div>${back ? `<div class="mt-2 text-sm bg-red-50 border border-red-300 text-red-800 rounded-lg p-2">↩ ${tr('lmBackT').replace('{note}', esc(back.okt))}${back.okn ? ' — ' + esc(back.okn) : ''}</div>` : ''}${lmOpen == key ? lmForm(t, m) : `<button type="button" onclick="lmStart('${key}')" class="${btn} mt-3">${tr('lmStart')}</button>`}</div>`;
+  };
+  return `<div class="max-w-2xl mx-auto"><h2 class="text-xl font-bold text-teal-800 mb-3">🔧 ${tr('lmDueT')}</h2>${due.length ? due.map(card).join('') : `<p class="bg-white rounded-xl shadow p-4 text-gray-600">${tr('lmNone')}</p>`}
+${wait.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmWaitT')}</h3>${wait.map(lmRunRow).join('')}` : ''}
+${okd.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmDoneT')}</h3>${okd.map(lmRunRow).join('')}` : ''}</div>`;
+}
+const lmCount = (key, t) => { const A = lmAns[key] || {}; return { left: t.it.filter((_, i) => !(A[i] && A[i].r)).length, noNote: t.it.filter((_, i) => A[i] && A[i].r == 'bad' && !(A[i].n || '').trim()).length }; };
+function lmForm(t, m) {
+  const key = t.id + '|' + m.id, A = lmAns[key] = lmAns[key] || {}, c = lmCount(key, t); let last = '';
+  const rows = t.it.map((p, i) => {
+    const a = A[i] || {}, hd = p.a && p.a != last ? (last = p.a, `<div class="font-bold text-teal-800 mt-4 mb-1 border-b pb-1">${esc(p.a)}</div>`) : '';
+    return hd + `<div class="py-2 border-b"><div class="font-semibold">${i + 1}. ${esc(p.t)}</div>${p.m ? `<div class="text-xs text-gray-600">${esc(p.m)}</div>` : ''}${p.n ? `<div class="text-xs text-amber-800">⚠ ${esc(p.n)}</div>` : ''}<div class="grid grid-cols-2 gap-2 mt-2"><button type="button" onclick="lmSet('${key}',${i},'ok')" aria-pressed="${a.r == 'ok'}" class="rounded-lg font-bold py-2 ${a.r == 'ok' ? 'bg-green-700 text-white' : 'bg-white border'}">✔ ${tr('lmOk')}</button><button type="button" onclick="lmSet('${key}',${i},'bad')" aria-pressed="${a.r == 'bad'}" class="rounded-lg font-bold py-2 ${a.r == 'bad' ? 'bg-red-600 text-white' : 'bg-white border'}">⚠ ${tr('lmBad')}</button></div>${a.r == 'bad' ? `<input class="mt-2" placeholder="${esc(tr('lmBadNote'))}" value="${esc(a.n || '')}" oninput="lmNote('${key}',${i},this.value,${t.id})" maxlength="300">` : ''}</div>`;
+  }).join('');
+  return `<div class="mt-3">${rows}<div class="mt-3 flex flex-col gap-2"><button type="button" onclick="lmAllOk('${key}',${t.id})" class="border rounded-lg py-2 font-bold">✔ ${tr('lmAllOk')}</button><p id="lmHint" class="text-sm text-amber-800">${lmHint(c)}</p><button type="button" id="lmSend" onclick="lmSubmit('${key}',${t.id},'${m.id}')" class="${btn}" ${c.left || c.noNote ? 'disabled' : ''}>${tr('lmSend')}</button><button type="button" onclick="lmStart('')" class="text-sm text-gray-500 py-2">${tr('lmClose')}</button></div></div>`;
+}
+const lmHint = c => (c.left ? tr('lmLeft').replace('{n}', c.left) : '') + (c.noNote ? ' ' + tr('lmNeedNote').replace('{n}', c.noNote) : '');
+function lmStart(key) { lmOpen = key; render(); }
+function lmSet(key, i, r) { const A = lmAns[key] = lmAns[key] || {}; A[i] = { r, n: r == 'bad' ? (A[i] && A[i].n) || '' : '' }; render(); }
+function lmAllOk(key, tid) { const t = lmTaskById(tid), A = lmAns[key] = lmAns[key] || {}; t.it.forEach((_, i) => { if (!(A[i] && A[i].r)) A[i] = { r: 'ok', n: '' }; }); render(); }
+// a note is typed: only the button and the hint change (the page is not redrawn under the keyboard)
+function lmNote(key, i, v, tid) {
+  const A = lmAns[key] = lmAns[key] || {}; A[i] = { r: 'bad', n: v };
+  const c = lmCount(key, lmTaskById(tid)), b = $('lmSend'), h = $('lmHint');
+  if (b) b.disabled = !!(c.left || c.noNote); if (h) h.textContent = lmHint(c);
+}
+async function lmSubmit(key, tid, mid) {
+  if (lmBusy) return;
+  const t = lmTaskById(tid), A = lmAns[key] || {}, items = t.it.map((_, i) => ({ r: (A[i] || {}).r, n: ((A[i] || {}).n || '').trim() }));
+  if (items.some(x => !x.r || (x.r == 'bad' && !x.n))) return;
+  lmBusy = true;
+  try { await rpc('light_submit', { p_tok: stTok(), p_task: tid, p_machine: mid, p_items: items }); delete lmAns[key]; lmOpen = ''; lmLoaded = false; await refresh(); }
+  catch (e) { lmLoaded = false; if (isDenied(e)) failMsg(e); else { await refresh().catch(() => {}); alert(/not due|not found|machine/.test(String(e && e.message)) ? tr('lmStale') : tr('netErr')); } }
+  finally { lmBusy = false; }
+}
+// ---- the approval (production supervisor of the section, section head, admin)
+function lmRunDetail(r) {
+  const bad = r.it.filter(p => p.r == 'bad'), okn = r.it.length - bad.length;
+  return `${bad.length ? `<ul class="mt-2 space-y-1">${bad.map(p => `<li class="text-sm bg-red-50 border border-red-300 text-red-800 rounded p-2">⚠ <b>${esc(p.t)}</b>${p.n ? ' — ' + esc(p.n) : ''}</li>`).join('')}</ul>` : ''}<p class="text-xs text-gray-600 mt-1">✔ ${tr('lmOkN').replace('{n}', okn)}${bad.length ? ' · ⚠ ' + tr('lmBadN').replace('{n}', bad.length) : ''}</p>`;
+}
+function lmQueue(canDecide) {
+  const l = lmPend();
+  return l.length ? l.map(r => { const t = lmTaskById(r.tid); return `<div class="bg-white rounded-xl shadow p-4 mb-3 border-s-4 border-amber-500" data-lmrun="${r.id}"><div class="flex flex-wrap justify-between gap-2"><div><b class="text-lg">${esc(r.mn)}</b><div class="text-sm text-gray-600">${esc(t ? t.t : '')}</div><div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)}${me.r == 'admin' ? ' · ' + esc(r.d) : ''}</div></div>${t ? lmKindBadge(t.k) : ''}</div>${lmRunDetail(r)}${canDecide ? `<textarea id="lmn_${r.id}" rows="2" class="mt-2" placeholder="${esc(tr('lmBackNote'))}" maxlength="300"></textarea><div class="grid grid-cols-2 gap-2 mt-2"><button type="button" onclick="lmDecide(${r.id},true)" class="bg-green-700 text-white font-bold rounded-lg py-2">✔ ${tr('lmApprove')}</button><button type="button" onclick="lmDecide(${r.id},false)" class="bg-white border border-red-400 text-red-700 font-bold rounded-lg py-2">↩ ${tr('lmSendBack')}</button></div>` : ''}</div>`; }).join('') : `<p class="text-gray-500">${tr('lmNoQueue')}</p>`;
+}
+const lmOffDb = () => `<p class="bg-amber-50 border border-amber-300 text-amber-900 rounded-lg p-3">${tr('lmOffDb')}</p>`;
+function lmApprView() {
+  if (!db.lm.on) return lmOffDb();
+  const rec = db.lm.runs.filter(r => r.st != 'pending' && r.d == me.dp).slice(0, 8);
+  return `<h3 class="font-bold text-teal-800 mb-2">${tr('lmQueue')}</h3>${lmQueue(true)}${rec.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmRecent')}</h3>${rec.map(lmRunRow).join('')}` : ''}`;
+}
+async function lmDecide(id, ok) {
+  const n = (($('lmn_' + id) || {}).value || '').trim();
+  if (!ok && !n) return alert(tr('lmNoteReq'));
+  try { await rpc('light_decide', { p_tok: stTok(), p_run: id, p_ok: ok, p_note: n || null }); lmLoaded = false; await refresh(); }
+  catch (e) { lmLoaded = false; if (isDenied(e)) return failMsg(e); await refresh().catch(() => {}); alert(/not waiting/.test(String(e && e.message)) ? tr('lmStale') : tr('netErr')); }
+}
+// ---- the maintenance supervisor (and the admin): the tasks and their points
+const lmToText = it => { let last = '', out = []; it.forEach(p => { if (p.a && p.a != last) { last = p.a; out.push('# ' + p.a); } const a = [p.t, p.m, p.n]; while (a.length > 1 && !a[a.length - 1]) a.pop(); out.push(a.join(' | ')); }); return out.join('\n'); };
+const lmFromText = tx => { let a = ''; const it = []; String(tx || '').split('\n').forEach(l => { l = l.trim(); if (!l) return; if (l[0] == '#') { a = l.slice(1).trim(); return; } const [t, m, n] = l.split('|').map(x => x.trim()); if (t) it.push({ t, a, m: m || '', n: n || '' }); }); return it; };
+function lmNew() { lmEdit = 0; lmF = { id: null, kind: 'light', title: '', dept: db.depts[0] || '', ms: [], ev: 1, text: '', ac: true }; render(); }
+function lmEditTask(id) { const t = lmTaskById(id); if (!t) return; lmEdit = id; lmF = { id: t.id, kind: t.k, title: t.t, dept: t.d, ms: t.ms.slice(), ev: t.ev, text: lmToText(t.it), ac: t.ac }; render(); window.scrollTo(0, 0); }
+function lmCancel() { lmEdit = null; lmF = null; render(); }
+function lmFset(k, v) { lmF[k] = v; if (k == 'dept') lmF.ms = []; if (k == 'dept' || k == 'kind') render(); }
+function lmFms(id, on) { lmF.ms = lmF.ms.filter(x => x != id); if (on) lmF.ms.push(id); }
+function lmFormEdit() {
+  const f = lmF, ms = db.machines.filter(m => m.d == f.dept), evs = LM_EV.some(e => e[0] == f.ev) ? LM_EV : [...LM_EV, [+f.ev, 'lmEveryN']];
+  return `<div class="bg-white rounded-xl shadow p-4 mb-4 border-2 border-teal-600 np space-y-3" id="lmEditBox">
+<h3 class="font-bold text-teal-800">${f.id ? '✏ ' + tr('lmEditT') : '＋ ' + tr('lmNew')}</h3>
+<label class="font-semibold block" for="lm_k">${tr('lmKind')}</label><select id="lm_k" onchange="lmFset('kind',this.value)"><option value="light" ${f.kind == 'light' ? 'selected' : ''}>🔧 ${tr('lmKLight')}</option><option value="deep" ${f.kind == 'deep' ? 'selected' : ''}>🧹 ${tr('lmKDeep')}</option></select>
+<label class="font-semibold block" for="lm_t">${tr('lmTitle')}</label><input id="lm_t" value="${esc(f.title)}" oninput="lmFset('title',this.value)" maxlength="160">
+<label class="font-semibold block" for="lm_d">${tr('dept')}</label><select id="lm_d" onchange="lmFset('dept',this.value)">${db.depts.map(d => `<option value="${esc(d)}" ${d == f.dept ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>
+<div class="font-semibold">${tr('lmMach')} <span class="text-xs font-normal text-gray-500">(${tr('lmMachHint')})</span></div>
+<div class="grid grid-cols-2 gap-1">${ms.map(m => `<label class="flex items-center gap-2 text-sm"><input type="checkbox" ${f.ms.includes(m.id) ? 'checked' : ''} onchange="lmFms('${m.id}',this.checked)"> ${esc(m.n)}</label>`).join('') || `<span class="text-sm text-gray-500">${tr('none')}</span>`}</div>
+<label class="font-semibold block" for="lm_e">${tr('lmFreq')}</label><select id="lm_e" onchange="lmFset('ev',this.value)">${evs.map(([n, k]) => `<option value="${n}" ${n == f.ev ? 'selected' : ''}>${n == 1 || LM_EV.some(e => e[0] == n) ? tr(k) : tr('lmEveryN').replace('{n}', n)}</option>`).join('')}</select>
+<label class="font-semibold block" for="lm_p">${tr('lmPts')}</label><p class="text-xs text-gray-500">${tr('lmPtsHint')}</p><code dir="ltr" class="block text-xs bg-gray-100 rounded p-2 whitespace-pre">point | method | remark
+# area</code>
+<textarea id="lm_p" rows="12" oninput="lmFset('text',this.value)" dir="auto" maxlength="12000">${esc(f.text)}</textarea>
+<label class="flex items-center gap-2"><input type="checkbox" ${f.ac ? 'checked' : ''} onchange="lmFset('ac',this.checked)"> ${tr('lmActive')}</label>
+<div class="flex gap-2"><button type="button" onclick="lmSave()" class="${btn}">${tr('lmSaveT')}</button><button type="button" onclick="lmCancel()" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></div>`;
+}
+async function lmSave() {
+  const f = lmF, items = lmFromText(f.text);
+  if (f.title.trim().length < 2 || !f.dept) return alert(tr('lmBadForm'));
+  if (!items.length) return alert(tr('lmNoPts'));
+  try { await rpc('light_save', { p_tok: stTok(), p_data: { id: f.id, kind: f.kind, title: f.title.trim(), dept: f.dept, machines: f.ms, every_days: +f.ev, items, active: f.ac } }); lmEdit = null; lmF = null; lmLoaded = false; await refresh(); }
+  catch (e) { if (isDenied(e)) failMsg(e); else alert(tr('netErr')); }
+}
+async function lmDelTask(id) {
+  if (!confirm(tr('lmDelConf'))) return;
+  try { await rpc('light_delete', { p_tok: stTok(), p_id: id }); lmLoaded = false; await refresh(); } catch (e) { if (isDenied(e)) failMsg(e); else alert(tr('netErr')); }
+}
+function lmAdminView() {
+  if (!db.lm.on) return lmOffDb();
+  const canEdit = me.r == 'admin' || me.r == 'supervisor', byD = {}, td = dayNo(ymd(new Date()));
+  db.lm.tasks.forEach(t => (byD[t.d] = byD[t.d] || []).push(t));
+  const tcard = t => {
+    const ms = t.ms.length ? t.ms.map(id => (db.machines.find(m => m.id == id) || {}).n || id).join('، ') : tr('lmAllM'), n30 = db.lm.runs.filter(r => r.tid == t.id && r.st == 'approved' && dayNo(r.at) > td - 30).length;
+    return `<div class="bg-white rounded-xl shadow p-4 ${t.ac ? '' : 'opacity-70'}" data-lmtask="${t.id}"><div class="flex flex-wrap justify-between gap-2"><b>${esc(t.t)}</b><span class="flex gap-1">${lmKindBadge(t.k)}${t.ac ? '' : `<span class="text-xs font-bold bg-gray-200 text-gray-600 rounded-full px-2 py-1">${tr('lmOff')}</span>`}</span></div><div class="text-xs text-gray-600 mt-1">${esc(ms)}</div><div class="text-xs text-gray-600">${lmEvTxt(t.ev)} · ${tr('lmPtsN').replace('{n}', t.it.length)} · ${tr('lmN30').replace('{n}', n30)}</div>${canEdit ? `<div class="np flex gap-3 mt-2"><button type="button" onclick="lmEditTask(${t.id})" class="text-sm text-teal-700 font-semibold">✏ ${tr('edit')}</button><button type="button" onclick="lmDelTask(${t.id})" class="text-sm text-red-600 font-semibold">🗑 ${tr('lmDel')}</button></div>` : ''}</div>`;
+  };
+  const recent = db.lm.runs.slice(0, 15);
+  return `<div class="np flex flex-wrap items-center justify-between gap-2 mb-3"><p class="text-sm text-gray-600 max-w-xl">${tr('lmSupHint')}</p>${canEdit && lmEdit == null ? `<button type="button" onclick="lmNew()" class="bg-teal-700 text-white font-bold rounded-lg px-4 py-2">${tr('lmNew')}</button>` : ''}</div>`
+    + (lmEdit != null && lmF ? lmFormEdit() : '')
+    + (me.r == 'admin' ? `<h3 class="font-bold text-teal-800 mb-2">${tr('lmQueue')}</h3>${lmQueue(true)}` : (lmPend().length ? `<p class="text-sm bg-amber-50 border border-amber-300 text-amber-900 rounded-lg p-2 mb-3">⏳ ${tr('lmWaitAll').replace('{n}', lmPend().length)}</p>` : ''))
+    + (Object.keys(byD).length ? Object.entries(byD).map(([d, l]) => `<h3 class="font-bold text-teal-800 mt-5 mb-2">${esc(d)}</h3><div class="grid md:grid-cols-2 gap-3">${l.map(tcard).join('')}</div>`).join('') : `<p class="text-gray-500 mt-3">${tr('lmNoTasks')}</p>`)
+    + (recent.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('lmRecent')}</h3>${recent.map(r => `<div class="bg-white rounded-lg shadow p-3 mb-2 text-sm"><div class="flex flex-wrap justify-between gap-2"><div><b>${esc(r.mn)}</b> · ${esc((lmTaskById(r.tid) || {}).t || '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)} · ${esc(r.d)}</div></div>${lmBadge(r.st)}</div>${lmRunDetail(r)}</div>`).join('')}` : '');
 }
 
 /* ---------- WORKSHOP SCREEN MODE ---------- */
