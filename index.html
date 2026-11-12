@@ -923,6 +923,7 @@ replaced|مرات التغيير|Times replaced
 lastRepl|آخر تغيير|Last replaced
 lifeNote|يُحسب تلقائياً من المدة بين تغييرين متتاليين للقطعة نفسها على الآلة نفسها، ويلزم تغييران على الأقل|Worked out automatically from the time between two replacements of the same part on the same machine; at least two replacements are needed
 lifeMo|شهر|months
+lifeWait|يحتاج تغيير ثاني|needs a 2nd replacement
 shLife|عمر القطع|Parts life
 descEn|الوصف بالإنجليزية|Description (English)
 `;
@@ -2521,8 +2522,8 @@ function backupBook(now) {
   const parts = []; reqs.forEach(r => (r.sp || []).forEach(p => parts.push([r.no, dt(r.fa || r.ra), r.mn, r.d, enx(p.n), p.p, p.q == null ? '' : p.q])));
   table('Spare parts used', 'One row for every spare part used in a request', [{ h: 'Request ID', w: 11, t: 'int' }, { h: 'Date', w: 18, t: 'date' }, { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Qty', w: 8, t: 'int' }], parts);
 
-  table('Spare parts life', 'Average life of a spare part: the time between two replacements of the same part on the same machine', [{ h: 'Machine', w: 24 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Times replaced', w: 14, t: 'int' }, { h: 'Average life (days)', w: 18, t: 'int' }, { h: 'Last replaced', w: 18, t: 'date' }],
-    partLife().map(x => [x.m, enx(x.n), x.p, x.c, Math.round(x.avg), dt(x.last)]));
+  table('Spare parts life', 'Average life of a spare part: the time between two replacements of the same part on the same machine. A part replaced only once is listed without a life: it needs two replacements', [{ h: 'Machine', w: 24 }, { h: 'Part name', w: 30 }, { h: 'Part no.', w: 18 }, { h: 'Times replaced', w: 14, t: 'int' }, { h: 'Average life (days)', w: 18, t: 'int' }, { h: 'Last replaced', w: 18, t: 'date' }],
+    partLife(true).map(x => [x.m, enx(x.n), x.p, x.c, x.avg == null ? '' : Math.round(x.avg), dt(x.last)]));
 
   table('Preventive plans', 'The preventive maintenance plans with their checklists and next due dates', [
     { h: 'Machine', w: 22 }, { h: 'Section', w: 16 }, { h: 'Task', w: 28 }, { h: 'Every (days)', w: 11, t: 'int' }, { h: 'Priority', w: 10, t: 'mid' }, { h: 'Checklist', w: 50, t: 'wrap' }, { h: 'Next due', w: 12, t: 'mid' }, { h: 'Last done', w: 12, t: 'mid' }, { h: 'Active', w: 8, t: 'mid' }
@@ -2659,7 +2660,7 @@ function mst(list) {
   return o;
 }
 // how long a spare part lasts: the time between two replacements of the same part (same name and number) on the same machine, averaged
-function partLife() {
+function partLife(all) {   // all = also the parts replaced only once (they have no life yet)
   const G = {};
   db.requests.filter(r => r.s == 'done' && r.fa).forEach(r => (r.sp || []).forEach(x => {   // a part that was replaced is replaced: it does not wait for the production approval
     if (!x.n) return;
@@ -2670,10 +2671,10 @@ function partLife() {
     o.t.sort(); const gaps = [];
     for (let i = 1; i < o.t.length; i++) { const d = (new Date(o.t[i]) - new Date(o.t[i - 1])) / 864e5; if (d > 0.01) gaps.push(d); }
     return { ...o, c: o.t.length, avg: gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : null, last: o.t[o.t.length - 1] };
-  }).filter(o => o.avg != null).sort((a, b) => a.avg - b.avg);
+  }).filter(o => all || o.avg != null).sort((a, b) => (a.avg == null ? 1e9 : a.avg) - (b.avg == null ? 1e9 : b.avg) || b.c - a.c);
 }
 const lifeTxt = d => d == null ? '' : d < 60 ? Math.round(d) + ' ' + tr('days') : (d / 30.4).toFixed(1) + ' ' + tr('lifeMo');
-const lifeTable = (l, withM) => `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b"><th class="p-2 text-start">${tr('partName')}</th>${withM ? `<th class="p-2 text-start">${tr('machine')}</th>` : ''}<th class="p-2 text-start">${tr('replaced')}</th><th class="p-2 text-start">${tr('lifeAvg')}</th><th class="p-2 text-start">${tr('lastRepl')}</th></tr></thead><tbody>${l.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(enx(x.n))}${x.p ? ` <span class="font-mono text-xs text-gray-500">(${esc(x.p)})</span>` : ''}</td>${withM ? `<td class="p-2">${esc(x.m)}</td>` : ''}<td class="p-2">${x.c}</td><td class="p-2 font-bold text-blue-700">${lifeTxt(x.avg)}</td><td class="p-2 text-gray-500">${fd(x.last)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-2">${tr('lifeNote')}</p>`;
+const lifeTable = (l, withM) => `<div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b"><th class="p-2 text-start">${tr('partName')}</th>${withM ? `<th class="p-2 text-start">${tr('machine')}</th>` : ''}<th class="p-2 text-start">${tr('replaced')}</th><th class="p-2 text-start">${tr('lifeAvg')}</th><th class="p-2 text-start">${tr('lastRepl')}</th></tr></thead><tbody>${l.map(x => `<tr class="border-b"><td class="p-2 font-semibold">${esc(enx(x.n))}${x.p ? ` <span class="font-mono text-xs text-gray-500">(${esc(x.p)})</span>` : ''}</td>${withM ? `<td class="p-2">${esc(x.m)}</td>` : ''}<td class="p-2">${x.c}</td><td class="p-2 font-bold ${x.avg == null ? 'text-gray-500 font-normal' : 'text-blue-700'}">${x.avg == null ? tr('lifeWait') : lifeTxt(x.avg)}</td><td class="p-2 text-gray-500">${fd(x.last)}</td></tr>`).join('')}</tbody></table></div><p class="text-xs text-gray-500 mt-2">${tr('lifeNote')}</p>`;
 function calc(fl) {
   const inP = fl ? fl.inP : s => sfRange() ? ((s || '').slice(0, 10) >= (sf.from || '') && (!sf.to || (s || '').slice(0, 10) <= sf.to)) : (period == 'all' || (s || '').startsWith(period));
   const okR = fl ? fl.okR : r => (!sf.d || r.d == sf.d) && (!sf.m || String(r.mid) == sf.m);
@@ -2729,7 +2730,7 @@ function machView(S, back) {
 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 my-3">${kp(m.c, tr('total'))}${kp(m.s, tr('stops'))}${kp(dhm(m.dt), tr('stopDur'))}${kp(f(m.mttr), 'MTTR')}${kp(f(m.mtbf), 'MTBF')}</div>
 <div class="flex flex-wrap gap-1 mb-3">${Object.entries(m.t).map(([k, v]) => `<span class="text-xs bg-orange-50 text-orange-800 rounded-full px-2 py-1">${esc(tl(k))}: ${v}</span>`).join('')}</div>
 <h4 class="font-bold text-teal-800 mt-3 mb-1">${tr('partsOnMach')}</h4><div class="flex flex-wrap gap-1 mb-3">${chips(P)}</div>
-${(() => { const l = partLife().filter(x => String(x.mid) == String(mview)); return l.length ? `<h4 class="font-bold text-teal-800 mb-1">${tr('lifeT')}</h4><div class="bg-white rounded-xl shadow p-3 mb-3">${lifeTable(l, false)}</div>` : ''; })()}
+${(() => { const l = partLife(true).filter(x => String(x.mid) == String(mview)); return l.length ? `<h4 class="font-bold text-teal-800 mb-1">${tr('lifeT')}</h4><div class="bg-white rounded-xl shadow p-3 mb-3">${lifeTable(l, false)}</div>` : ''; })()}
 <h4 class="font-bold text-teal-800 mb-1">${tr('rcOnMach')}</h4><div class="flex flex-wrap gap-1 mb-4">${chips(RCm, rl)}</div>
 <h4 class="font-bold text-teal-800 mb-2">${tr('timeline')}</h4>
 ${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 border-s-4 ${r.s == 'done' ? 'border-green-500' : 'border-red-500'}" style="break-inside:avoid">${card(r)}${r.s == 'done' ? done(r) : `<span class="text-xs font-bold text-red-700">${tr(r.s == 'open' ? 'sOpen' : 'sProg')}</span>`}</div>`).join('') : `<p class="text-gray-500">${tr('none')}</p>`}</div>`;
@@ -2923,7 +2924,7 @@ ${box(tr('topMach'), ms.length ? bars(ms.slice(0, 8).map(([, m]) => [m.n, m.c]),
 <div class="grid sm:grid-cols-2 gap-3 mb-5">${mcards}</div>
 ${box(tr('topRC'), rcs.length ? bars(rcs.slice(0, 8).map(([k, v]) => [rl(k), v]), 'bg-purple-600') : none)}
 ${box(tr('topParts'), pt.length ? bars(pt.slice(0, 8).map(x => [enx(x.n) + (x.p ? ' (' + x.p + ')' : ''), x.c]), 'bg-blue-600') + ptab : none)}
-${box(tr('lifeT'), (() => { const l = partLife(); return l.length ? lifeTable(l, true) : `<p class="text-gray-500">${tr('lifeNote')}</p>`; })())}
+${box(tr('lifeT'), (() => { const l = partLife(true); return l.length ? lifeTable(l, true) : `<p class="text-gray-500">${tr('lifeNote')}</p>`; })())}
 ${me.r == 'admin' ? box(tr('statsTech'), techs) : ''}</div>`;
 }
 async function exportXl() {
@@ -2946,7 +2947,7 @@ async function exportXl() {
     ], Object.values(S.P).sort((a, b) => b.c - a.c).map(x => [enx(x.n), x.p, x.c, [...x.m].join(', ')]));
     add(tr('shLife'), [
       { h: tr('partName'), w: 28 }, { h: tr('partNo'), w: 18 }, { h: tr('machine'), w: 24 }, { h: tr('replaced'), w: 14, t: 'int' }, { h: tr('lifeAvg') + ' (' + tr('days') + ')', w: 20, t: 'int' }, { h: tr('lastRepl'), w: 18, t: 'date' }
-    ], partLife().map(x => [enx(x.n), x.p, x.m, x.c, Math.round(x.avg), XW.date(x.last)]));
+    ], partLife(true).map(x => [enx(x.n), x.p, x.m, x.c, x.avg == null ? '' : Math.round(x.avg), XW.date(x.last)]));
     if (db.sp.on) {
       const mn = id => (db.machines.find(x => x.id == id) || {}).n || id, md = id => (db.machines.find(x => x.id == id) || {}).d || '';
       const bad = { c: 'B91C1C', b: 1 }, warn = { c: 'B45309', b: 1 };
