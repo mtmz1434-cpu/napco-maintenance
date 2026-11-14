@@ -6,9 +6,9 @@
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#08111a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Napco">
+<meta name="apple-mobile-web-app-title" content="NAPCO System">
 <script>try{var _t=localStorage.getItem("theme"),_f=+localStorage.getItem("fs");document.documentElement.setAttribute("data-theme",_t=="light"?"light":"dark");if(_f==1||_f==2)document.documentElement.style.fontSize=["","112.5%","125%"][_f];if(_t=="light")document.querySelector("meta[name=theme-color]").content="#115e59"}catch(e){}</script>
-<title>Napco Maintenance</title>
+<title>NAPCO System</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -185,7 +185,7 @@ const SLA = { critical: 15, high: 30, medium: 60, low: 120 };
 // Preventive tasks that fall due within this many days are flagged as "due soon" in the alerts. Change freely.
 const PM_SOON = 3;
 
-const D = `app|نظام صيانة نابكو|Napco Maintenance
+const D = `app|نابكو سيستيم|NAPCO System
 loading|جارٍ التحميل...|Loading...
 netErr|تعذر الاتصال بالخادم، حاول مرة أخرى|Could not reach the server, try again
 empNo|رقم الموظف|Employee number
@@ -205,7 +205,7 @@ operator|مشغّل|Operator
 technician|فني صيانة|Technician
 supervisor|مشرف صيانة|Maintenance supervisor
 prodsup|مشرف إنتاج|Production supervisor
-supRoleHint|مشرف الصيانة يستلم ويغلق الطلبات ويشوف كل الأقسام (بدون اعتماد). مشرف الإنتاج يشوف قسمه فقط ويعتمد الإغلاق|The maintenance supervisor takes and closes requests and sees every section (no approval). The production supervisor sees his own section only and approves closures
+supRoleHint|مشرف الصيانة يستلم ويغلق الطلبات ويشوف كل الأقسام (بدون اعتماد). مشرف الإنتاج يشوف قسمه فقط، يوافق على طلبات مشغّليه ويعتمد الإغلاق|The maintenance supervisor takes and closes requests and sees every section (no approval). The production supervisor sees his own section only, approves his operators' requests and approves closures
 createPw|أنشئ كلمة مرور خاصة بك|Create your own password
 waiting|تم تسجيلك. بانتظار الموافقة (مشغل أو مشرف إنتاج: رئيس قسمك، فني أو مشرف صيانة: أدمن الصيانة)|You are registered. Waiting for approval (operator or production supervisor: your section head; technician or maintenance supervisor: the maintenance admin)
 report|تسجيل عطل جديد|Report a machine fault
@@ -393,6 +393,24 @@ lmEditT|تعديل المهمة|Edit the task
 lmKind|النوع|Type
 lmKLight|صيانة خفيفة|Light maintenance
 lmKDeep|تنظيف عميق|Deep cleaning
+lmKRound|جولة تفتيش|Inspection round
+tabRounds|الجولات|Rounds
+rdPts|النقاط التي يفحصها الفني في الجولة|The points the technician checks in the round
+rdKindHint|ينفذها فني الصيانة أو مشرف الصيانة. أي نقطة غير سليمة تفتح تذكرة عطل تلقائياً.|Done by a maintenance technician or the maintenance supervisor. Any point that is not OK opens a breakdown ticket by itself.
+rdDueT|جولات التفتيش المطلوبة الآن|Inspection rounds due now
+rdNone|ما فيه جولات مطلوبة الحين.|No rounds are due now.
+rdSend|إرسال الجولة|Send the round
+rdAutoTk|تُفتح تذكرة عطل لهذي النقطة تلقائياً|A breakdown ticket opens for this point automatically
+rdTkMade|تم فتح {n} تذكرة عطل.|{n} breakdown ticket(s) opened.
+rdRecent|آخر الجولات|Latest rounds
+rdDone|تمت|Done
+lmTkAsk|افتح تذكرة عطل لهذي النقطة|Open a breakdown ticket for this point
+lmTkN|تذكرة #{n}|Ticket #{n}
+lmLateT|متأخرة عن موعدها|Overdue
+lmLateRow|متأخرة {n} يوم|{n} day(s) late
+lmLateMore|و{n} أخرى|and {n} more
+lmComp|الالتزام {n}% بالموعد|{n}% on time
+lmSoonT|تستحق غداً|Due tomorrow
 lmTitle|اسم المهمة|Task name
 lmMach|الآلات|Machines
 lmMachHint|لا تختر شيئاً = كل آلات القسم|choose none = every machine of the section
@@ -740,7 +758,8 @@ newAccount|حساب جديد|New account
 register|تسجيل|Register
 nameShort|اكتب اسمك الكامل|Enter your full name
 noDepts|لا توجد أقسام بعد، تواصل مع أدمن الصيانة|No sections yet, contact the maintenance admin
-sentHold|تم إرسال الطلب. ينتظر موافقة مسؤول قسمك قبل أن يصل للفنيين|Sent. It is waiting for your section admin's approval before it reaches the technicians
+sentHold|تم إرسال الطلب. ينتظر موافقة مشرف الإنتاج أو رئيس القسم قبل أن يصل للفنيين|Sent. It is waiting for your production supervisor or section head to approve it before it reaches the technicians
+psHoldHint|طلبات مشغّلي قسمك تنتظر موافقتك قبل ما توصل للفنيين. الماكينة المتوقفة والأولوية الحرجة ما تنتظر موافقة. الطلب يتحول للفنيين تلقائياً بعد {n} دقيقة.|Your operators' requests wait here for your approval before they reach the technicians. A stopped machine or a critical priority does not wait. A request is released to the technicians by itself after {n} minutes.
 otherDept|هذه الآلة تتبع قسماً آخر|This machine belongs to another section
 noMachOp|لا توجد آلات مسجلة في قسمك بعد. اطلب من الأدمن إضافتها ثم افتح الصفحة من جديد|No machines are registered in your department yet. Ask the admin to add them, then reload the page
 qrUnknown|هذه الآلة غير مسجلة في النظام. اختر الآلة من القائمة، أو اطلب من الأدمن إضافتها|This machine is not registered. Pick it from the list, or ask the admin to add it
@@ -935,7 +954,7 @@ stAddPart|+ قطعة جديدة|+ New part
 stAfter|الرصيد بعدها|Balance after
 stAllF|الكل|All
 stAppr|اعتماد الطلبات|Approve requests
-stApprHint|يعتمد الطلبات مدير الصيانة. الطلب اللي إجماليه {n} ريال أو أكثر يظهر بعلامة حمراء ويطلب تأكيد إضافي.|The maintenance manager approves the requests. A request whose total reaches {n} SAR is marked red and asks for one more confirmation.
+stApprHint|يوصلك هنا فقط الطلب اللي إجماليه {n} ريال أو أكثر، وتعتمده أنت. الطلب الأقل يروح لأمين المخزن مباشرة بدون اعتماد.|Only a request whose total reaches {n} SAR comes here for your approval. A smaller request goes straight to the storekeeper with no approval.
 stApprNone|ما فيه طلبات بانتظار الاعتماد|No requests are waiting for approval
 stAsk|طلب قطعة|Ask for a part
 stBack|رفض|Send back
@@ -1015,8 +1034,10 @@ stSave|حفظ|Save
 stSearch|ابحث برقم القطعة أو الاسم أو المقاس أو الموقع|Search by part number, name, size or shelf
 stSearchHint|اكتب رقم القطعة أو اسمها أو مقاسها، أو اختر العطل لتظهر القطع المناسبة لماكينته|Type the part number, name or size, or pick the breakdown to see the parts that fit its machine
 stSearchMv|ابحث برقم القطعة أو الاسم أو رقم الفاتورة|Search by part number, name or invoice
-stSend|إرسال الطلب لمدير الصيانة|Send to the maintenance manager
-stSent|تم إرسال الطلب لمدير الصيانة|The request was sent to the maintenance manager
+stSend|إرسال الطلب|Send the request
+stSent|إجمالي الطلب {n} ريال أو أكثر، فتم إرساله لمدير الصيانة للاعتماد|The request total reaches {n} SAR, so it was sent to the maintenance manager for approval
+stSentStore|تم إرسال الطلب للمخزن مباشرة. استلم القطع من أمين المخزن|The request went straight to the store. Collect the parts from the storekeeper
+stRule|الطلب اللي إجماليه أقل من {n} ريال يروح للمخزن مباشرة. {n} ريال أو أكثر يحتاج اعتماد مدير الصيانة أول.|A request below {n} SAR goes straight to the store. {n} SAR or more needs the maintenance manager's approval first.
 stShort|النواقص|Shortages
 stShortage|الناقص {n}|Missing {n}
 stSpec|المقاس / النوع|Size / type
@@ -1571,7 +1592,7 @@ async function load(full) {
     db.na.skip = db.na.on ? ns.map(x => ({ m: String(x.machine_id), t: txt(x.item) || '', by: txt(x.by_name) || '', at: txt(x.at) || '' })) : [];
   }
   // light maintenance (update 21; a database without it simply has none): the tasks and the operators' records. The answers of a record (items) are read only for the people who check them
-  if (me && ['operator', 'supervisor', 'admin', 'prodsup', 'deptadmin'].includes(me.r) && (!lmLoaded || lmWho != me.e + me.r || full || me.r == 'operator' || n > 0 || tab == 'light' || tab == 'lapp')) {
+  if (me && ['operator', 'supervisor', 'admin', 'prodsup', 'deptadmin', 'technician'].includes(me.r) && (!lmLoaded || lmWho != me.e + me.r || full || me.r == 'operator' || n > 0 || tab == 'light' || tab == 'lapp' || tab == 'rounds' || ttab == 'rounds')) {
     const since = ymd(new Date(Date.now() - 30 * 864e5)), need = me.r != 'operator';
     const [lt, lr, li, lp] = await Promise.all([api('light_tasks?select=*&order=id').catch(() => null),
       api('light_runs?select=id,task_id,machine_id,machine_name,dept,by_emp,by_name,done_at,state,ok_name,ok_at,ok_note&order=id.desc&limit=800').catch(() => null),
@@ -1580,7 +1601,7 @@ async function load(full) {
     lmLoaded = true; lmWho = me.e + me.r; lmSig = JSON.stringify([lt, lr, li, lp]);
     const im = new Map(); [li, lp].forEach(a => arr(a).forEach(x => im.set(Number(x.id), x.items)));
     db.lm.on = Array.isArray(lt) && Array.isArray(lr);
-    db.lm.tasks = db.lm.on ? lt.map(x => ({ id: Number(x.id), k: x.kind == 'deep' ? 'deep' : 'light', t: txt(x.title) || '', d: txt(x.dept) || '', ms: arr(x.machines).map(String), ev: Number(x.every_days) || 1, it: lmItems(x.items), ac: x.active !== false })) : [];
+    db.lm.tasks = db.lm.on ? lt.map(x => ({ id: Number(x.id), k: x.kind == 'deep' || x.kind == 'round' ? x.kind : 'light', cr: txt(x.created_at) || '', t: txt(x.title) || '', d: txt(x.dept) || '', ms: arr(x.machines).map(String), ev: Number(x.every_days) || 1, it: lmItems(x.items), ac: x.active !== false })) : [];
     db.lm.runs = db.lm.on ? lr.map(x => ({ id: Number(x.id), tid: Number(x.task_id), mid: String(x.machine_id), mn: txt(x.machine_name) || '', d: txt(x.dept) || '', it: lmItems(im.get(Number(x.id))), by: txt(x.by_emp) || '', bn: txt(x.by_name) || '', at: lmAt(x.done_at), st: ['approved', 'rejected'].includes(x.state) ? x.state : 'pending', okn: txt(x.ok_name) || '', oka: lmAt(x.ok_at), okt: txt(x.ok_note) || '' })) : [];
   }
   if (stP) {
@@ -1647,7 +1668,7 @@ function logout() {
   stReset(); lmLoaded = false; lmOpen = ''; lmAns = {}; lmEdit = null; lmF = null; otab = 'rep'; db.lm = { on: false, tasks: [], runs: [] };   // the next account starts with its own light-maintenance data
   save(); render();
 }
-function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; bdLim = BD_FIRST; bdAll = false; render(); if (k == 'store') { stLoaded = false; refresh().catch(() => {}); } }
+function setTab(k) { tab = k; mview = null; editId = null; medit = false; pmEdit = null; bdLim = BD_FIRST; bdAll = false; render(); if (k == 'store') { stLoaded = false; refresh().catch(() => {}); } if (k == 'rounds') { lmLoaded = false; refresh().catch(() => {}); } }
 function setPeriod(v) { period = v; render(); }
 // statistics filters: department, machine and an exact date range (one day = the same date twice); a range overrides the period
 function setSF(k, v) { sf[k] = v; if (k == 'd') sf.m = ''; render(); }
@@ -1861,7 +1882,7 @@ const opMachines = () => db.machines.filter(m => !m.d || m.d == me.dp);   // the
 let otab = 'rep';
 function setOT(k) { otab = k; render(); }
 function opView() {
-  const has = db.lm.on && db.lm.tasks.some(t => t.ac && t.d == me.dp), due = has ? lmDueList().length : 0;
+  const has = db.lm.on && db.lm.tasks.some(t => t.ac && t.k != 'round' && t.d == me.dp), due = has ? lmDueList().length : 0;
   const bar = has ? `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${[['rep', 'tabOpRep', 0], ['light', 'tabOpLight', due]].map(([k, l, c]) => `<button onclick="setOT('${k}')" ${otab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${otab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</nav>` : '';
   return bar + (has && otab == 'light' ? lmOpView() : opForm());
 }
@@ -2421,12 +2442,12 @@ const spNew = i => {
 
 /* ---------- ADMIN / SUPERVISOR / WORKSHOP ---------- */
 function adminView() {
-  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'store', 'parts', 'na', 'light', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'parts', 'store', 'na', 'light', 'shift', 'pm', 'stats'], workshop: ['all', 'open', 'prev'] }[me.r].filter(k => k != 'store' || db.st.on);
+  const A = { admin: ['dash', 'open', 'prev', 'all', 'appr', 'store', 'parts', 'na', 'light', 'rounds', 'tech', 'dept', 'stats', 'pm', 'mach', 'shift'], supervisor: ['dash', 'work', 'mine', 'all', 'parts', 'store', 'na', 'light', 'rounds', 'shift', 'pm', 'stats'], workshop: ['all', 'open', 'prev'] }[me.r].filter(k => (k != 'store' || db.st.on) && (k != 'rounds' || lmHasRounds()));
   if (tv) tab = 'open';
   if (!tab || !A.includes(tab)) tab = me.r == 'workshop' ? 'open' : A[0];
-  const N = { all: 'tabAll', appr: 'tabAppr', parts: 'tabParts', na: 'tabNa', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept', light: 'tabLight', store: 'tabStore' };
-  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length, npw = me.r == 'workshop' ? 0 : partsWaitN(), nna = me.r == 'workshop' ? 0 : naWaitN(), nlm = me.r == 'admin' ? lmPend().length : 0, nst = !db.st.on ? 0 : me.r == 'admin' ? db.st.cn.pending : db.st.cn.mine;
-  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<nav class="flex flex-wrap gap-2 mb-4 np tabs${A.length > 6 ? ' tabs2' : ''}" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'parts' && npw ? ' (' + npw + ')' : ''}${k == 'na' && nna ? ' (' + nna + ')' : ''}${k == 'light' && nlm ? ' (' + nlm + ')' : ''}${k == 'store' && nst ? ' (' + nst + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</nav>` : '') + ({ all: hubView, appr: aAppr, parts: aParts, na: aNa, light: lmAdminView, store: storeView, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
+  const N = { all: 'tabAll', appr: 'tabAppr', parts: 'tabParts', na: 'tabNa', mine: 'tabMine', pm: 'tabPM', dash: 'tabDash', work: 'tabWork', open: 'tabOpen', prev: 'tabPrev', tech: 'tabTech', stats: 'tabStats', mach: 'tabMach', shift: 'tabShift', dept: 'tabDept', light: 'tabLight', rounds: 'tabRounds', store: 'tabStore' };
+  const pend = (db.staff.length ? db.staff : db.techs).filter(t => t.st == 'pending').length, op = db.requests.filter(r => r.s != 'done').length, nw = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, nm = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length, na = me.r == 'workshop' ? 0 : apprPend().length, npw = me.r == 'workshop' ? 0 : partsWaitN(), nna = me.r == 'workshop' ? 0 : naWaitN(), nlm = me.r == 'admin' ? lmPend().length : 0, nrd = db.lm.on ? lmRoundDue().length : 0, nst = !db.st.on ? 0 : me.r == 'admin' ? db.st.cn.pending : db.st.cn.mine;
+  return (me.r == 'workshop' && !tv ? `<button onclick="toggleTv()" class="np mb-3 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm">⛶ ${tr('tvMode')}</button>` : '') + (me.r != 'workshop' ? alerts() : '') + (A.length > 1 && !tv ? `<nav class="flex flex-wrap gap-2 mb-4 np tabs${A.length > 6 ? ' tabs2' : ''}" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'open' && op ? ' (' + op + ')' : ''}${k == 'work' && nw ? ' (' + nw + ')' : ''}${k == 'mine' && nm ? ' (' + nm + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'parts' && npw ? ' (' + npw + ')' : ''}${k == 'na' && nna ? ' (' + nna + ')' : ''}${k == 'light' && nlm ? ' (' + nlm + ')' : ''}${k == 'rounds' && nrd ? ' (' + nrd + ')' : ''}${k == 'store' && nst ? ' (' + nst + ')' : ''}${k == 'tech' && pend ? ' (' + pend + ')' : ''}</button>`).join('')}${me.r == 'admin' ? `<span class="ms-auto flex gap-2"><button onclick="setTrEmail()" title="${esc(tr('trEmailAsk'))}" class="bg-white border px-3 py-2 rounded-lg font-bold text-sm ${trDe() ? 'text-green-700' : ''}">✉${trDe() ? ' ✓' : ''}</button><button onclick="exportAll(this)" title="${tr('bkHint')}" class="bg-green-700 text-white px-3 py-2 rounded-lg font-bold text-sm">⬇ ${tr('bkAll')}</button></span>` : ''}</nav>` : '') + ({ all: hubView, appr: aAppr, parts: aParts, na: aNa, light: lmAdminView, rounds: lmRoundView, store: storeView, mine: techMine, pm: aPM, dash: aDash, work: techView, open: aOpen, prev: aPrev, tech: aTech, dept: aDept, stats: aStats, mach: aMach, shift: aShift }[tab])();
 }
 const delBtn = r => me.r == 'admin' ? `<span class="np flex gap-3">${isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="text-xs text-teal-700 font-semibold">✔ ${tr('approve')}</button>` : ''}<button onclick="editReq(${r.id})" class="text-xs text-teal-700 font-semibold">✏ ${tr('edit')}</button><button onclick="delReq(${r.id})" class="text-xs text-red-600 font-semibold">🗑 ${tr('remove')}</button></span>` : '';
 // the badge under an open / in-progress request: waiting for the department, pickup timer, preventive due date, or who is working on it
@@ -3122,10 +3143,10 @@ function delMach(id) { if (confirm(tr('confirmDel'))) adm('admin_delete', { p_ki
 function setShift(v) { shOff = +v; render(); }
 // the technician's page: his requests, and the shift handover (the supervisor and the admin have it in their own tab bar)
 let ttab = 'work';
-function setTT(k) { ttab = k; render(); if (k == 'store') { stLoaded = false; refresh().catch(() => {}); } }
+function setTT(k) { ttab = k; render(); if (k == 'store') { stLoaded = false; refresh().catch(() => {}); } if (k == 'rounds') { lmLoaded = false; refresh().catch(() => {}); } }
 const techHome = () => {
   const w = db.requests.filter(r => r.s == 'open' && !isHeld(r)).length, n = db.requests.filter(r => r.s == 'prog' && r.ts == me.e).length;
-  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['all', 'tabAll', 0], ...(db.st.on ? [['store', 'tabStore', db.st.cn.mine]] : []), ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" ${ttab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</nav>` + (ttab == 'shift' ? aShift() : ttab == 'store' && db.st.on ? storeView() : ttab == 'all' ? hubView() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
+  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${[['work', 'tabWork', w], ['mine', 'tabMine', n], ['prev', 'tabPrevT', 0], ['all', 'tabAll', 0], ...(db.st.on ? [['store', 'tabStore', db.st.cn.mine]] : []), ...(lmHasRounds() ? [['rounds', 'tabRounds', lmRoundDue().length]] : []), ['shift', 'tabShift', 0]].map(([k, l, c]) => `<button onclick="setTT('${k}')" ${ttab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${ttab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(l)}${c ? ' (' + c + ')' : ''}</button>`).join('')}</nav>` + (ttab == 'rounds' ? lmRoundView() : ttab == 'shift' ? aShift() : ttab == 'store' && db.st.on ? storeView() : ttab == 'all' ? hubView() : ttab == 'prev' ? techPrev() : ttab == 'mine' ? techMine() : techView());
 };
 function shiftWin(off) {
   const d = new Date(), h = d.getHours();
@@ -3712,16 +3733,22 @@ function dMach() {
 
 /* ---------- PRODUCTION SUPERVISOR: his section's machines and requests, and the approval of finished work (he does not take or close maintenance) ---------- */
 function psView() {
-  const A = ['dopen', 'dprev', 'appr', 'lapp', 'dmach'];
-  if (!tab || !A.includes(tab)) tab = A[0];
-  const N = { dopen: 'tabDOpen', dprev: 'tabPrev', appr: 'tabAppr', lapp: 'tabLApp', dmach: 'tabDMach' };
+  const A = ['hold', 'dopen', 'dprev', 'appr', 'lapp', 'dmach'];
+  const nh = dReqs().filter(isHeld).length;
+  if (!tab || !A.includes(tab)) tab = nh ? 'hold' : 'dopen';
+  const N = { hold: 'tabHold', dopen: 'tabDOpen', dprev: 'tabPrev', appr: 'tabAppr', lapp: 'tabLApp', dmach: 'tabDMach' };
   const no = dReqs().filter(r => r.s != 'done').length, na = apprPend().length, nl = lmPend().length;
-  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'dopen' && no ? ' (' + no + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'lapp' && nl ? ' (' + nl + ')' : ''}</button>`).join('')}</nav>`
-    + { dopen: psOpen, dprev: bdView, appr: aAppr, lapp: lmApprView, dmach: dMach }[tab]();
+  return `<nav class="flex flex-wrap gap-2 mb-4 np tabs" aria-label="${tr('tabsT')}">${A.map(k => `<button onclick="setTab('${k}')" ${tab == k ? 'aria-current="page"' : ''} class="px-3 py-2 rounded-lg font-bold text-sm ${tab == k ? 'bg-teal-700 text-white' : 'bg-white border'}">${tr(N[k])}${k == 'hold' && nh ? ' (' + nh + ')' : ''}${k == 'dopen' && no ? ' (' + no + ')' : ''}${k == 'appr' && na ? ' (' + na + ')' : ''}${k == 'lapp' && nl ? ' (' + nl + ')' : ''}</button>`).join('')}</nav>`
+    + { hold: psHold, dopen: psOpen, dprev: bdView, appr: aAppr, lapp: lmApprView, dmach: dMach }[tab]();
+}
+const psOkBtn = r => isHeld(r) ? `<button onclick="act('dept_approve',{p_id:${r.id}})" class="np text-xs bg-teal-700 text-white font-semibold rounded px-2 py-1">✔ ${tr('approve')}</button>` : '';
+function psHold() {
+  const l = dReqs().filter(isHeld).sort((a, b) => heldUntil(a) - heldUntil(b));
+  return `<p class="text-sm text-gray-600 mb-3">${tr('psHoldHint').replace('{n}', HOLD_MIN)}</p>` + (l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 border-teal-600">${card(r)}<div class="flex justify-between items-center mt-2 gap-2">${openBadge(r)}${psOkBtn(r)}</div></div>`).join('')}</div>` : `<p class="text-gray-500">${tr('noneHold')}</p>`);
 }
 function psOpen() {
   const l = dReqs().filter(r => r.s != 'done').sort((a, b) => (a.s == 'open' ? 0 : 1) - (b.s == 'open' ? 0 : 1) || b.id - a.id);
-  return l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="mt-2">${openBadge(r)}</div></div>`).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`;
+  return l.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">${l.map(r => `<div class="bg-white rounded-xl shadow p-4 border-s-4 ${r.st == 'Yes' || r.pr == 'critical' ? 'border-red-500' : 'border-teal-600'}">${card(r)}<div class="flex justify-between items-center mt-2 gap-2">${openBadge(r)}${psOkBtn(r)}</div></div>`).join('')}</div>` : `<p class="text-gray-500">${tr('none')}</p>`;
 }
 
 /* ---------- ADMIN: DEPARTMENTS AND THEIR ADMINS ---------- */
@@ -3840,7 +3867,7 @@ ${me.r == 'admin' ? box(tr('workload'), d.load.length ? d.load.map(([e, n]) => `
 
 /* ---------- LIGHT MAINTENANCE BY THE OPERATOR (update 21) ---------- */
 let lmLoaded = false, lmWho = '', lmSig = '', lmOpen = '', lmAns = {}, lmEdit = null, lmF = null, lmBusy = false;
-const lmItems = v => arr(v).filter(e => e && typeof e == 'object').map(e => ({ t: txt(e.t) || '', a: txt(e.a) || '', m: txt(e.m) || '', n: txt(e.n) || '', r: e.r == 'ok' ? 'ok' : e.r == 'bad' ? 'bad' : null }));
+const lmItems = v => arr(v).filter(e => e && typeof e == 'object').map(e => ({ t: txt(e.t) || '', a: txt(e.a) || '', m: txt(e.m) || '', n: txt(e.n) || '', rq: Number(e.rq) || 0, r: e.r == 'ok' ? 'ok' : e.r == 'bad' ? 'bad' : null }));
 const lmAt = v => { try { return v ? loc(v) : ''; } catch (e) { return ''; } };
 const LM_EV = [[1, 'lmDaily'], [2, 'lmEvery2'], [7, 'lmWeekly'], [14, 'lmBiweekly'], [30, 'lmMonthly'], [90, 'lmQuarterly']];
 const lmEvTxt = n => { const x = LM_EV.find(e => e[0] == n); return x ? tr(x[1]) : tr('lmEveryN').replace('{n}', n); };
@@ -3852,56 +3879,81 @@ const lmLast = (t, mid) => db.lm.runs.filter(r => r.tid == t.id && r.mid == mid 
 const lmIsDue = (t, mid) => { const r = lmLast(t, mid); return !r || dayNo(r.at) <= dayNo(ymd(new Date())) - t.ev; };
 function lmDueList() {
   const out = [];
-  db.lm.tasks.filter(t => t.ac && t.d == me.dp).forEach(t => lmTaskMach(t).forEach(m => { if (lmIsDue(t, m.id)) out.push({ t, m }); }));
+  db.lm.tasks.filter(t => t.ac && t.k != 'round' && t.d == me.dp).forEach(t => lmTaskMach(t).forEach(m => { if (lmIsDue(t, m.id)) out.push({ t, m }); }));
   return out;
 }
 const lmPend = () => db.lm.on ? db.lm.runs.filter(r => r.st == 'pending' && (me.r == 'admin' || r.d == me.dp)) : [];
 const lmBadge = st => `<span class="text-xs font-bold rounded-full px-2 py-1 ${st == 'approved' ? 'bg-green-100 text-green-800' : st == 'rejected' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-800'}">${st == 'approved' ? '✔ ' + tr('lmApproved') : st == 'rejected' ? '↩ ' + tr('lmRejected') : '⏳ ' + tr('lmPendApp')}</span>`;
-const lmKindBadge = k => `<span class="text-xs font-bold rounded-full px-2 py-1 ${k == 'deep' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${k == 'deep' ? '🧹 ' + tr('lmKDeep') : '🔧 ' + tr('lmKLight')}</span>`;
-const lmRunRow = r => { const t = lmTaskById(r.tid); return `<div class="bg-white rounded-lg shadow p-3 mb-2 flex flex-wrap justify-between gap-2 text-sm"><div><b>${esc(r.mn)}</b> · ${esc(t ? t.t : '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)}${r.st == 'rejected' && r.okt ? ' · ' + esc(r.okt) : ''}</div></div>${lmBadge(r.st)}</div>`; };
-// ---- the operator
-function lmOpView() {
-  const due = lmDueList(), mine = db.lm.runs.filter(r => r.d == me.dp), wait = mine.filter(r => r.st == 'pending').slice(0, 10), okd = mine.filter(r => r.st == 'approved').slice(0, 5);
-  const card = ({ t, m }) => {
+const lmKindBadge = k => `<span class="text-xs font-bold rounded-full px-2 py-1 ${k == 'deep' ? 'bg-purple-100 text-purple-800' : k == 'round' ? 'bg-teal-100 text-teal-800' : 'bg-blue-100 text-blue-800'}">${k == 'deep' ? '🧹 ' + tr('lmKDeep') : k == 'round' ? '🔍 ' + tr('lmKRound') : '🔧 ' + tr('lmKLight')}</span>`;
+const lmIsRound = r => { const t = lmTaskById(r.tid); return !!t && t.k == 'round'; };
+const lmRunBadge = r => lmIsRound(r) ? `<span class="text-xs font-bold rounded-full px-2 py-1 bg-green-100 text-green-800">✔ ${tr('rdDone')}</span>` : lmBadge(r.st);
+// the day a task falls due for a machine (its last record that was not sent back, or the day it was created, plus its period); late = days after that day
+const lmNextDay = (t, mid) => { const r = lmLast(t, mid); return (r ? dayNo(r.at) : dayNo(t.cr || ymd(new Date()))) + t.ev; };
+function lmLateList(pick) {
+  const td = dayNo(ymd(new Date())), out = [];
+  db.lm.tasks.filter(t => t.ac && pick(t)).forEach(t => lmTaskMach(t).forEach(m => { const late = td - lmNextDay(t, m.id); if (late > 0) out.push({ t, m, late }); }));
+  return out.sort((a, b) => b.late - a.late);
+}
+const lmLateBox = (l, withSec) => l.length ? `<div class="bg-red-50 border border-red-300 rounded-xl p-3 mb-4" data-lmlate="${l.length}"><h3 class="font-bold text-red-800 mb-1">⏰ ${tr('lmLateT')} (${l.length})</h3><ul class="text-sm space-y-1">${l.slice(0, 10).map(x => `<li><b>${esc(x.m.n)}</b> · ${esc(x.t.t)}${withSec ? ' · ' + esc(x.t.d) : ''} <span class="text-red-700">— ${tr('lmLateRow').replace('{n}', x.late)}</span></li>`).join('')}</ul>${l.length > 10 ? `<p class="text-xs text-red-700 mt-1">${tr('lmLateMore').replace('{n}', l.length - 10)}</p>` : ''}</div>` : '';
+function lmSoonList() {
+  const td = dayNo(ymd(new Date())), out = [];
+  db.lm.tasks.filter(t => t.ac && t.k != 'round' && t.d == me.dp).forEach(t => lmTaskMach(t).forEach(m => { if (!lmIsDue(t, m.id) && lmNextDay(t, m.id) == td + 1) out.push({ t, m }); }));
+  return out;
+}
+// done on time in the last 30 days (or since the task was created): records / records expected; null when less than one was expected
+function lmComp(t) {
+  const td = dayNo(ymd(new Date())), w = Math.min(30, Math.max(1, td - dayNo(t.cr || ymd(new Date())))), exp = lmTaskMach(t).length * w / t.ev;
+  if (exp < 1) return null;
+  return Math.min(100, Math.round(db.lm.runs.filter(r => r.tid == t.id && r.st != 'rejected' && dayNo(r.at) > td - w).length / exp * 100));
+}
+const lmCompTxt = t => { const c = lmComp(t); return c == null ? '' : ' · ' + tr('lmComp').replace('{n}', c); };
+const lmRunRow = r => { const t = lmTaskById(r.tid); return `<div class="bg-white rounded-lg shadow p-3 mb-2 flex flex-wrap justify-between gap-2 text-sm"><div><b>${esc(r.mn)}</b> · ${esc(t ? t.t : '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)}${r.st == 'rejected' && r.okt ? ' · ' + esc(r.okt) : ''}</div></div>${lmRunBadge(r)}</div>`; };
+// ---- the operator (the card is also used by the rounds)
+const lmCard = ({ t, m }) => {
     const key = t.id + '|' + m.id, bk = db.lm.runs.find(r => r.tid == t.id && r.mid == m.id), back = bk && bk.st == 'rejected' ? bk : null;
     return `<div class="bg-white rounded-xl shadow p-4 mb-3 border-s-4 ${back ? 'border-red-500' : 'border-teal-600'}" data-lm="${key}"><div class="flex flex-wrap justify-between gap-2"><div><b class="text-lg">${esc(m.n)}</b><div class="text-sm text-gray-600">${esc(t.t)}</div></div><div class="flex flex-wrap gap-1 items-start">${lmKindBadge(t.k)}<span class="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-1">${lmEvTxt(t.ev)} · ${tr('lmPtsN').replace('{n}', t.it.length)}</span></div></div>${back ? `<div class="mt-2 text-sm bg-red-50 border border-red-300 text-red-800 rounded-lg p-2">↩ ${tr('lmBackT').replace('{note}', esc(back.okt))}${back.okn ? ' — ' + esc(back.okn) : ''}</div>` : ''}${lmOpen == key ? lmForm(t, m) : `<button type="button" onclick="lmStart('${key}')" class="${btn} mt-3">${tr('lmStart')}</button>`}</div>`;
-  };
-  return `<div class="max-w-2xl mx-auto"><h2 class="text-xl font-bold text-teal-800 mb-3">🔧 ${tr('lmDueT')}</h2>${due.length ? due.map(card).join('') : `<p class="bg-white rounded-xl shadow p-4 text-gray-600">${tr('lmNone')}</p>`}
+};
+function lmOpView() {
+  const due = lmDueList(), soon = lmSoonList(), mine = db.lm.runs.filter(r => r.d == me.dp && !lmIsRound(r)), wait = mine.filter(r => r.st == 'pending').slice(0, 10), okd = mine.filter(r => r.st == 'approved').slice(0, 5);
+  return `<div class="max-w-2xl mx-auto"><h2 class="text-xl font-bold text-teal-800 mb-3">🔧 ${tr('lmDueT')}</h2>${due.length ? due.map(lmCard).join('') : `<p class="bg-white rounded-xl shadow p-4 text-gray-600">${tr('lmNone')}</p>`}
 ${wait.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmWaitT')}</h3>${wait.map(lmRunRow).join('')}` : ''}
-${okd.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmDoneT')}</h3>${okd.map(lmRunRow).join('')}` : ''}</div>`;
+${okd.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmDoneT')}</h3>${okd.map(lmRunRow).join('')}` : ''}
+${soon.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">🔔 ${tr('lmSoonT')}</h3>${soon.map(x => `<div class="bg-white rounded-lg shadow p-3 mb-2 text-sm"><b>${esc(x.m.n)}</b> · ${esc(x.t.t)}</div>`).join('')}` : ''}</div>`;
 }
 const lmCount = (key, t) => { const A = lmAns[key] || {}; return { left: t.it.filter((_, i) => !(A[i] && A[i].r)).length, noNote: t.it.filter((_, i) => A[i] && A[i].r == 'bad' && !(A[i].n || '').trim()).length }; };
 function lmForm(t, m) {
   const key = t.id + '|' + m.id, A = lmAns[key] = lmAns[key] || {}, c = lmCount(key, t); let last = '';
   const rows = t.it.map((p, i) => {
     const a = A[i] || {}, hd = p.a && p.a != last ? (last = p.a, `<div class="font-bold text-teal-800 mt-4 mb-1 border-b pb-1">${esc(p.a)}</div>`) : '';
-    return hd + `<div class="py-2 border-b"><div class="font-semibold">${i + 1}. ${esc(p.t)}</div>${p.m ? `<div class="text-xs text-gray-600">${esc(p.m)}</div>` : ''}${p.n ? `<div class="text-xs text-amber-800">⚠ ${esc(p.n)}</div>` : ''}<div class="grid grid-cols-2 gap-2 mt-2"><button type="button" onclick="lmSet('${key}',${i},'ok')" aria-pressed="${a.r == 'ok'}" class="rounded-lg font-bold py-2 ${a.r == 'ok' ? 'bg-green-700 text-white' : 'bg-white border'}">✔ ${tr('lmOk')}</button><button type="button" onclick="lmSet('${key}',${i},'bad')" aria-pressed="${a.r == 'bad'}" class="rounded-lg font-bold py-2 ${a.r == 'bad' ? 'bg-red-600 text-white' : 'bg-white border'}">⚠ ${tr('lmBad')}</button></div>${a.r == 'bad' ? `<input class="mt-2" placeholder="${esc(tr('lmBadNote'))}" value="${esc(a.n || '')}" oninput="lmNote('${key}',${i},this.value,${t.id})" maxlength="300">` : ''}</div>`;
+    return hd + `<div class="py-2 border-b"><div class="font-semibold">${i + 1}. ${esc(p.t)}</div>${p.m ? `<div class="text-xs text-gray-600">${esc(p.m)}</div>` : ''}${p.n ? `<div class="text-xs text-amber-800">⚠ ${esc(p.n)}</div>` : ''}<div class="grid grid-cols-2 gap-2 mt-2"><button type="button" onclick="lmSet('${key}',${i},'ok')" aria-pressed="${a.r == 'ok'}" class="rounded-lg font-bold py-2 ${a.r == 'ok' ? 'bg-green-700 text-white' : 'bg-white border'}">✔ ${tr('lmOk')}</button><button type="button" onclick="lmSet('${key}',${i},'bad')" aria-pressed="${a.r == 'bad'}" class="rounded-lg font-bold py-2 ${a.r == 'bad' ? 'bg-red-600 text-white' : 'bg-white border'}">⚠ ${tr('lmBad')}</button></div>${a.r == 'bad' ? `<input class="mt-2" placeholder="${esc(tr('lmBadNote'))}" value="${esc(a.n || '')}" oninput="lmNote('${key}',${i},this.value,${t.id})" maxlength="300">${t.k == 'round' ? `<p class="text-xs text-amber-800 mt-1">🎫 ${tr('rdAutoTk')}</p>` : `<label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" ${a.tk ? 'checked' : ''} onchange="lmTk('${key}',${i},this.checked)"> ${tr('lmTkAsk')}</label>`}` : ''}</div>`;
   }).join('');
-  return `<div class="mt-3">${rows}<div class="mt-3 flex flex-col gap-2"><button type="button" onclick="lmAllOk('${key}',${t.id})" class="border rounded-lg py-2 font-bold">✔ ${tr('lmAllOk')}</button><p id="lmHint" class="text-sm text-amber-800">${lmHint(c)}</p><button type="button" id="lmSend" onclick="lmSubmit('${key}',${t.id},'${m.id}')" class="${btn}" ${c.left || c.noNote ? 'disabled' : ''}>${tr('lmSend')}</button><button type="button" onclick="lmStart('')" class="text-sm text-gray-500 py-2">${tr('lmClose')}</button></div></div>`;
+  return `<div class="mt-3">${rows}<div class="mt-3 flex flex-col gap-2"><button type="button" onclick="lmAllOk('${key}',${t.id})" class="border rounded-lg py-2 font-bold">✔ ${tr('lmAllOk')}</button><p id="lmHint" class="text-sm text-amber-800">${lmHint(c)}</p><button type="button" id="lmSend" onclick="lmSubmit('${key}',${t.id},'${m.id}')" class="${btn}" ${c.left || c.noNote ? 'disabled' : ''}>${t.k == 'round' ? tr('rdSend') : tr('lmSend')}</button><button type="button" onclick="lmStart('')" class="text-sm text-gray-500 py-2">${tr('lmClose')}</button></div></div>`;
 }
 const lmHint = c => (c.left ? tr('lmLeft').replace('{n}', c.left) : '') + (c.noNote ? ' ' + tr('lmNeedNote').replace('{n}', c.noNote) : '');
+function lmTk(key, i, on) { const A = lmAns[key] = lmAns[key] || {}; A[i] = { ...(A[i] || { r: 'bad', n: '' }), tk: !!on }; }
 function lmStart(key) { lmOpen = key; render(); }
-function lmSet(key, i, r) { const A = lmAns[key] = lmAns[key] || {}; A[i] = { r, n: r == 'bad' ? (A[i] && A[i].n) || '' : '' }; render(); }
+function lmSet(key, i, r) { const A = lmAns[key] = lmAns[key] || {}; A[i] = { r, n: r == 'bad' ? (A[i] && A[i].n) || '' : '', tk: r == 'bad' && !!(A[i] && A[i].tk) }; render(); }
 function lmAllOk(key, tid) { const t = lmTaskById(tid), A = lmAns[key] = lmAns[key] || {}; t.it.forEach((_, i) => { if (!(A[i] && A[i].r)) A[i] = { r: 'ok', n: '' }; }); render(); }
 // a note is typed: only the button and the hint change (the page is not redrawn under the keyboard)
 function lmNote(key, i, v, tid) {
-  const A = lmAns[key] = lmAns[key] || {}; A[i] = { r: 'bad', n: v };
+  const A = lmAns[key] = lmAns[key] || {}; A[i] = { ...(A[i] || {}), r: 'bad', n: v };
   const c = lmCount(key, lmTaskById(tid)), b = $('lmSend'), h = $('lmHint');
   if (b) b.disabled = !!(c.left || c.noNote); if (h) h.textContent = lmHint(c);
 }
 async function lmSubmit(key, tid, mid) {
   if (lmBusy) return;
-  const t = lmTaskById(tid), A = lmAns[key] || {}, items = t.it.map((_, i) => ({ r: (A[i] || {}).r, n: ((A[i] || {}).n || '').trim() }));
+  const t = lmTaskById(tid), A = lmAns[key] || {}, items = t.it.map((_, i) => ({ r: (A[i] || {}).r, n: ((A[i] || {}).n || '').trim(), tk: (A[i] || {}).r == 'bad' && !!(A[i] || {}).tk }));
   if (items.some(x => !x.r || (x.r == 'bad' && !x.n))) return;
+  const made = items.filter(x => x.r == 'bad' && (t.k == 'round' || x.tk)).length;   // a round opens a ticket for every point that needs attention; a light task only for the ticked ones
   lmBusy = true;
-  try { await rpc('light_submit', { p_tok: stTok(), p_task: tid, p_machine: mid, p_items: items }); delete lmAns[key]; lmOpen = ''; lmLoaded = false; await refresh(); }
+  try { await rpc(t.k == 'round' ? 'round_submit' : 'light_submit', { p_tok: stTok(), p_task: tid, p_machine: mid, p_items: items }); delete lmAns[key]; lmOpen = ''; lmLoaded = false; await refresh(); if (made) alert(tr('rdTkMade').replace('{n}', made)); }
   catch (e) { lmLoaded = false; if (isDenied(e)) failMsg(e); else { await refresh().catch(() => {}); alert(/not due|not found|machine/.test(String(e && e.message)) ? tr('lmStale') : tr('netErr')); } }
   finally { lmBusy = false; }
 }
 // ---- the approval (production supervisor of the section, section head, admin)
 function lmRunDetail(r) {
   const bad = r.it.filter(p => p.r == 'bad'), okn = r.it.length - bad.length;
-  return `${bad.length ? `<ul class="mt-2 space-y-1">${bad.map(p => `<li class="text-sm bg-red-50 border border-red-300 text-red-800 rounded p-2">⚠ <b>${esc(p.t)}</b>${p.n ? ' — ' + esc(p.n) : ''}</li>`).join('')}</ul>` : ''}<p class="text-xs text-gray-600 mt-1">✔ ${tr('lmOkN').replace('{n}', okn)}${bad.length ? ' · ⚠ ' + tr('lmBadN').replace('{n}', bad.length) : ''}</p>`;
+  return `${bad.length ? `<ul class="mt-2 space-y-1">${bad.map(p => `<li class="text-sm bg-red-50 border border-red-300 text-red-800 rounded p-2">⚠ <b>${esc(p.t)}</b>${p.n ? ' — ' + esc(p.n) : ''}${p.rq ? ` <span class="font-bold">· 🎫 ${tr('lmTkN').replace('{n}', p.rq)}</span>` : ''}</li>`).join('')}</ul>` : ''}<p class="text-xs text-gray-600 mt-1">✔ ${tr('lmOkN').replace('{n}', okn)}${bad.length ? ' · ⚠ ' + tr('lmBadN').replace('{n}', bad.length) : ''}</p>`;
 }
 function lmQueue(canDecide) {
   const l = lmPend();
@@ -3910,8 +3962,8 @@ function lmQueue(canDecide) {
 const lmOffDb = () => `<p class="bg-amber-50 border border-amber-300 text-amber-900 rounded-lg p-3">${tr('lmOffDb')}</p>`;
 function lmApprView() {
   if (!db.lm.on) return lmOffDb();
-  const rec = db.lm.runs.filter(r => r.st != 'pending' && r.d == me.dp).slice(0, 8);
-  return `<h3 class="font-bold text-teal-800 mb-2">${tr('lmQueue')}</h3>${lmQueue(true)}${rec.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmRecent')}</h3>${rec.map(lmRunRow).join('')}` : ''}`;
+  const rec = db.lm.runs.filter(r => r.st != 'pending' && r.d == me.dp && !lmIsRound(r)).slice(0, 8);
+  return lmLateBox(lmLateList(t => t.k != 'round' && t.d == me.dp)) + `<h3 class="font-bold text-teal-800 mb-2">${tr('lmQueue')}</h3>${lmQueue(true)}${rec.length ? `<h3 class="font-bold text-teal-800 mt-5 mb-2">${tr('lmRecent')}</h3>${rec.map(lmRunRow).join('')}` : ''}`;
 }
 async function lmDecide(id, ok) {
   const n = (($('lmn_' + id) || {}).value || '').trim();
@@ -3931,13 +3983,13 @@ function lmFormEdit() {
   const f = lmF, ms = db.machines.filter(m => m.d == f.dept), evs = LM_EV.some(e => e[0] == f.ev) ? LM_EV : [...LM_EV, [+f.ev, 'lmEveryN']];
   return `<div class="bg-white rounded-xl shadow p-4 mb-4 border-2 border-teal-600 np space-y-3" id="lmEditBox">
 <h3 class="font-bold text-teal-800">${f.id ? '✏ ' + tr('lmEditT') : '＋ ' + tr('lmNew')}</h3>
-<label class="font-semibold block" for="lm_k">${tr('lmKind')}</label><select id="lm_k" onchange="lmFset('kind',this.value)"><option value="light" ${f.kind == 'light' ? 'selected' : ''}>🔧 ${tr('lmKLight')}</option><option value="deep" ${f.kind == 'deep' ? 'selected' : ''}>🧹 ${tr('lmKDeep')}</option></select>
+<label class="font-semibold block" for="lm_k">${tr('lmKind')}</label><select id="lm_k" onchange="lmFset('kind',this.value)"><option value="light" ${f.kind == 'light' ? 'selected' : ''}>🔧 ${tr('lmKLight')}</option><option value="deep" ${f.kind == 'deep' ? 'selected' : ''}>🧹 ${tr('lmKDeep')}</option><option value="round" ${f.kind == 'round' ? 'selected' : ''}>🔍 ${tr('lmKRound')}</option></select>${f.kind == 'round' ? `<p class="text-xs text-teal-800" id="rdKindHint">${tr('rdKindHint')}</p>` : ''}
 <label class="font-semibold block" for="lm_t">${tr('lmTitle')}</label><input id="lm_t" value="${esc(f.title)}" oninput="lmFset('title',this.value)" maxlength="160">
 <label class="font-semibold block" for="lm_d">${tr('dept')}</label><select id="lm_d" onchange="lmFset('dept',this.value)">${db.depts.map(d => `<option value="${esc(d)}" ${d == f.dept ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>
 <div class="font-semibold">${tr('lmMach')} <span class="text-xs font-normal text-gray-500">(${tr('lmMachHint')})</span></div>
 <div class="grid grid-cols-2 gap-1">${ms.map(m => `<label class="flex items-center gap-2 text-sm"><input type="checkbox" ${f.ms.includes(m.id) ? 'checked' : ''} onchange="lmFms('${m.id}',this.checked)"> ${esc(m.n)}</label>`).join('') || `<span class="text-sm text-gray-500">${tr('none')}</span>`}</div>
 <label class="font-semibold block" for="lm_e">${tr('lmFreq')}</label><select id="lm_e" onchange="lmFset('ev',this.value)">${evs.map(([n, k]) => `<option value="${n}" ${n == f.ev ? 'selected' : ''}>${n == 1 || LM_EV.some(e => e[0] == n) ? tr(k) : tr('lmEveryN').replace('{n}', n)}</option>`).join('')}</select>
-<label class="font-semibold block" for="lm_p">${tr('lmPts')}</label><p class="text-xs text-gray-500">${tr('lmPtsHint')}</p><code dir="ltr" class="block text-xs bg-gray-100 rounded p-2 whitespace-pre">point | method | remark
+<label class="font-semibold block" for="lm_p">${f.kind == 'round' ? tr('rdPts') : tr('lmPts')}</label><p class="text-xs text-gray-500">${tr('lmPtsHint')}</p><code dir="ltr" class="block text-xs bg-gray-100 rounded p-2 whitespace-pre">point | method | remark
 # area</code>
 <textarea id="lm_p" rows="12" oninput="lmFset('text',this.value)" dir="auto" maxlength="12000">${esc(f.text)}</textarea>
 <label class="flex items-center gap-2"><input type="checkbox" ${f.ac ? 'checked' : ''} onchange="lmFset('ac',this.checked)"> ${tr('lmActive')}</label>
@@ -3960,14 +4012,27 @@ function lmAdminView() {
   db.lm.tasks.forEach(t => (byD[t.d] = byD[t.d] || []).push(t));
   const tcard = t => {
     const ms = t.ms.length ? t.ms.map(id => (db.machines.find(m => m.id == id) || {}).n || id).join('، ') : tr('lmAllM'), n30 = db.lm.runs.filter(r => r.tid == t.id && r.st == 'approved' && dayNo(r.at) > td - 30).length;
-    return `<div class="bg-white rounded-xl shadow p-4 ${t.ac ? '' : 'opacity-70'}" data-lmtask="${t.id}"><div class="flex flex-wrap justify-between gap-2"><b>${esc(t.t)}</b><span class="flex gap-1">${lmKindBadge(t.k)}${t.ac ? '' : `<span class="text-xs font-bold bg-gray-200 text-gray-600 rounded-full px-2 py-1">${tr('lmOff')}</span>`}</span></div><div class="text-xs text-gray-600 mt-1">${esc(ms)}</div><div class="text-xs text-gray-600">${lmEvTxt(t.ev)} · ${tr('lmPtsN').replace('{n}', t.it.length)} · ${tr('lmN30').replace('{n}', n30)}</div>${canEdit ? `<div class="np flex gap-3 mt-2"><button type="button" onclick="lmEditTask(${t.id})" class="text-sm text-teal-700 font-semibold">✏ ${tr('edit')}</button><button type="button" onclick="lmDelTask(${t.id})" class="text-sm text-red-600 font-semibold">🗑 ${tr('lmDel')}</button></div>` : ''}</div>`;
+    return `<div class="bg-white rounded-xl shadow p-4 ${t.ac ? '' : 'opacity-70'}" data-lmtask="${t.id}"><div class="flex flex-wrap justify-between gap-2"><b>${esc(t.t)}</b><span class="flex gap-1">${lmKindBadge(t.k)}${t.ac ? '' : `<span class="text-xs font-bold bg-gray-200 text-gray-600 rounded-full px-2 py-1">${tr('lmOff')}</span>`}</span></div><div class="text-xs text-gray-600 mt-1">${esc(ms)}</div><div class="text-xs text-gray-600">${lmEvTxt(t.ev)} · ${tr('lmPtsN').replace('{n}', t.it.length)} · ${tr('lmN30').replace('{n}', n30)}${lmCompTxt(t)}</div>${canEdit ? `<div class="np flex gap-3 mt-2"><button type="button" onclick="lmEditTask(${t.id})" class="text-sm text-teal-700 font-semibold">✏ ${tr('edit')}</button><button type="button" onclick="lmDelTask(${t.id})" class="text-sm text-red-600 font-semibold">🗑 ${tr('lmDel')}</button></div>` : ''}</div>`;
   };
   const recent = db.lm.runs.slice(0, 15);
   return `<div class="np flex flex-wrap items-center justify-between gap-2 mb-3"><p class="text-sm text-gray-600 max-w-xl">${tr('lmSupHint')}</p>${canEdit && lmEdit == null ? `<button type="button" onclick="lmNew()" class="bg-teal-700 text-white font-bold rounded-lg px-4 py-2">${tr('lmNew')}</button>` : ''}</div>`
     + (lmEdit != null && lmF ? lmFormEdit() : '')
+    + lmLateBox(lmLateList(t => t.k != 'round'), true)
     + (me.r == 'admin' ? `<h3 class="font-bold text-teal-800 mb-2">${tr('lmQueue')}</h3>${lmQueue(true)}` : (lmPend().length ? `<p class="text-sm bg-amber-50 border border-amber-300 text-amber-900 rounded-lg p-2 mb-3">⏳ ${tr('lmWaitAll').replace('{n}', lmPend().length)}</p>` : ''))
     + (Object.keys(byD).length ? Object.entries(byD).map(([d, l]) => `<h3 class="font-bold text-teal-800 mt-5 mb-2">${esc(d)}</h3><div class="grid md:grid-cols-2 gap-3">${l.map(tcard).join('')}</div>`).join('') : `<p class="text-gray-500 mt-3">${tr('lmNoTasks')}</p>`)
-    + (recent.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('lmRecent')}</h3>${recent.map(r => `<div class="bg-white rounded-lg shadow p-3 mb-2 text-sm"><div class="flex flex-wrap justify-between gap-2"><div><b>${esc(r.mn)}</b> · ${esc((lmTaskById(r.tid) || {}).t || '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)} · ${esc(r.d)}</div></div>${lmBadge(r.st)}</div>${lmRunDetail(r)}</div>`).join('')}` : '');
+    + (recent.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('lmRecent')}</h3>${recent.map(r => `<div class="bg-white rounded-lg shadow p-3 mb-2 text-sm"><div class="flex flex-wrap justify-between gap-2"><div><b>${esc(r.mn)}</b> · ${esc((lmTaskById(r.tid) || {}).t || '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)} · ${esc(r.d)}</div></div>${lmRunBadge(r)}</div>${lmRunDetail(r)}</div>`).join('')}` : '');
+}
+
+// ---- rounds: a technician, the maintenance supervisor or the admin walks the machines; a point that needs attention opens a ticket by itself (update 24)
+const lmHasRounds = () => db.lm.on && db.lm.tasks.some(t => t.k == 'round');   // the Rounds tab appears with the first round
+const lmRoundDue = () => { const out = []; db.lm.tasks.filter(t => t.ac && t.k == 'round').forEach(t => lmTaskMach(t).forEach(m => { if (lmIsDue(t, m.id)) out.push({ t, m }); })); return out; };
+function lmRoundView() {
+  if (!db.lm.on) return lmOffDb();
+  const due = lmRoundDue(), late = lmLateList(t => t.k == 'round'), rec = db.lm.runs.filter(r => lmIsRound(r)).slice(0, 10), byD = {};
+  due.forEach(x => (byD[x.t.d] = byD[x.t.d] || []).push(x));
+  return `<div class="max-w-2xl mx-auto"><h2 class="text-xl font-bold text-teal-800 mb-3">🔍 ${tr('rdDueT')}</h2>${lmLateBox(late, true)}`
+    + (due.length ? Object.entries(byD).map(([d, l]) => `<h3 class="font-bold text-teal-800 mt-4 mb-2">${esc(d)}</h3>${l.map(lmCard).join('')}`).join('') : `<p class="bg-white rounded-xl shadow p-4 text-gray-600">${tr('rdNone')}</p>`)
+    + (rec.length ? `<h3 class="font-bold text-teal-800 mt-6 mb-2">${tr('rdRecent')}</h3>${rec.map(r => `<div class="bg-white rounded-lg shadow p-3 mb-2 text-sm" data-rdrun="${r.id}"><div class="flex flex-wrap justify-between gap-2"><div><b>${esc(r.mn)}</b> · ${esc((lmTaskById(r.tid) || {}).t || '')}<div class="text-xs text-gray-500">${esc(r.bn || r.by)} · ${fd(r.at)} · ${esc(r.d)}</div></div>${lmRunBadge(r)}</div>${lmRunDetail(r)}</div>`).join('')}` : '') + '</div>';
 }
 
 /* ---------- WORKSHOP SCREEN MODE ---------- */
@@ -4094,7 +4159,7 @@ function stCartHtml() {
   const rows = stCart.map(c => { const x = stItem(c.i); if (!x) return ''; return `<div class="flex flex-wrap items-center gap-2 py-2 border-b"><div class="grow min-w-0"><b dir="auto">${esc(x.n)}</b> <bdi dir="ltr" class="text-gray-500">${esc(x.cd)}</bdi><div class="text-xs text-gray-600">${x.lc ? '📍 ' + esc(x.lc) + ' · ' : ''}${tr('stOnShelf')}: <bdi dir="ltr">${stN(x.q)}</bdi> ${esc(x.u)}</div></div><input type="text" inputmode="decimal" value="${esc(c.q)}" oninput="stQty(${x.id},this.value)" class="!w-20 text-center" aria-label="${tr('stQty')}"><button type="button" onclick="stDel(${x.id})" class="text-red-600 text-sm font-semibold">✕</button></div>`; }).join('');
   return `<h3 class="font-bold text-teal-800 mb-1">🧰 ${tr('stCartT')}${stCart.length ? ' (' + stCart.length + ')' : ''}</h3>${rows || `<p class="text-sm text-gray-500">${tr('stCartEmpty')}</p>`}
 <label class="text-sm font-semibold block mt-3">${tr('stNote')}${stTk ? '' : ' *'}</label><textarea rows="2" oninput="stNote=this.value" placeholder="${stTk ? '' : esc(tr('stNoTicketNote'))}">${esc(stNote)}</textarea>
-<button type="button" onclick="stSend()" class="${btn} mt-3" ${stCart.length ? '' : 'disabled'}>${tr('stSend')}</button>`;
+<button type="button" onclick="stSend()" class="${btn} mt-3" ${stCart.length ? '' : 'disabled'}>${tr('stSend')}</button><p class="text-xs text-gray-600 mt-2">${tr('stRule').replace(/\{n\}/g, ST_BIG)}</p>`;
 }
 function stAskV() {
   return `<div class="max-w-3xl mx-auto"><div class="bg-white rounded-xl shadow p-4 mb-3"><label class="font-semibold">${tr('stTicket')}</label><select onchange="stTk=this.value;stPaint()" class="mt-1">${stTickets()}</select>
@@ -4110,7 +4175,7 @@ async function stSend() {
   const lines = stCart.map(c => ({ i: c.i, q: Number(c.q) }));
   if (!lines.length || lines.some(l => !(l.q > 0) || l.q > ((stItem(l.i) || {}).q || 0))) return alert(tr('stNeedQty'));
   if (!stTk && !stNote.trim()) return alert(tr('stNoTicketNote'));
-  if (await stDo('store_req_create', { p_ticket: stTk ? Number(stTk) : null, p_lines: lines, p_note: stNote.trim() || null })) { stCart = []; stNote = ''; stTk = ''; stT = 'mine'; render(); alert(tr('stSent')); }
+  const res = await stDo('store_req_create', { p_ticket: stTk ? Number(stTk) : null, p_lines: lines, p_note: stNote.trim() || null }); if (res) { const q = db.st.reqs.find(x => x.id == Number(res.r)); stCart = []; stNote = ''; stTk = ''; stT = 'mine'; render(); alert(q && q.st == 'approved' ? tr('stSentStore') : tr('stSent').replace('{n}', ST_BIG)); }
 }
 // ---- the stock list
 const stQcls = x => x.q <= 0 ? 'text-red-700 bg-red-50' : x.mq > 0 && x.q <= x.mq ? 'text-amber-800 bg-amber-50' : 'text-green-800 bg-green-50';
