@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://nkrhntuswynyqwcgzzsm.supabase.co https://api.mymemory.translated.net; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; worker-src 'self' blob:">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#08111a">
@@ -9,7 +10,914 @@
 <meta name="apple-mobile-web-app-title" content="NAPCO System">
 <script>try{var _t=localStorage.getItem("theme"),_f=+localStorage.getItem("fs");document.documentElement.setAttribute("data-theme",_t=="light"?"light":"dark");if(_f==1||_f==2)document.documentElement.style.fontSize=["","112.5%","125%"][_f];if(_t=="light")document.querySelector("meta[name=theme-color]").content="#115e59"}catch(e){}</script>
 <title>NAPCO System</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// QR codes are made inside the page (no outside script). QR core: QRCode for JavaScript, Copyright (c) 2009 Kazuhiko Arase, MIT license (http://www.opensource.org/licenses/mit-license.php).
+(function(){
+var __m={},__c={};function __r(p){p=p.replace('./','');if(__c[p])return __c[p].exports;var m={exports:{}};__c[p]=m;__m[p](m,m.exports,__r);return m.exports}
+__m['QRMode']=function(module,exports,require){
+module.exports = {
+MODE_NUMBER :       1 << 0,
+MODE_ALPHA_NUM :    1 << 1,
+MODE_8BIT_BYTE :    1 << 2,
+MODE_KANJI :        1 << 3
+};
+};
+__m['QRErrorCorrectLevel']=function(module,exports,require){
+module.exports = {
+L : 1,
+M : 0,
+Q : 3,
+H : 2
+};
+};
+__m['QRMaskPattern']=function(module,exports,require){
+module.exports = {
+PATTERN000 : 0,
+PATTERN001 : 1,
+PATTERN010 : 2,
+PATTERN011 : 3,
+PATTERN100 : 4,
+PATTERN101 : 5,
+PATTERN110 : 6,
+PATTERN111 : 7
+};
+};
+__m['QRMath']=function(module,exports,require){
+var QRMath = {
+glog : function(n) {
+if (n < 1) {
+throw new Error("glog(" + n + ")");
+}
+return QRMath.LOG_TABLE[n];
+},
+gexp : function(n) {
+while (n < 0) {
+n += 255;
+}
+while (n >= 256) {
+n -= 255;
+}
+return QRMath.EXP_TABLE[n];
+},
+EXP_TABLE : new Array(256),
+LOG_TABLE : new Array(256)
+};
+for (var i = 0; i < 8; i++) {
+QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+^ QRMath.EXP_TABLE[i - 5]
+^ QRMath.EXP_TABLE[i - 6]
+^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+module.exports = QRMath;
+};
+__m['QRPolynomial']=function(module,exports,require){
+var QRMath = require('./QRMath');
+function QRPolynomial(num, shift) {
+if (num.length === undefined) {
+throw new Error(num.length + "/" + shift);
+}
+var offset = 0;
+while (offset < num.length && num[offset] === 0) {
+offset++;
+}
+this.num = new Array(num.length - offset + shift);
+for (var i = 0; i < num.length - offset; i++) {
+this.num[i] = num[i + offset];
+}
+}
+QRPolynomial.prototype = {
+get : function(index) {
+return this.num[index];
+},
+getLength : function() {
+return this.num.length;
+},
+multiply : function(e) {
+var num = new Array(this.getLength() + e.getLength() - 1);
+for (var i = 0; i < this.getLength(); i++) {
+for (var j = 0; j < e.getLength(); j++) {
+num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+}
+}
+return new QRPolynomial(num, 0);
+},
+mod : function(e) {
+if (this.getLength() - e.getLength() < 0) {
+return this;
+}
+var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+var num = new Array(this.getLength() );
+for (var i = 0; i < this.getLength(); i++) {
+num[i] = this.get(i);
+}
+for (var x = 0; x < e.getLength(); x++) {
+num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+}
+return new QRPolynomial(num, 0).mod(e);
+}
+};
+module.exports = QRPolynomial;
+};
+__m['QRRSBlock']=function(module,exports,require){
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+function QRRSBlock(totalCount, dataCount) {
+this.totalCount = totalCount;
+this.dataCount  = dataCount;
+}
+QRRSBlock.RS_BLOCK_TABLE = [
+[1, 26, 19],
+[1, 26, 16],
+[1, 26, 13],
+[1, 26, 9],
+[1, 44, 34],
+[1, 44, 28],
+[1, 44, 22],
+[1, 44, 16],
+[1, 70, 55],
+[1, 70, 44],
+[2, 35, 17],
+[2, 35, 13],
+[1, 100, 80],
+[2, 50, 32],
+[2, 50, 24],
+[4, 25, 9],
+[1, 134, 108],
+[2, 67, 43],
+[2, 33, 15, 2, 34, 16],
+[2, 33, 11, 2, 34, 12],
+[2, 86, 68],
+[4, 43, 27],
+[4, 43, 19],
+[4, 43, 15],
+[2, 98, 78],
+[4, 49, 31],
+[2, 32, 14, 4, 33, 15],
+[4, 39, 13, 1, 40, 14],
+[2, 121, 97],
+[2, 60, 38, 2, 61, 39],
+[4, 40, 18, 2, 41, 19],
+[4, 40, 14, 2, 41, 15],
+[2, 146, 116],
+[3, 58, 36, 2, 59, 37],
+[4, 36, 16, 4, 37, 17],
+[4, 36, 12, 4, 37, 13],
+[2, 86, 68, 2, 87, 69],
+[4, 69, 43, 1, 70, 44],
+[6, 43, 19, 2, 44, 20],
+[6, 43, 15, 2, 44, 16],
+[4, 101, 81],
+[1, 80, 50, 4, 81, 51],
+[4, 50, 22, 4, 51, 23],
+[3, 36, 12, 8, 37, 13],
+[2, 116, 92, 2, 117, 93],
+[6, 58, 36, 2, 59, 37],
+[4, 46, 20, 6, 47, 21],
+[7, 42, 14, 4, 43, 15],
+[4, 133, 107],
+[8, 59, 37, 1, 60, 38],
+[8, 44, 20, 4, 45, 21],
+[12, 33, 11, 4, 34, 12],
+[3, 145, 115, 1, 146, 116],
+[4, 64, 40, 5, 65, 41],
+[11, 36, 16, 5, 37, 17],
+[11, 36, 12, 5, 37, 13],
+[5, 109, 87, 1, 110, 88],
+[5, 65, 41, 5, 66, 42],
+[5, 54, 24, 7, 55, 25],
+[11, 36, 12],
+[5, 122, 98, 1, 123, 99],
+[7, 73, 45, 3, 74, 46],
+[15, 43, 19, 2, 44, 20],
+[3, 45, 15, 13, 46, 16],
+[1, 135, 107, 5, 136, 108],
+[10, 74, 46, 1, 75, 47],
+[1, 50, 22, 15, 51, 23],
+[2, 42, 14, 17, 43, 15],
+[5, 150, 120, 1, 151, 121],
+[9, 69, 43, 4, 70, 44],
+[17, 50, 22, 1, 51, 23],
+[2, 42, 14, 19, 43, 15],
+[3, 141, 113, 4, 142, 114],
+[3, 70, 44, 11, 71, 45],
+[17, 47, 21, 4, 48, 22],
+[9, 39, 13, 16, 40, 14],
+[3, 135, 107, 5, 136, 108],
+[3, 67, 41, 13, 68, 42],
+[15, 54, 24, 5, 55, 25],
+[15, 43, 15, 10, 44, 16],
+[4, 144, 116, 4, 145, 117],
+[17, 68, 42],
+[17, 50, 22, 6, 51, 23],
+[19, 46, 16, 6, 47, 17],
+[2, 139, 111, 7, 140, 112],
+[17, 74, 46],
+[7, 54, 24, 16, 55, 25],
+[34, 37, 13],
+[4, 151, 121, 5, 152, 122],
+[4, 75, 47, 14, 76, 48],
+[11, 54, 24, 14, 55, 25],
+[16, 45, 15, 14, 46, 16],
+[6, 147, 117, 4, 148, 118],
+[6, 73, 45, 14, 74, 46],
+[11, 54, 24, 16, 55, 25],
+[30, 46, 16, 2, 47, 17],
+[8, 132, 106, 4, 133, 107],
+[8, 75, 47, 13, 76, 48],
+[7, 54, 24, 22, 55, 25],
+[22, 45, 15, 13, 46, 16],
+[10, 142, 114, 2, 143, 115],
+[19, 74, 46, 4, 75, 47],
+[28, 50, 22, 6, 51, 23],
+[33, 46, 16, 4, 47, 17],
+[8, 152, 122, 4, 153, 123],
+[22, 73, 45, 3, 74, 46],
+[8, 53, 23, 26, 54, 24],
+[12, 45, 15, 28, 46, 16],
+[3, 147, 117, 10, 148, 118],
+[3, 73, 45, 23, 74, 46],
+[4, 54, 24, 31, 55, 25],
+[11, 45, 15, 31, 46, 16],
+[7, 146, 116, 7, 147, 117],
+[21, 73, 45, 7, 74, 46],
+[1, 53, 23, 37, 54, 24],
+[19, 45, 15, 26, 46, 16],
+[5, 145, 115, 10, 146, 116],
+[19, 75, 47, 10, 76, 48],
+[15, 54, 24, 25, 55, 25],
+[23, 45, 15, 25, 46, 16],
+[13, 145, 115, 3, 146, 116],
+[2, 74, 46, 29, 75, 47],
+[42, 54, 24, 1, 55, 25],
+[23, 45, 15, 28, 46, 16],
+[17, 145, 115],
+[10, 74, 46, 23, 75, 47],
+[10, 54, 24, 35, 55, 25],
+[19, 45, 15, 35, 46, 16],
+[17, 145, 115, 1, 146, 116],
+[14, 74, 46, 21, 75, 47],
+[29, 54, 24, 19, 55, 25],
+[11, 45, 15, 46, 46, 16],
+[13, 145, 115, 6, 146, 116],
+[14, 74, 46, 23, 75, 47],
+[44, 54, 24, 7, 55, 25],
+[59, 46, 16, 1, 47, 17],
+[12, 151, 121, 7, 152, 122],
+[12, 75, 47, 26, 76, 48],
+[39, 54, 24, 14, 55, 25],
+[22, 45, 15, 41, 46, 16],
+[6, 151, 121, 14, 152, 122],
+[6, 75, 47, 34, 76, 48],
+[46, 54, 24, 10, 55, 25],
+[2, 45, 15, 64, 46, 16],
+[17, 152, 122, 4, 153, 123],
+[29, 74, 46, 14, 75, 47],
+[49, 54, 24, 10, 55, 25],
+[24, 45, 15, 46, 46, 16],
+[4, 152, 122, 18, 153, 123],
+[13, 74, 46, 32, 75, 47],
+[48, 54, 24, 14, 55, 25],
+[42, 45, 15, 32, 46, 16],
+[20, 147, 117, 4, 148, 118],
+[40, 75, 47, 7, 76, 48],
+[43, 54, 24, 22, 55, 25],
+[10, 45, 15, 67, 46, 16],
+[19, 148, 118, 6, 149, 119],
+[18, 75, 47, 31, 76, 48],
+[34, 54, 24, 34, 55, 25],
+[20, 45, 15, 61, 46, 16]
+];
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+if (rsBlock === undefined) {
+throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+}
+var length = rsBlock.length / 3;
+var list = [];
+for (var i = 0; i < length; i++) {
+var count = rsBlock[i * 3 + 0];
+var totalCount = rsBlock[i * 3 + 1];
+var dataCount  = rsBlock[i * 3 + 2];
+for (var j = 0; j < count; j++) {
+list.push(new QRRSBlock(totalCount, dataCount) );
+}
+}
+return list;
+};
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+switch(errorCorrectLevel) {
+case QRErrorCorrectLevel.L :
+return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+case QRErrorCorrectLevel.M :
+return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+case QRErrorCorrectLevel.Q :
+return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+case QRErrorCorrectLevel.H :
+return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+default :
+return undefined;
+}
+};
+module.exports = QRRSBlock;
+};
+__m['QRBitBuffer']=function(module,exports,require){
+function QRBitBuffer() {
+this.buffer = [];
+this.length = 0;
+}
+QRBitBuffer.prototype = {
+get : function(index) {
+var bufIndex = Math.floor(index / 8);
+return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+},
+put : function(num, length) {
+for (var i = 0; i < length; i++) {
+this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+}
+},
+getLengthInBits : function() {
+return this.length;
+},
+putBit : function(bit) {
+var bufIndex = Math.floor(this.length / 8);
+if (this.buffer.length <= bufIndex) {
+this.buffer.push(0);
+}
+if (bit) {
+this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+}
+this.length++;
+}
+};
+module.exports = QRBitBuffer;
+};
+__m['QR8bitByte']=function(module,exports,require){
+var QRMode = require('./QRMode');
+function QR8bitByte(data) {
+this.mode = QRMode.MODE_8BIT_BYTE;
+this.data = data;
+}
+QR8bitByte.prototype = {
+getLength : function() {
+return this.data.length;
+},
+write : function(buffer) {
+for (var i = 0; i < this.data.length; i++) {
+buffer.put(this.data.charCodeAt(i), 8);
+}
+}
+};
+module.exports = QR8bitByte;
+};
+__m['QRUtil']=function(module,exports,require){
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+var QRUtil = {
+PATTERN_POSITION_TABLE : [
+[],
+[6, 18],
+[6, 22],
+[6, 26],
+[6, 30],
+[6, 34],
+[6, 22, 38],
+[6, 24, 42],
+[6, 26, 46],
+[6, 28, 50],
+[6, 30, 54],
+[6, 32, 58],
+[6, 34, 62],
+[6, 26, 46, 66],
+[6, 26, 48, 70],
+[6, 26, 50, 74],
+[6, 30, 54, 78],
+[6, 30, 56, 82],
+[6, 30, 58, 86],
+[6, 34, 62, 90],
+[6, 28, 50, 72, 94],
+[6, 26, 50, 74, 98],
+[6, 30, 54, 78, 102],
+[6, 28, 54, 80, 106],
+[6, 32, 58, 84, 110],
+[6, 30, 58, 86, 114],
+[6, 34, 62, 90, 118],
+[6, 26, 50, 74, 98, 122],
+[6, 30, 54, 78, 102, 126],
+[6, 26, 52, 78, 104, 130],
+[6, 30, 56, 82, 108, 134],
+[6, 34, 60, 86, 112, 138],
+[6, 30, 58, 86, 114, 142],
+[6, 34, 62, 90, 118, 146],
+[6, 30, 54, 78, 102, 126, 150],
+[6, 24, 50, 76, 102, 128, 154],
+[6, 28, 54, 80, 106, 132, 158],
+[6, 32, 58, 84, 110, 136, 162],
+[6, 26, 54, 82, 110, 138, 166],
+[6, 30, 58, 86, 114, 142, 170]
+],
+G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+getBCHTypeInfo : function(data) {
+var d = data << 10;
+while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );
+}
+return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+},
+getBCHTypeNumber : function(data) {
+var d = data << 12;
+while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );
+}
+return (data << 12) | d;
+},
+getBCHDigit : function(data) {
+var digit = 0;
+while (data !== 0) {
+digit++;
+data >>>= 1;
+}
+return digit;
+},
+getPatternPosition : function(typeNumber) {
+return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+},
+getMask : function(maskPattern, i, j) {
+switch (maskPattern) {
+case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+default :
+throw new Error("bad maskPattern:" + maskPattern);
+}
+},
+getErrorCorrectPolynomial : function(errorCorrectLength) {
+var a = new QRPolynomial([1], 0);
+for (var i = 0; i < errorCorrectLength; i++) {
+a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+}
+return a;
+},
+getLengthInBits : function(mode, type) {
+if (1 <= type && type < 10) {
+switch(mode) {
+case QRMode.MODE_NUMBER     : return 10;
+case QRMode.MODE_ALPHA_NUM  : return 9;
+case QRMode.MODE_8BIT_BYTE  : return 8;
+case QRMode.MODE_KANJI      : return 8;
+default :
+throw new Error("mode:" + mode);
+}
+} else if (type < 27) {
+switch(mode) {
+case QRMode.MODE_NUMBER     : return 12;
+case QRMode.MODE_ALPHA_NUM  : return 11;
+case QRMode.MODE_8BIT_BYTE  : return 16;
+case QRMode.MODE_KANJI      : return 10;
+default :
+throw new Error("mode:" + mode);
+}
+} else if (type < 41) {
+switch(mode) {
+case QRMode.MODE_NUMBER     : return 14;
+case QRMode.MODE_ALPHA_NUM  : return 13;
+case QRMode.MODE_8BIT_BYTE  : return 16;
+case QRMode.MODE_KANJI      : return 12;
+default :
+throw new Error("mode:" + mode);
+}
+} else {
+throw new Error("type:" + type);
+}
+},
+getLostPoint : function(qrCode) {
+var moduleCount = qrCode.getModuleCount();
+var lostPoint = 0;
+var row = 0;
+var col = 0;
+for (row = 0; row < moduleCount; row++) {
+for (col = 0; col < moduleCount; col++) {
+var sameCount = 0;
+var dark = qrCode.isDark(row, col);
+for (var r = -1; r <= 1; r++) {
+if (row + r < 0 || moduleCount <= row + r) {
+continue;
+}
+for (var c = -1; c <= 1; c++) {
+if (col + c < 0 || moduleCount <= col + c) {
+continue;
+}
+if (r === 0 && c === 0) {
+continue;
+}
+if (dark === qrCode.isDark(row + r, col + c) ) {
+sameCount++;
+}
+}
+}
+if (sameCount > 5) {
+lostPoint += (3 + sameCount - 5);
+}
+}
+}
+for (row = 0; row < moduleCount - 1; row++) {
+for (col = 0; col < moduleCount - 1; col++) {
+var count = 0;
+if (qrCode.isDark(row,     col    ) ) count++;
+if (qrCode.isDark(row + 1, col    ) ) count++;
+if (qrCode.isDark(row,     col + 1) ) count++;
+if (qrCode.isDark(row + 1, col + 1) ) count++;
+if (count === 0 || count === 4) {
+lostPoint += 3;
+}
+}
+}
+for (row = 0; row < moduleCount; row++) {
+for (col = 0; col < moduleCount - 6; col++) {
+if (qrCode.isDark(row, col) &&
+!qrCode.isDark(row, col + 1) &&
+qrCode.isDark(row, col + 2) &&
+qrCode.isDark(row, col + 3) &&
+qrCode.isDark(row, col + 4) &&
+!qrCode.isDark(row, col + 5) &&
+qrCode.isDark(row, col + 6) ) {
+lostPoint += 40;
+}
+}
+}
+for (col = 0; col < moduleCount; col++) {
+for (row = 0; row < moduleCount - 6; row++) {
+if (qrCode.isDark(row, col) &&
+!qrCode.isDark(row + 1, col) &&
+qrCode.isDark(row + 2, col) &&
+qrCode.isDark(row + 3, col) &&
+qrCode.isDark(row + 4, col) &&
+!qrCode.isDark(row + 5, col) &&
+qrCode.isDark(row + 6, col) ) {
+lostPoint += 40;
+}
+}
+}
+var darkCount = 0;
+for (col = 0; col < moduleCount; col++) {
+for (row = 0; row < moduleCount; row++) {
+if (qrCode.isDark(row, col) ) {
+darkCount++;
+}
+}
+}
+var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+lostPoint += ratio * 10;
+return lostPoint;
+}
+};
+module.exports = QRUtil;
+};
+__m['index']=function(module,exports,require){
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+function QRCode(typeNumber, errorCorrectLevel) {
+this.typeNumber = typeNumber;
+this.errorCorrectLevel = errorCorrectLevel;
+this.modules = null;
+this.moduleCount = 0;
+this.dataCache = null;
+this.dataList = [];
+}
+QRCode.prototype = {
+addData : function(data) {
+var newData = new QR8bitByte(data);
+this.dataList.push(newData);
+this.dataCache = null;
+},
+isDark : function(row, col) {
+if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+throw new Error(row + "," + col);
+}
+return this.modules[row][col];
+},
+getModuleCount : function() {
+return this.moduleCount;
+},
+make : function() {
+if (this.typeNumber < 1 ){
+var typeNumber = 1;
+for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+var buffer = new QRBitBuffer();
+var totalDataCount = 0;
+for (var i = 0; i < rsBlocks.length; i++) {
+totalDataCount += rsBlocks[i].dataCount;
+}
+for (var x = 0; x < this.dataList.length; x++) {
+var data = this.dataList[x];
+buffer.put(data.mode, 4);
+buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+data.write(buffer);
+}
+if (buffer.getLengthInBits() <= totalDataCount * 8)
+break;
+}
+this.typeNumber = typeNumber;
+}
+this.makeImpl(false, this.getBestMaskPattern() );
+},
+makeImpl : function(test, maskPattern) {
+this.moduleCount = this.typeNumber * 4 + 17;
+this.modules = new Array(this.moduleCount);
+for (var row = 0; row < this.moduleCount; row++) {
+this.modules[row] = new Array(this.moduleCount);
+for (var col = 0; col < this.moduleCount; col++) {
+this.modules[row][col] = null;//(col + row) % 3;
+}
+}
+this.setupPositionProbePattern(0, 0);
+this.setupPositionProbePattern(this.moduleCount - 7, 0);
+this.setupPositionProbePattern(0, this.moduleCount - 7);
+this.setupPositionAdjustPattern();
+this.setupTimingPattern();
+this.setupTypeInfo(test, maskPattern);
+if (this.typeNumber >= 7) {
+this.setupTypeNumber(test);
+}
+if (this.dataCache === null) {
+this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+}
+this.mapData(this.dataCache, maskPattern);
+},
+setupPositionProbePattern : function(row, col)  {
+for (var r = -1; r <= 7; r++) {
+if (row + r <= -1 || this.moduleCount <= row + r) continue;
+for (var c = -1; c <= 7; c++) {
+if (col + c <= -1 || this.moduleCount <= col + c) continue;
+if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) ||
+(0 <= c && c <= 6 && (r === 0 || r === 6) ) ||
+(2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+this.modules[row + r][col + c] = true;
+} else {
+this.modules[row + r][col + c] = false;
+}
+}
+}
+},
+getBestMaskPattern : function() {
+var minLostPoint = 0;
+var pattern = 0;
+for (var i = 0; i < 8; i++) {
+this.makeImpl(true, i);
+var lostPoint = QRUtil.getLostPoint(this);
+if (i === 0 || minLostPoint >  lostPoint) {
+minLostPoint = lostPoint;
+pattern = i;
+}
+}
+return pattern;
+},
+createMovieClip : function(target_mc, instance_name, depth) {
+var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+var cs = 1;
+this.make();
+for (var row = 0; row < this.modules.length; row++) {
+var y = row * cs;
+for (var col = 0; col < this.modules[row].length; col++) {
+var x = col * cs;
+var dark = this.modules[row][col];
+if (dark) {
+qr_mc.beginFill(0, 100);
+qr_mc.moveTo(x, y);
+qr_mc.lineTo(x + cs, y);
+qr_mc.lineTo(x + cs, y + cs);
+qr_mc.lineTo(x, y + cs);
+qr_mc.endFill();
+}
+}
+}
+return qr_mc;
+},
+setupTimingPattern : function() {
+for (var r = 8; r < this.moduleCount - 8; r++) {
+if (this.modules[r][6] !== null) {
+continue;
+}
+this.modules[r][6] = (r % 2 === 0);
+}
+for (var c = 8; c < this.moduleCount - 8; c++) {
+if (this.modules[6][c] !== null) {
+continue;
+}
+this.modules[6][c] = (c % 2 === 0);
+}
+},
+setupPositionAdjustPattern : function() {
+var pos = QRUtil.getPatternPosition(this.typeNumber);
+for (var i = 0; i < pos.length; i++) {
+for (var j = 0; j < pos.length; j++) {
+var row = pos[i];
+var col = pos[j];
+if (this.modules[row][col] !== null) {
+continue;
+}
+for (var r = -2; r <= 2; r++) {
+for (var c = -2; c <= 2; c++) {
+if (Math.abs(r) === 2 ||
+Math.abs(c) === 2 ||
+(r === 0 && c === 0) ) {
+this.modules[row + r][col + c] = true;
+} else {
+this.modules[row + r][col + c] = false;
+}
+}
+}
+}
+}
+},
+setupTypeNumber : function(test) {
+var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+var mod;
+for (var i = 0; i < 18; i++) {
+mod = (!test && ( (bits >> i) & 1) === 1);
+this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+}
+for (var x = 0; x < 18; x++) {
+mod = (!test && ( (bits >> x) & 1) === 1);
+this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+}
+},
+setupTypeInfo : function(test, maskPattern) {
+var data = (this.errorCorrectLevel << 3) | maskPattern;
+var bits = QRUtil.getBCHTypeInfo(data);
+var mod;
+for (var v = 0; v < 15; v++) {
+mod = (!test && ( (bits >> v) & 1) === 1);
+if (v < 6) {
+this.modules[v][8] = mod;
+} else if (v < 8) {
+this.modules[v + 1][8] = mod;
+} else {
+this.modules[this.moduleCount - 15 + v][8] = mod;
+}
+}
+for (var h = 0; h < 15; h++) {
+mod = (!test && ( (bits >> h) & 1) === 1);
+if (h < 8) {
+this.modules[8][this.moduleCount - h - 1] = mod;
+} else if (h < 9) {
+this.modules[8][15 - h - 1 + 1] = mod;
+} else {
+this.modules[8][15 - h - 1] = mod;
+}
+}
+this.modules[this.moduleCount - 8][8] = (!test);
+},
+mapData : function(data, maskPattern) {
+var inc = -1;
+var row = this.moduleCount - 1;
+var bitIndex = 7;
+var byteIndex = 0;
+for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+if (col === 6) col--;
+while (true) {
+for (var c = 0; c < 2; c++) {
+if (this.modules[row][col - c] === null) {
+var dark = false;
+if (byteIndex < data.length) {
+dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+}
+var mask = QRUtil.getMask(maskPattern, row, col - c);
+if (mask) {
+dark = !dark;
+}
+this.modules[row][col - c] = dark;
+bitIndex--;
+if (bitIndex === -1) {
+byteIndex++;
+bitIndex = 7;
+}
+}
+}
+row += inc;
+if (row < 0 || this.moduleCount <= row) {
+row -= inc;
+inc = -inc;
+break;
+}
+}
+}
+}
+};
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+var buffer = new QRBitBuffer();
+for (var i = 0; i < dataList.length; i++) {
+var data = dataList[i];
+buffer.put(data.mode, 4);
+buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+data.write(buffer);
+}
+var totalDataCount = 0;
+for (var x = 0; x < rsBlocks.length; x++) {
+totalDataCount += rsBlocks[x].dataCount;
+}
+if (buffer.getLengthInBits() > totalDataCount * 8) {
+throw new Error("code length overflow. (" +
+buffer.getLengthInBits() +
+">" +
+totalDataCount * 8 +
+")");
+}
+if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+buffer.put(0, 4);
+}
+while (buffer.getLengthInBits() % 8 !== 0) {
+buffer.putBit(false);
+}
+while (true) {
+if (buffer.getLengthInBits() >= totalDataCount * 8) {
+break;
+}
+buffer.put(QRCode.PAD0, 8);
+if (buffer.getLengthInBits() >= totalDataCount * 8) {
+break;
+}
+buffer.put(QRCode.PAD1, 8);
+}
+return QRCode.createBytes(buffer, rsBlocks);
+};
+QRCode.createBytes = function(buffer, rsBlocks) {
+var offset = 0;
+var maxDcCount = 0;
+var maxEcCount = 0;
+var dcdata = new Array(rsBlocks.length);
+var ecdata = new Array(rsBlocks.length);
+for (var r = 0; r < rsBlocks.length; r++) {
+var dcCount = rsBlocks[r].dataCount;
+var ecCount = rsBlocks[r].totalCount - dcCount;
+maxDcCount = Math.max(maxDcCount, dcCount);
+maxEcCount = Math.max(maxEcCount, ecCount);
+dcdata[r] = new Array(dcCount);
+for (var i = 0; i < dcdata[r].length; i++) {
+dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+}
+offset += dcCount;
+var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+var modPoly = rawPoly.mod(rsPoly);
+ecdata[r] = new Array(rsPoly.getLength() - 1);
+for (var x = 0; x < ecdata[r].length; x++) {
+var modIndex = x + modPoly.getLength() - ecdata[r].length;
+ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+}
+}
+var totalCodeCount = 0;
+for (var y = 0; y < rsBlocks.length; y++) {
+totalCodeCount += rsBlocks[y].totalCount;
+}
+var data = new Array(totalCodeCount);
+var index = 0;
+for (var z = 0; z < maxDcCount; z++) {
+for (var s = 0; s < rsBlocks.length; s++) {
+if (z < dcdata[s].length) {
+data[index++] = dcdata[s][z];
+}
+}
+}
+for (var xx = 0; xx < maxEcCount; xx++) {
+for (var t = 0; t < rsBlocks.length; t++) {
+if (xx < ecdata[t].length) {
+data[index++] = ecdata[t][xx];
+}
+}
+}
+return data;
+};
+module.exports = QRCode;
+};
+var Core=__r('index');
+// same call as qrcodejs:  new QRCode(element, {text, width, height})  -> an inline SVG (sharp when printed), error correction H, white background
+window.QRCode=function(el,o){o=typeof o=='string'?{text:o}:(o||{});var q=new Core(0,2);q.addData(unescape(encodeURIComponent(o.text==null?'':String(o.text))));q.make();
+var n=q.getModuleCount(),d='',r,c,s;for(r=0;r<n;r++){for(c=0;c<n;c++){if(q.isDark(r,c)){s=c;while(c+1<n&&q.isDark(r,c+1))c++;d+='M'+s+' '+r+'h'+(c-s+1)+'v1h-'+(c-s+1)+'z'}}}
+var w=o.width||o.height||256,h=o.height||w;el.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+n+' '+n+'" width="'+w+'" height="'+h+'" shape-rendering="crispEdges" role="img" style="display:block;background:#fff"><rect width="'+n+'" height="'+n+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'};
+window.QRCode.CorrectLevel={L:1,M:0,Q:3,H:2};
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f3f6f5;--tx:#1f2937;--mu:#566070;--mu2:#616b7a;--inbg:#fff;--inbd:#b6c2bd;--ac:#0f766e;--acr:rgba(15,118,110,.22);--pop:#fff;--popbd:#d1d5db;--gp:#0f766e;--ln:#e5e7eb;--ln2:#d1d5db;--card:#fff;--c1:#2563eb;--c2:#b45309}
@@ -251,6 +1159,7 @@ finishedAt|تاريخ ووقت الانتهاء|Finished date & time
 dateErr|وقت الانتهاء قبل وقت الاستلام|Finish time is before receive time
 close|إنهاء وإغلاق الطلب|Finish & close request
 closedMsg|تم إغلاق الطلب وحفظه في الطلبات السابقة|Request closed and saved to previous requests
+wrongPwLock|رقم الموظف أو كلمة المرور غير صحيحة. بعد 5 محاولات خاطئة انتظر 15 دقيقة، أو ادخل من جهازك المعتاد|Wrong employee number or password. After 5 wrong tries wait 15 minutes, or sign in from your usual device
 tabWork|استلام الطلبات|Take requests
 tabOpen|الطلبات المفتوحة|Open requests
 tabPrev|سجل الأعطال|Breakdown log
@@ -797,6 +1706,18 @@ noDeptMach|آلات قسمها غير موجود في القائمة:|Machines w
 badDept|القسم غير موجود|Section not found
 allRoles|كل الأدوار|All roles
 allDepts|كل الأقسام|All sections
+auditTitle|سجل العمليات|Change log
+auditNote|من غيّر ماذا ومتى (أسماء الأعمدة فقط، بدون القيم). آخر 300 عملية.|Who changed what and when (column names only, never the values). Last 300 changes.
+auditShow|عرض السجل|Show the log
+auditNone|لا توجد عمليات مسجلة بعد|No changes recorded yet
+auditWhen|الوقت|When
+auditWho|من|Who
+auditWhat|ماذا|What
+auditOld|هذي الميزة تحتاج تحديث قاعدة البيانات 26|This needs database update 26
+unlockTitle|أقفال الدخول|Sign-in locks
+unlockNote|بعد 5 كلمات مرور خاطئة يُقفل الدخول 15 دقيقة على الأجهزة الجديدة. إذا أحد قفل حساباً عن قصد، امسح الأقفال من هنا.|After 5 wrong passwords, sign-in from new devices is locked for 15 minutes. If someone keeps an account locked on purpose, clear the locks here.
+unlockBtn|مسح كل الأقفال|Clear all locks
+unlockAsk|مسح كل أقفال الدخول الآن؟|Clear all sign-in locks now?
 bdClass|نوع العطل (كهربائي / ميكانيكي)|Mechanical or Electrical BD
 bdClassPick|اختر نوع العطل (كهربائي / ميكانيكي)|Select the breakdown type (electrical / mechanical)
 bdElec|كهربائي|Electrical
@@ -1476,13 +2397,14 @@ function sol(r) {
 
 /* ---------- SERVER (Supabase REST) ---------- */
 async function api(path, method = 'GET', body, prefer) {
-  const h = { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' };
+  const h = { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' }, rk = rdTok();
   if (prefer) h.Prefer = prefer;
+  if (rk) h['Accept-Language'] = rk;   // update 25: the database lets only a signed-in session read (this header needs no extra permission across addresses)
   const ac = new AbortController(), to = setTimeout(() => ac.abort(), 25000);   // a dead connection ends in an error message, not a frozen button
   let r, t;
   try { r = await fetch(SUPABASE_URL + '/rest/v1/' + path, { method, headers: h, signal: ac.signal, body: body === undefined ? undefined : JSON.stringify(body) }); t = await r.text(); }
   finally { clearTimeout(to); }
-  if (!r.ok) throw new Error(t);
+  if (!r.ok) { const er = new Error(t); sessEnded(er); throw er; }
   if (!t) return null;
   try { return JSON.parse(t); } catch (e) { return t; }   // a plain-text reply is returned as is
 }
@@ -1493,12 +2415,29 @@ const rpc = (fn, args) => api('rpc/' + fn, 'POST', args);
 const noFn = err => /PGRST202|Could not find the function|does not exist/i.test(String(err && err.message));
 // the server refused because the admin session is gone or invalid (not a plain database permission error)
 const isDenied = err => { const m = String(err && err.message); return /\bdenied\b/i.test(m) && !/permission denied/i.test(m); };
+// the session token sent with every read (update 25); none before signing in
+let sessGone = false;
+function sessEnded(err) { if (!/session expired/.test(String(err && err.message)) || !me || sessGone) return false; sessGone = true; setTimeout(() => { alert(tr('sessExp')); logout(); sessGone = false; }, 0); return true; }
+const rdTok = () => { const t = !me ? '' : me.r == 'admin' ? me.h : me.t; return /^[0-9a-f]{64}$/.test(t || '') ? t : ''; };
+// update 25: a device that signed in before keeps its own wrong-password counter, so others cannot lock it out. One id per account on this device.
+const devGet = k => { try { const v = JSON.parse(LS.get('napco_dev') || '{}'); return v && /^[0-9a-f]{64}$/.test(v[k] || '') ? v[k] : null; } catch (e) { return null; } };
+const devSet = (k, d) => { if (!/^[0-9a-f]{64}$/.test(d || '')) return; let v = {}; try { v = JSON.parse(LS.get('napco_dev') || '{}') || {}; } catch (e) { v = {}; } v[k] = d; LS.set('napco_dev', JSON.stringify(v)); };
+// a new sign-in function (update 25) returns { r, tok, dev }; as the old ones: the token, or 'bad' / 'locked'
+async function signInNew(fn, args, k) {
+  const x = await rpc(fn, { ...args, p_dev: devGet(k) });
+  if (x && x.dev) devSet(k, x.dev);
+  return x && x.r == 'ok' ? x.tok : x && x.r == 'locked' ? 'locked' : 'bad';
+}
 // Admin sign-in: the admin functions receive a random session token, never the password hash.
-// An older database (update 6 not run yet) keeps working the old way until it is updated.
+// An older database (update 6 / 25 not run yet) keeps working the old way until it is updated.
 async function adminSignIn(h) {
+  try { return await signInNew('sign_in_admin', { p_h: h }, 'admin'); }
+  catch (err) { if (!noFn(err)) throw err; }
   try { return await rpc('admin_sign_in', { p_h: h }); }
   catch (err) { if (!noFn(err)) throw err; return (await rpc('admin_login', { p_h: h })) ? h : 'bad'; }
 }
+// after any sign-in: the data of the account (the page was loaded before, without a session, so it had none), and the English dictionary
+async function afterSignIn() { await load().catch(() => {}); if (lang == 'en') await loadDict(true).catch(() => {}); }
 async function adminOk(t) {
   try { return !!(await rpc('admin_check', { p_tok: t })); }
   catch (err) { if (!noFn(err)) throw err; return !!(await rpc('admin_login', { p_h: t })); }
@@ -1631,7 +2570,7 @@ let polling = false, pollFails = 0;
 async function poll() {
   if (document.hidden || polling) return;
   polling = true;
-  try { polls++; if (polls % 30 == 0 && me && me.r == 'admin' && !(me.sx ? await rpc('sx_check', { p_tok: me.h }) : await adminOk(me.h))) return logout(); if (polls % 30 == 0 && me && STAFF.includes(me.r) && !(await chkStaff())) { alert(tr('sessExp')); return logout(); } if (polls % 30 == 0) await genPM(); const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || ((me.r == 'admin' || me.r == 'supervisor') && (tab == 'open' || tab == 'dash')) || (me.r == 'deptadmin' && (tab == 'hold' || tab == 'dopen'))); if ((ch || tick) && !dirty) render(); pollFails = 0; $('nb').style.display = 'none'; }
+  try { polls++; if (polls % 30 == 0 && me && me.r == 'admin' && !(me.sx ? await rpc('sx_check', { p_tok: me.h }) : await adminOk(me.h))) return logout(); if (polls % 30 == 0 && me && STAFF.includes(me.r) && !(await chkStaff())) { alert(tr('sessExp')); return logout(); } if (polls % 30 == 0 && me && me.r == 'workshop' && me.t && !(await rpc('ws_check', { p_tok: me.t }).catch(e => !!noFn(e)))) return logout(); if (polls % 30 == 0) await genPM(); const ch = await load(polls % 30 == 0), tick = me && (me.r == 'workshop' || ((me.r == 'admin' || me.r == 'supervisor') && (tab == 'open' || tab == 'dash')) || (me.r == 'deptadmin' && (tab == 'hold' || tab == 'dopen'))); if ((ch || tick) && !dirty) render(); pollFails = 0; $('nb').style.display = 'none'; }
   catch (e) { if (++pollFails >= 2) { $('nb').textContent = tr('offline'); $('nb').style.display = 'block'; } }   // try again next time
   finally { polling = false; }
 }
@@ -1663,8 +2602,9 @@ function setLang() { lang = lang == 'ar' ? 'en' : 'ar'; LS.set('lang', lang); re
 function logout() {
   if (me && me.sx) { const t = me.h; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } rpc('sx_logout', { p_tok: t }).catch(() => {}); }
   else if (me && me.r == 'admin') rpc('admin_sign_out', { p_tok: me.h }).catch(() => {});
+  else if (me && me.r == 'workshop') { if (me.t) rpc('ws_sign_out', { p_tok: me.t }).catch(() => {}); }
   else if (me && me.t) rpc('staff_sign_out', { p_tok: me.t }).catch(() => {});
-  me = null; sxPanel = false; pwPanel = false; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' };
+  me = null; sxPanel = false; pwPanel = false; auditRows = null; rpEmp = null; db.staff = []; ttab = 'work'; hubS = hubM = hubV = null; spInst = spEdit = spRecvId = null; docForm = false; step = { s: 'emp', e: '' };
   stReset(); lmLoaded = false; lmOpen = ''; lmAns = {}; lmEdit = null; lmF = null; otab = 'rep'; db.lm = { on: false, tasks: [], runs: [] };   // the next account starts with its own light-maintenance data
   save(); render();
 }
@@ -1782,12 +2722,13 @@ function fx() {
 async function doSx(e) {
   e.preventDefault();
   try {
-    const t = await rpc('sx_login', { p_emp: nd($('xe').value), p_h: await sha($('xp').value) });
+    const xa = { p_emp: nd($('xe').value), p_h: await sha($('xp').value) };
+    let t; try { t = await signInNew('sign_in_owner', xa, 'owner'); } catch (err) { if (!noFn(err)) throw err; t = await rpc('sx_login', xa); }   // a database without update 25: the old way
     if (t == 'locked') return alert(tr('tryLater'));
     if (!/^[0-9a-f]{64}$/.test(t || '')) return alert(tr('wrongPw'));
     me = { e: '', r: 'admin', h: t, sx: true }; tab = ''; mview = null;
     try { sessionStorage.setItem('napco_s', t); } catch (err) { /* optional */ }
-    await load().catch(() => {}); render();
+    await afterSignIn(); render();
   } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 function sxToggle() { sxPanel = !sxPanel; render(); }
@@ -1798,7 +2739,28 @@ function sxView() {
   if (!me.sx) return card(`<h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><p class="text-sm text-gray-500 mb-3">${tr('empNo')}: <b>${esc(me.e)}</b></p>${credForm('ga', 'admSave(event,true)', 'newPw8')}`);
   return card(`<h3 class="font-bold text-teal-800 mb-3">⚙ ${tr('acct')}</h3><form onsubmit="sxSave(event)" class="space-y-3" autocomplete="off"><label class="block font-semibold">${tr('curPw')}</label><input id="xo" type="password" autocomplete="off" required><label class="block font-semibold">${tr('newEmp')}</label><input id="xn" inputmode="numeric" autocomplete="off"><label class="block font-semibold">${tr('newPw')}</label><input id="xq" type="password" autocomplete="new-password"><input id="xr" type="password" placeholder="${tr('confirmPw')}" autocomplete="new-password"><div class="flex gap-2"><button class="${btn}">${tr('sxSaveBtn')}</button><button type="button" onclick="sxToggle()" class="w-full border rounded-lg py-3 font-bold">${tr('back')}</button></div></form>`)
     + card(`<h3 class="font-bold text-teal-800 mb-1">👤 ${tr('admAcct')}</h3><p class="text-sm text-gray-500 mb-3">${tr('empNo')}: <b>${esc(ADMIN_ID)}</b></p>${credForm('gb', 'admSave(event,false)', 'newPw8')}`)
-    + headsCard();
+    + headsCard() + auditCard() + unlockCard();
+}
+// update 26: the record of changes (who, when, which table and columns; never the values). Owner page only; loaded when opened.
+let auditRows = null, auditBusy = false;
+const auditCard = () => `<div class="max-w-2xl mx-auto mt-6"><h3 class="font-bold text-teal-800 mb-1">🧾 ${tr('auditTitle')}</h3><p class="text-sm text-gray-500 mb-3">${tr('auditNote')}</p>`
+  + (auditRows == null ? `<button type="button" onclick="auditLoad()" class="bg-teal-700 text-white rounded-lg px-4 py-2"${auditBusy ? ' disabled' : ''}>${auditBusy ? '⏳' : tr('auditShow')}</button>`
+    : !auditRows.length ? `<p class="text-sm text-gray-500">${tr('auditNone')}</p>`
+    : `<div class="bg-white rounded-xl shadow overflow-x-auto"><table class="w-full text-xs"><thead><tr class="text-gray-500"><th class="p-2 text-start">${tr('auditWhen')}</th><th class="p-2 text-start">${tr('auditWho')}</th><th class="p-2 text-start">${tr('auditWhat')}</th></tr></thead><tbody>`
+      + auditRows.map(a => `<tr class="border-t"><td class="p-2 whitespace-nowrap">${esc(String(a.at || '').slice(0, 16).replace('T', ' '))}</td><td class="p-2">${esc(a.actor)}</td><td class="p-2">${esc(a.tbl)} · ${esc(a.op)}${a.ref ? ' #' + esc(a.ref) : ''}${Array.isArray(a.cols) && a.cols.length ? ' <span class="text-gray-500">(' + esc(a.cols.join(', ')) + ')</span>' : ''}</td></tr>`).join('')
+      + `</tbody></table></div><button type="button" onclick="auditLoad()" class="text-sm text-teal-700 mt-2">↻ ${tr('auditShow')}</button>`)
+  + `</div>`;
+const unlockCard = () => `<div class="max-w-2xl mx-auto mt-6 mb-6"><h3 class="font-bold text-teal-800 mb-1">🔓 ${tr('unlockTitle')}</h3><p class="text-sm text-gray-500 mb-3">${tr('unlockNote')}</p><button type="button" onclick="authUnlock()" class="bg-teal-700 text-white rounded-lg px-4 py-2">${tr('unlockBtn')}</button></div>`;
+async function authUnlock() {
+  if (!confirm(tr('unlockAsk'))) return;
+  try { await rpc('auth_unlock', { p_tok: me.h }); alert(tr('saved')); }
+  catch (err) { alert(noFn(err) ? tr('auditOld') : tr('netErr') + errTxt(err)); }
+}
+async function auditLoad() {
+  auditBusy = true; render();
+  try { const r = await rpc('audit_list', { p_tok: me.h, p_limit: 300, p_tbl: null }); auditRows = Array.isArray(r) ? r : []; }
+  catch (err) { auditRows = null; alert(noFn(err) ? tr('auditOld') : tr('netErr') + errTxt(err)); }
+  auditBusy = false; render();
 }
 // change the admin's number / password: from his own page (own = true) or reset by the owner (own = false)
 async function admSave(e, own) {
@@ -1810,7 +2772,7 @@ async function admSave(e, own) {
   if (!ne && !np) return;
   try {
     const nh = np ? await sha(np) : '', oh = await sha(o);
-    const r = own ? await rpc('admin_update_self', { p_old_h: oh, p_emp: ne, p_new_h: nh })
+    const r = own ? await rpc('admin_change_self', { p_tok: me.h, p_old_h: oh, p_emp: ne, p_new_h: nh }).catch(err => { if (!noFn(err)) throw err; return rpc('admin_update_self', { p_old_h: oh, p_emp: ne, p_new_h: nh }); })   // update 25 needs the session too
       : await rpc('sx_reset_admin', { p_tok: me.h, p_old_h: oh, p_emp: ne, p_new_h: nh });
     if (r == 'ok') {
       if (ne) ADMIN_ID = ne;
@@ -1848,17 +2810,20 @@ async function doLogin(e) {
       const t = await adminSignIn(h);
       if (t == 'locked') return alert(tr('tryLater'));
       if (!/^[0-9a-f]{64}$/.test(t || '')) return alert(tr('wrongPw'));
-      me = { e: u, r: 'admin', h: t }; save(); await load().catch(() => {}); return render();   // the account list needs the new session, so load it before the first screen
+      me = { e: u, r: 'admin', h: t }; save(); await afterSignIn(); return render();   // the account list needs the new session, so load it before the first screen
     }
     if (u == WORKSHOP_ID) {
-      if (!(await rpc('ws_login', { p_h: h }))) return alert(tr('wrongPw'));
-      me = { e: u, r: 'workshop' }; save(); await load().catch(() => {}); return render();   // the "All sections" tab needs the plan and the spare parts, so load them before the first screen
+      let wt; try { wt = await signInNew('sign_in_ws', { p_h: h }, 'workshop'); } catch (err) { if (!noFn(err)) throw err; wt = (await rpc('ws_login', { p_h: h })) ? '' : 'bad'; }   // a database without update 25: no session
+      if (wt == 'locked') return alert(tr('tryLater'));
+      if (wt == 'bad') return alert(tr('wrongPw'));
+      me = { e: u, r: 'workshop', t: wt }; save(); await afterSignIn(); return render();   // the "All sections" tab needs the plan and the spare parts, so load them before the first screen
     }
-    const x = await rpc('staff_sign_in', { p_emp: u, p_hash: h });
-    if (!x.ok) return alert(tr(x.locked ? 'tryLater' : 'wrongPw'));
+    let x; try { x = await rpc('sign_in_staff', { p_emp: u, p_hash: h, p_dev: devGet('s' + u) }); if (x && x.dev) devSet('s' + u, x.dev); }
+    catch (err) { if (!noFn(err)) throw err; x = await rpc('staff_sign_in', { p_emp: u, p_hash: h }); }   // a database without update 25
+    if (!x.ok) return alert(tr(x.locked ? 'tryLater' : 'wrongPwLock'));
     if (x.status != 'approved') { step = { s: 'wait', e: u }; return render(); }
     me = { e: u, r: ROLE[x.role] || 'operator', t: x.token, dp: x.dept || '', nm: x.name || '' };
-    save(); await load().catch(() => {}); render();
+    save(); await afterSignIn(); render();
   } catch (err) { alert(tr('netErr')); }
 }
 // sign up: operator / technician / supervisor. The account waits for approval (operators: their department admin).
@@ -1867,7 +2832,7 @@ async function doReg(e) {
   const u = nd($('emp').value), nm = $('nm').value.trim(), role = $('rr').value, a = $('pw').value;
   if (!/^\d{3,12}$/.test(u)) return alert(tr('badEmp'));
   if (nm.length < 2) return alert(tr('nameShort'));
-  if (a.length < 4) return alert(tr('pwShort'));
+  if (a.length < 8) return alert(tr('pwLong8'));
   if (a !== $('pw2').value) return alert(tr('pwMismatch'));
   if ((role == 'op' || role == 'psup') && !$('rd').value) return alert(tr('noDepts'));
   try {
@@ -2244,14 +3209,21 @@ async function take(e, id) {
       if (!mp || mp == '__all') return alert(tr('pickPart'));
       Object.assign(body, { priority: $('tp' + id).value, problem_type: tt, bd_class: bc, machine_part: mp });
     }
-    const url = 'requests?id=eq.' + id + '&status=eq.open';
-    let rows;
-    try { rows = await api(url, 'PATCH', body, 'return=representation'); }
-    catch (err) { if (!bd || !/machine_part|bd_class|priority|problem_type|permission denied/i.test(String(err && err.message))) throw err; rows = await api(url, 'PATCH', base, 'return=representation'); }   // a database that has not had update 8 / 9 yet
-    if (!rows.length) alert(tr('takenByOther'));
-    else { if (custom) await rpc('bump_custom', { p_machine: r.mid, p_label: custom }).catch(() => {}); if (me.r == 'technician') ttab = 'mine'; else tab = 'mine'; window.scrollTo(0, 0); }
+    let took;
+    try { took = await rpc('tech_take', { p_tok: me.t, p_id: Number(id), p_data: body }); }   // update 25: the database checks the session and writes him as the taker
+    catch (err) {
+      if (isDenied(err)) { alert(tr('sessExp')); return logout(); }
+      if (!noFn(err)) throw err;
+      const url = 'requests?id=eq.' + id + '&status=eq.open';   // a database without update 25: the old direct change
+      let rows;
+      try { rows = await api(url, 'PATCH', body, 'return=representation'); }
+      catch (e2) { if (!bd || !/machine_part|bd_class|priority|problem_type|permission denied/i.test(String(e2 && e2.message))) throw e2; rows = await api(url, 'PATCH', base, 'return=representation'); }   // a database that has not had update 8 / 9 yet
+      took = rows.length > 0;
+    }
+    if (!took) alert(tr('takenByOther'));
+    else { if (custom) await rpc('custom_bump', { p_tok: me.t, p_machine: r.mid, p_label: custom }).catch(e => noFn(e) ? rpc('bump_custom', { p_machine: r.mid, p_label: custom }) : null).catch(() => {}); if (me.r == 'technician') ttab = 'mine'; else tab = 'mine'; window.scrollTo(0, 0); }
     await load(); render();
-  } catch (err) { alert(tr('netErr')); }
+  } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 function pchg(id, v) {
   $('pb' + id).classList.toggle('hidden', v != 'Yes');
@@ -2317,10 +3289,16 @@ async function fin(e, id) {
   const body = { status: 'done', root_cause: rc, ...(ck ? { checklist: ck } : {}), ...bd, finished_at: fa, action: acT, ...(ae ? { action_en: ae } : {}), cleaning: $('cl' + id).value, stopped_after: $('s2' + id).value, parts: sp };
   const url = 'requests?id=eq.' + id + '&taken_by=eq.' + me.e;
   try {
-    try { await api(url, 'PATCH', body); }
-    catch (err) { if (!/machine_part|bd_class|problem_type|action_en|permission denied/i.test(String(err && err.message))) throw err; delete body.machine_part; delete body.bd_class; delete body.problem_type; delete body.action_en; if (body.stopped_after == 'Job') body.stopped_after = 'Yes'; await api(url, 'PATCH', body); }   // a database that has not had update 8 yet
+    try { await rpc('tech_close', { p_tok: me.t, p_id: Number(id), p_data: body }); }   // update 25: the database checks that he is the one who took it
+    catch (e1) {
+      if (isDenied(e1)) { alert(tr('sessExp')); return logout(); }
+      if (/not yours/.test(String(e1 && e1.message))) { await load(); render(); return alert(tr('takenByOther')); }
+      if (!noFn(e1)) throw e1;
+      try { await api(url, 'PATCH', body); }   // a database without update 25: the old direct change
+      catch (err) { if (!/machine_part|bd_class|problem_type|action_en|permission denied/i.test(String(err && err.message))) throw err; delete body.machine_part; delete body.bd_class; delete body.problem_type; delete body.action_en; if (body.stopped_after == 'Job') body.stopped_after = 'Yes'; await api(url, 'PATCH', body); }   // a database that has not had update 8 yet
+    }
     await load(); render(); window.scrollTo(0, 0); alert(tr('closedMsg'));
-  } catch (err) { alert(tr('netErr')); }
+  } catch (err) { alert(tr('netErr') + errTxt(err)); }
 }
 
 /* ---------- APPROVAL of finished work: the section head, the section's supervisors and the admin ---------- */
@@ -2777,7 +3755,7 @@ function rpOpen(e) { rpEmp = e; render(); }
 async function rpSave(ev, e) {
   ev.preventDefault();
   const s = db.staff.find(x => x.e == e), pw = $('rpn').value, adm8 = s && s.r == 'dadm';
-  if (pw.length < (adm8 ? 8 : 4)) return alert(tr(adm8 ? 'pwLong8' : 'pwShort'));
+  if (pw.length < 8) return alert(tr('pwLong8'));
   rpEmp = null;
   if (await act('staff_reset_pw', { p_emp: e, p_hash: await sha(pw) })) alert(tr('saved'));
 }
@@ -2838,7 +3816,7 @@ function calc(fl) {
     t.n++; if (r.fa) { t.d++; t.ms += new Date(r.fa) - new Date(r.ta); }
   });
   // per department: machines that broke down in the period, breakdowns, stops, downtime (same definition as the machine file), machines stopped right now
-  const D = {}, dk = d => (d || '').trim() || '—', dz = k => D[k] = D[k] || { m: 0, c: 0, s: 0, dt: 0, now: 0 };
+  const D = Object.create(null), dk = d => (d || '').trim() || '—', dz = k => D[k] = D[k] || { m: 0, c: 0, s: 0, dt: 0, now: 0 };
   Object.values(M).forEach(m => { const o = dz(dk(m.d)); o.m++; o.c += m.c; o.s += m.s; o.dt += m.dt; });
   const stopped = {}; db.requests.filter(r => r.k != 'pm' && r.s != 'done' && r.st == 'Yes').forEach(r => { stopped[r.mid] = dk(r.d); });
   Object.values(stopped).forEach(k => { dz(k).now++; });
@@ -3647,7 +4625,7 @@ ${rs.length ? `<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4" id="hubLogL
 function hubManual(m) {
   const isA = me.r == 'admin', docs = db.sp.docs.filter(d => d.mid == m.id);
   const form = isA ? (docForm ? `<form onsubmit="docSave(event)" class="np bg-white rounded-xl shadow p-4 mb-3 space-y-2 border-2 border-teal-600" id="docForm"><b class="text-teal-800">+ ${tr('docAdd')}</b><label class="text-xs block">${tr('docTitle')}<input id="dct" required></label><label class="text-xs block">${tr('docLink')}<input id="dcu" dir="ltr" placeholder="manuals/..." required></label><p class="text-xs text-gray-500">${tr('docHint')}</p><div class="flex gap-2"><button class="${btn}">${tr('spSave')}</button><button type="button" onclick="docOpen(false)" class="w-full border rounded-lg py-3 font-bold">${tr('cancel')}</button></div></form>` : `<button onclick="docOpen(true)" class="${btn} mb-3 np">+ ${tr('docAdd')}</button>`) : '';
-  return `${form}${docs.length ? docs.map(d => `<div class="bg-white rounded-xl shadow p-4 mb-2 flex justify-between items-center gap-3" data-doc="${d.id}"><span>📖 <b>${esc(d.t)}</b></span><span class="flex gap-3 items-center"><a href="${esc(d.u)}" target="_blank" rel="noopener" class="bg-teal-700 text-white rounded-lg px-3 py-2 text-sm font-bold">${tr('docOpen')} ↗</a>${isA ? `<button onclick="docDel(${d.id})" class="np text-xs text-red-600 font-semibold">🗑</button>` : ''}</span></div>`).join('') : `<p class="text-gray-500">${tr('docNone')}</p>`}`;
+  return `${form}${docs.length ? docs.map(d => `<div class="bg-white rounded-xl shadow p-4 mb-2 flex justify-between items-center gap-3" data-doc="${d.id}"><span>📖 <b>${esc(d.t)}</b></span><span class="flex gap-3 items-center"><a href="${/^(https:\/\/|manuals\/)[^\s<>"']+$/.test(d.u || '') ? esc(d.u) : '#'}" target="_blank" rel="noopener" class="bg-teal-700 text-white rounded-lg px-3 py-2 text-sm font-bold">${tr('docOpen')} ↗</a>${isA ? `<button onclick="docDel(${d.id})" class="np text-xs text-red-600 font-semibold">🗑</button>` : ''}</span></div>`).join('') : `<p class="text-gray-500">${tr('docNone')}</p>`}`;
 }
 function hubSetK(k) { hubK = k; render(); }
 function hubSetSt(k) { hubSt = k; render(); }
@@ -3804,7 +4782,7 @@ function pwView() {
 }
 async function savePw(e) {
   e.preventDefault();
-  const o = $('po').value, n = $('pn').value, min = me.r == 'deptadmin' ? 8 : 4;
+  const o = $('po').value, n = $('pn').value, min = 8;
   if (n.length < min) return alert(tr(min == 8 ? 'pwLong8' : 'pwShort'));
   if (n !== $('pq').value) return alert(tr('pwMismatch'));
   try {
@@ -4300,11 +5278,13 @@ function stBackup(table) {
 (async () => {
   $('app').innerHTML = `<p class="p-8 text-center text-gray-500">${tr('loading')}</p>`;
   try {
-    await load(true);
+    if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (/^[0-9a-f]{64}$/.test(t || '')) me = { e: '', r: 'admin', h: t, sx: true }; }   // checked just below
+    await load(true).catch(e => { if (!me) throw e; });
     if (lang == 'en') await loadDict();
     await genPM();
     if (me && me.r == 'admin' && !me.sx && !(await adminOk(me.h))) me = null;
-    if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (t && await rpc('sx_check', { p_tok: t })) me = { e: '', r: 'admin', h: t, sx: true }; }
+    if (me && me.sx && !(await rpc('sx_check', { p_tok: me.h }))) { me = null; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } }
+    if (me && me.r == 'workshop') { try { if (!(await rpc('ws_check', { p_tok: me.t || '' }))) me = null; } catch (e) { if (!noFn(e)) throw e; } }   // update 25: the workshop screen needs a session
     if (me && STAFF.includes(me.r)) { const c = await rpc('staff_check', { p_tok: me.t }); if (c.ok) { me.r = ROLE[c.role] || me.r; me.dp = c.dept || ''; me.nm = c.name || ''; } else me = null; }
     save();
   } catch (e) {
