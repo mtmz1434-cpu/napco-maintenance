@@ -5480,7 +5480,7 @@ function stBackup(table) {
     if (me && STAFF.includes(me.r)) { const c = await rpc('staff_check', { p_tok: me.t }); if (c.ok) { me.r = ROLE[c.role] || me.r; me.dp = c.dept || ''; me.nm = c.name || ''; } else me = null; }
     save();
   } catch (e) {
-    $('app').innerHTML = `<div class="p-8 text-center text-red-700">${tr('netErr')}<button onclick="location.reload()" class="${btn} mt-4">↻</button></div>`;
+    $('app').innerHTML = `<div class="p-8 text-center text-red-700">${tr('netErr')}<p class="text-xs text-gray-500 mt-2" dir="ltr">${esc(String((e && (e.name == 'AbortError' ? 'timeout (25 s)' : e.message)) || e).slice(0, 300))}</p><button onclick="location.reload()" class="${btn} mt-4">↻</button></div>`;   // the reason, so a problem can be traced
     return;
   }
   render();
