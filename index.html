@@ -2525,6 +2525,7 @@ async function api(path, method = 'GET', body, prefer) {
   const ac = new AbortController(), to = setTimeout(() => ac.abort(), 25000);   // a dead connection ends in an error message, not a frozen button
   let r, t;
   try { r = await fetch(SUPABASE_URL + '/rest/v1/' + path, { method, headers: h, signal: ac.signal, body: body === undefined ? undefined : JSON.stringify(body) }); t = await r.text(); }
+  catch (e) { if (e && e.name == 'AbortError') throw new Error('timeout 25 s: ' + method + ' ' + path.split('?')[0]); throw e; }
   finally { clearTimeout(to); }
   if (!r.ok) { const er = new Error(t); sessEnded(er); throw er; }
   if (!t) return null;
@@ -5470,17 +5471,20 @@ function stBackup(table) {
 (async () => {
   $('app').innerHTML = `<div class="boot" role="status"><span class="ld" aria-hidden="true"><i></i><i></i><i></i></span><p class="text-gray-500">${tr('loading')}</p></div>`;
   try {
-    if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (/^[0-9a-f]{64}$/.test(t || '')) me = { e: '', r: 'admin', h: t, sx: true }; }   // checked just below
-    await load(true).catch(e => { if (!me) throw e; });
+    if (!me) { let t = null; try { t = sessionStorage.getItem('napco_s'); } catch (e) { /* optional */ } if (/^[0-9a-f]{64}$/.test(t || '')) me = { e: '', r: 'admin', h: t, sx: true }; }
+    // update 28: the saved session is checked FIRST, before any data is read with it; one that ended is dropped (then the sign-in screen shows)
+    const ck = async (fn, a) => { try { return await fn(); } catch (e) { if (noFn(e)) return a; throw e; } };
+    if (me && me.sx && !(await ck(() => rpc('sx_check', { p_tok: me.h }), true))) { me = null; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } }
+    if (me && me.r == 'admin' && !me.sx && !(await adminOk(me.h))) me = null;
+    if (me && me.r == 'workshop' && !(await ck(() => rpc('ws_check', { p_tok: me.t || '' }), true))) me = null;   // update 25: the workshop screen needs a session
+    if (me && STAFF.includes(me.r)) { const c = await rpc('staff_check', { p_tok: me.t }); if (c && c.ok) { me.r = ROLE[c.role] || me.r; me.dp = c.dept || ''; me.nm = c.name || ''; } else me = null; }
+    save();
+    await load(true);
     if (lang == 'en') await loadDict();
     await genPM();
-    if (me && me.r == 'admin' && !me.sx && !(await adminOk(me.h))) me = null;
-    if (me && me.sx && !(await rpc('sx_check', { p_tok: me.h }))) { me = null; try { sessionStorage.removeItem('napco_s'); } catch (e) { /* optional */ } }
-    if (me && me.r == 'workshop') { try { if (!(await rpc('ws_check', { p_tok: me.t || '' }))) me = null; } catch (e) { if (!noFn(e)) throw e; } }   // update 25: the workshop screen needs a session
-    if (me && STAFF.includes(me.r)) { const c = await rpc('staff_check', { p_tok: me.t }); if (c.ok) { me.r = ROLE[c.role] || me.r; me.dp = c.dept || ''; me.nm = c.name || ''; } else me = null; }
     save();
   } catch (e) {
-    $('app').innerHTML = `<div class="p-8 text-center text-red-700">${tr('netErr')}<p class="text-xs text-gray-500 mt-2" dir="ltr">${esc(String((e && (e.name == 'AbortError' ? 'timeout (25 s)' : e.message)) || e).slice(0, 300))}</p><button onclick="location.reload()" class="${btn} mt-4">↻</button></div>`;   // the reason, so a problem can be traced
+    $('app').innerHTML = `<div class="p-8 text-center text-red-700">${tr('netErr')}<p class="text-xs text-gray-500 mt-2" dir="ltr">${esc(String((e && e.message) || e).slice(0, 300))}</p><button onclick="location.reload()" class="${btn} mt-4">↻</button>${me ? `<button onclick="try{localStorage.removeItem('napco_me');sessionStorage.removeItem('napco_s')}catch(x){}location.reload()" class="mt-3 text-sm underline text-gray-500">${tr('logout')}</button>` : ''}</div>`;   // the reason, so a problem can be traced; and a way out of a saved session
     return;
   }
   render();
