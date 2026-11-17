@@ -918,12 +918,12 @@ var w=o.width||o.height||256,h=o.height||w;el.innerHTML='<svg xmlns="http://www.
 window.QRCode.CorrectLevel={L:1,M:0,Q:3,H:2};
 })();
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f3f6f5;--tx:#1f2937;--mu:#566070;--mu2:#616b7a;--inbg:#fff;--inbd:#b6c2bd;--ac:#0f766e;--acr:rgba(15,118,110,.22);--pop:#fff;--popbd:#d1d5db;--gp:#0f766e;--ln:#e5e7eb;--ln2:#d1d5db;--card:#fff;--c1:#2563eb;--c2:#b45309}
 @media screen{html[data-theme=dark]{--bg:#0b1722;--tx:#e8eef4;--mu:#a9b8c7;--mu2:#8fa2b4;--inbg:#0e1c29;--inbd:#3a5772;--ac:#f5a524;--acr:rgba(245,165,36,.3);--pop:#152636;--popbd:#2f4b66;--gp:#f5a524;--ln:#2b455d;--ln2:#3a5772;--card:#122231;--c1:#60a5fa;--c2:#f5a524}}
 html{color-scheme:light;-webkit-text-size-adjust:100%}@media screen{html[data-theme=dark]{color-scheme:dark}}
-body{font-family:Cairo,system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+body{font-family:Rubik,Cairo,system-ui,sans-serif;background:var(--bg);color:var(--tx);font-variant-numeric:tabular-nums;line-height:1.55;-webkit-font-smoothing:antialiased}
 input,select,textarea{border:1px solid var(--inbd);border-radius:.5rem;padding:.6rem;width:100%;background:var(--inbg);color:var(--tx);font:inherit;transition:border-color .15s,box-shadow .15s}
 input,select{min-height:2.75rem}
 input[type=checkbox]{width:auto;padding:0;min-height:0}
@@ -1075,6 +1075,88 @@ html[data-theme=dark] .pmg td.pmg-idle{background:#1b3043;color:#8fa2b4}
 html[data-theme=dark] .pmg-cap{color:#5eead4}
 html[data-theme=dark] .hb:hover{background:rgba(255,255,255,.1)}
 }
+
+/* ---------- Material look (update 27): layered surfaces with soft elevation, pill buttons, state layers, motion that answers a tap.
+   Same colours as before (navy + amber, teal in the light look); only shapes, shadows, type and motion change. Nothing moves. ---------- */
+:root{--e1:0 1px 2px rgba(16,24,40,.10),0 1px 3px 1px rgba(16,24,40,.07);--e2:0 1px 2px rgba(16,24,40,.12),0 2px 6px 2px rgba(16,24,40,.08);
+  --e3:0 4px 8px 3px rgba(16,24,40,.10),0 1px 3px rgba(16,24,40,.14);--ez:cubic-bezier(.2,0,0,1);--sl:currentColor}
+@media screen{html[data-theme=dark]{--e1:0 1px 2px rgba(0,0,0,.5),0 1px 3px 1px rgba(0,0,0,.28);--e2:0 1px 2px rgba(0,0,0,.5),0 2px 6px 2px rgba(0,0,0,.3);
+  --e3:0 4px 8px 3px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.5)}}
+
+/* type: Rubik, medium weights for titles (Material uses medium, not heavy bold, for titles) */
+h1,h2,h3,h4{letter-spacing:0}
+h2.font-bold,h3.font-bold,h2 .font-bold,h3 .font-bold{font-weight:600}
+.text-2xl.font-bold,.text-3xl.font-bold,.text-4xl.font-bold{font-weight:600;letter-spacing:-.01em}
+.greet h1{font-weight:600}
+
+/* top app bar: one solid surface that sits above the page */
+header.bg-teal-800{box-shadow:var(--e2);position:relative;z-index:20}
+
+/* surfaces: cards lift off the page with a soft shadow instead of an outline */
+.shadow{box-shadow:var(--e1)}
+.rounded-xl{border-radius:16px}
+div.rounded-lg.shadow,section.rounded-lg.shadow,li.rounded-lg.shadow{border-radius:12px}
+.req{transition:box-shadow .2s var(--ez)}
+.req:hover,button.shadow:hover,a.shadow:hover{box-shadow:var(--e2)}
+.look-pop{border-radius:16px;box-shadow:var(--e3);border-color:transparent}
+
+/* buttons: pill shape, medium weight, a state layer on hover and press (the Material "ink") */
+button.rounded-lg,a.rounded-lg,button.rounded,button.rounded-md,.tabs>button,label.rounded-lg{border-radius:999px}
+button.rounded-lg,a.rounded-lg,.tabs>button{min-height:2.5rem;font-weight:500;letter-spacing:.01em}
+button,a.rounded-lg{position:relative;transition:box-shadow .2s var(--ez),background-color .2s var(--ez),border-color .2s var(--ez),transform .1s var(--ez)}
+button:not(:disabled):hover{background-image:linear-gradient(color-mix(in srgb,var(--sl) 8%,transparent),color-mix(in srgb,var(--sl) 8%,transparent))}
+button:not(:disabled):active{background-image:linear-gradient(color-mix(in srgb,var(--sl) 14%,transparent),color-mix(in srgb,var(--sl) 14%,transparent));transform:scale(.985)}
+.bg-teal-700:not(:disabled):hover,.bg-red-600:not(:disabled):hover,.bg-green-700:not(:disabled):hover,.bg-orange-600:not(:disabled):hover,.bg-amber-500:not(:disabled):hover{box-shadow:var(--e1)}
+.hb{border-radius:999px}
+button.rounded-xl{border-radius:16px}            /* big tap areas that are cards keep the card shape */
+
+/* tabs and filters: Material filter chips; the chosen one is filled with the main colour */
+.tabs>button{border:1px solid var(--ln2);background-color:transparent;color:var(--mu)}
+.tabs>button.bg-teal-700,.tabs>button[aria-current]{background-color:var(--ac);border-color:transparent;color:#fff;box-shadow:var(--e1)}
+
+/* text fields: Material outlined fields */
+input,select,textarea{border-radius:10px}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac),0 0 0 4px var(--acr)}
+
+/* status tags: small, medium weight */
+span.rounded-full{font-weight:500}
+
+@media screen{
+html[data-theme=dark] .tabs>button.bg-teal-700,html[data-theme=dark] .tabs>button[aria-current]{color:#0b1722}
+html[data-theme=dark] header.bg-teal-800{background-color:#0f1e2c}
+}
+@media print{.shadow,header.bg-teal-800{box-shadow:none!important}}
+
+/* ---------- the menu (update 27): a Material navigation drawer that slides in from the side the page starts on ---------- */
+.nav-scrim{position:fixed;inset:0;z-index:50;background:rgba(5,12,18,.5);opacity:0;transition:opacity .25s var(--ez)}
+.nav-scrim.in{opacity:1}
+.nav-drawer{position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:51;width:min(20rem,86vw);background:var(--pop);color:var(--tx);
+  border-start-end-radius:16px;border-end-end-radius:16px;box-shadow:var(--e3);display:flex;flex-direction:column;
+  transform:translateX(-100%);transition:transform .3s var(--ez);padding-bottom:env(safe-area-inset-bottom)}
+[dir=rtl] .nav-drawer{transform:translateX(100%)}
+.nav-drawer.in,[dir=rtl] .nav-drawer.in{transform:none}
+.nav-hd{padding:1.25rem 1.25rem .75rem;display:flex;flex-direction:column;gap:.15rem;border-bottom:1px solid var(--ln)}
+.nav-hd b{font-size:1.15rem;font-weight:600}
+.nav-hd span{font-size:.85rem;color:var(--mu)}
+.nav-list{padding:.5rem .75rem;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.nav-it{text-align:start;min-height:3rem;padding:0 1rem;border-radius:999px;font-weight:500;color:var(--tx);background:transparent;width:100%}
+.nav-it.on{background:color-mix(in srgb,var(--ac) 22%,transparent);font-weight:600}
+.nav-none{padding:1rem;color:var(--mu)}
+#navBtn svg{display:block}
+
+/* the section line that replaces the bar of section buttons (they are in the menu now) */
+nav.tabs.sec-on{display:flex!important;flex-wrap:wrap!important;align-items:center;gap:.5rem;overflow:visible;margin-inline:0;padding:0;-webkit-mask-image:none;mask-image:none;margin-bottom:1rem}
+nav.tabs.sec-on>button[onclick^="set"]{display:none!important}
+nav.tabs.sec-on>.ms-auto{margin-inline-start:auto}
+.tabs>button.sec-title,.sec-title{display:inline-flex;align-items:center;gap:.35rem;min-height:2.75rem;padding:0 .9rem 0 .6rem;margin-inline-start:-.6rem;border:0;border-radius:999px;
+  background:transparent;color:var(--tx);font-size:1.25rem;font-weight:600;box-shadow:none}
+[dir=rtl] .sec-title{padding:0 .6rem 0 .9rem}
+.sec-title svg{color:var(--gp);flex:none}
+#navBtn{position:relative}
+.nav-badge{position:absolute;top:2px;inset-inline-end:0;min-width:1.15rem;height:1.15rem;padding:0 .3rem;border-radius:999px;background:#d93025;color:#fff;font-size:.7rem;font-weight:600;line-height:1.15rem;text-align:center;box-shadow:0 0 0 2px var(--hdb,#08111a)}
+header.bg-teal-800{--hdb:#115e59}
+@media screen{html[data-theme=dark] header.bg-teal-800{--hdb:#0f1e2c}}
+
 </style>
 </head>
 <body>
@@ -1160,6 +1242,8 @@ dateErr|وقت الانتهاء قبل وقت الاستلام|Finish time is be
 close|إنهاء وإغلاق الطلب|Finish & close request
 closedMsg|تم إغلاق الطلب وحفظه في الطلبات السابقة|Request closed and saved to previous requests
 wrongPwLock|رقم الموظف أو كلمة المرور غير صحيحة. بعد 5 محاولات خاطئة انتظر 15 دقيقة، أو ادخل من جهازك المعتاد|Wrong employee number or password. After 5 wrong tries wait 15 minutes, or sign in from your usual device
+menuT|القائمة: كل الأقسام|Menu: all sections
+menuNone|هذه الصفحة ليس فيها أقسام أخرى|This page has no other sections
 tabWork|استلام الطلبات|Take requests
 tabOpen|الطلبات المفتوحة|Open requests
 tabPrev|سجل الأعطال|Breakdown log
@@ -2624,7 +2708,7 @@ let theme = LS.get('theme') == 'light' ? 'light' : 'dark', fsz = [1, 2].includes
 function applyLook() {
   const r = document.documentElement;
   r.setAttribute('data-theme', theme); r.style.fontSize = ['', '112.5%', '125%'][fsz];
-  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = theme == 'dark' ? '#08111a' : '#115e59';
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = theme == 'dark' ? '#0a121a' : '#17222c';
   document.querySelectorAll('#lookPop [data-th]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.th == theme)));
   document.querySelectorAll('#lookPop [data-fs]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.fs == fsz)));
 }
@@ -2639,6 +2723,55 @@ function lookShow(on) {
 }
 function lookToggle() { lookShow(!setOpen); if (setOpen) { const f = document.querySelector('#lookPop button'); if (f) f.focus(); } }
 document.addEventListener('click', e => { if (setOpen && !e.target.closest('#lookPop,#lookBtn')) lookShow(false); });
+// update 27: the menu (three lines in the top bar) lists every section of the account's page; a tap opens that section.
+// It is built from the page's own section bar each time it opens, so it always matches what this account can see.
+// update 27: the sections live in the menu; on the page their bar becomes one line: the current section's name (a tap opens the menu)
+// and, for the admin, the backup buttons that were at the end of the bar. The menu button shows how many items wait in the other sections.
+const secBtns = nv => nv ? [...nv.querySelectorAll(':scope > button[onclick^="set"]')] : [];
+function secBar() {
+  const nv = document.querySelector('#app nav.tabs'), nb = $('navBtn'), bs = secBtns(nv);
+  if (nb) nb.hidden = !bs.length;
+  if (!nv || !bs.length) return;
+  const cur = bs.find(b => b.hasAttribute('aria-current')) || bs[0];
+  const t = document.createElement('button'); t.type = 'button'; t.className = 'sec-title'; t.setAttribute('aria-haspopup', 'dialog'); t.onclick = navOpen;
+  const s = document.createElement('span'); s.textContent = cur.textContent.trim(); t.appendChild(s);
+  t.insertAdjacentHTML('beforeend', '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');
+  nv.prepend(t); nv.classList.add('sec-on');
+  if (nb) {   // waiting items in the other sections: a small number on the menu button
+    const n = bs.filter(b => b !== cur).reduce((a, b) => { const m = b.textContent.match(/\((\d+)\)\s*$/); return a + (m ? +m[1] : 0); }, 0);
+    const old = nb.querySelector('.nav-badge'); if (old) old.remove();
+    if (n) { const g = document.createElement('span'); g.className = 'nav-badge'; g.textContent = n > 99 ? '99+' : String(n); nb.appendChild(g); }
+    nb.setAttribute('aria-label', tr('menuT') + (n ? ' (' + n + ')' : ''));
+  }
+}
+function navOpen() {
+  navClose(true);
+  const items = secBtns(document.querySelector('#app nav.tabs'));
+  const sc = document.createElement('div'); sc.className = 'nav-scrim np'; sc.id = 'navScrim'; sc.onclick = () => navClose();
+  const d = document.createElement('nav'); d.className = 'nav-drawer np'; d.id = 'navDrawer'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', tr('menuT'));
+  const hd = document.createElement('div'); hd.className = 'nav-hd';
+  const t = document.createElement('b'); t.textContent = tr('app'); hd.appendChild(t);
+  if (me) { const s = document.createElement('span'); s.textContent = me.sx ? tr('adminT') : '#' + me.e + (me.dp ? ' · ' + me.dp : ''); hd.appendChild(s); }
+  d.appendChild(hd);
+  const ul = document.createElement('div'); ul.className = 'nav-list';
+  if (!items.length) { const p = document.createElement('p'); p.className = 'nav-none'; p.textContent = tr('menuNone'); ul.appendChild(p); }
+  items.forEach(b => {
+    const it = document.createElement('button'); it.type = 'button'; it.className = 'nav-it' + (b.hasAttribute('aria-current') ? ' on' : '');
+    if (b.hasAttribute('aria-current')) it.setAttribute('aria-current', 'page');
+    it.textContent = b.textContent.trim();
+    it.onclick = () => { navClose(); b.click(); window.scrollTo(0, 0); };
+    ul.appendChild(it);
+  });
+  d.appendChild(ul);
+  document.body.append(sc, d);
+  requestAnimationFrame(() => { sc.classList.add('in'); d.classList.add('in'); const f = d.querySelector('.nav-it.on') || d.querySelector('.nav-it'); if (f) f.focus({ focusVisible: false }); });
+}
+function navClose(quiet) {
+  const d = $('navDrawer'), s = $('navScrim');
+  if (d) d.remove(); if (s) s.remove();
+  if (!quiet && d) { const b = $('navBtn'); if (b) b.focus(); }
+}
+document.addEventListener('keydown', e => { if (e.key == 'Escape' && $('navDrawer')) navClose(); });
 document.addEventListener('keydown', e => { if (e.key == 'Escape' && setOpen) { lookShow(false); const b = $('lookBtn'); if (b) b.focus(); } });
 function alT(b) {
   alOpen = !alOpen;
@@ -2675,11 +2808,12 @@ function renderNow() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang == 'ar' ? 'rtl' : 'ltr';
   const pop = `<div id="lookPop" role="dialog" aria-label="${tr('lookT')}" class="look-pop np${setOpen ? '' : ' hidden'}"><div class="lp-t">${tr('themeT')}</div><div class="lp-r"><button type="button" data-th="dark" aria-pressed="${theme == 'dark'}" onclick="setTheme('dark')">🌙 ${tr('darkT')}</button><button type="button" data-th="light" aria-pressed="${theme == 'light'}" onclick="setTheme('light')">☀ ${tr('lightT')}</button></div><div class="lp-t">${tr('fszT')}</div><div class="lp-r">${[['fszS', '1em'], ['fszM', '1.15em'], ['fszL', '1.3em']].map(([k, z], i) => `<button type="button" data-fs="${i}" aria-pressed="${fsz == i}" aria-label="${tr(k)}" onclick="setFsz(${i})" style="font-size:${z}">A</button>`).join('')}</div></div>`;
-  let h = `<a href="#main" class="skip np" onclick="event.preventDefault();const m=$('main');if(m)m.focus()">${tr('skipT')}</a><header class="bg-teal-800 text-white np relative"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-2 flex justify-between items-center gap-2"><b class="hdt">🛠 ${tr('app')}</b><div class="flex items-center gap-1 sm:gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded hidden sm:inline">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" class="hb" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" class="hb" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()" class="hb">${tr('logout')}</button>` : ''}<button type="button" id="lookBtn" onclick="lookToggle()" class="hb" aria-label="${tr('lookT')}" aria-haspopup="dialog" aria-expanded="${setOpen}">Aa</button><button onclick="setLang()" class="hb border border-white/50 rounded px-2">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div>${pop}</header><main id="main" tabindex="-1" class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
+  let h = `<a href="#main" class="skip np" onclick="event.preventDefault();const m=$('main');if(m)m.focus()">${tr('skipT')}</a><header class="bg-teal-800 text-white np relative"><div class="max-w-[1600px] mx-auto px-4 lg:px-8 py-2 flex justify-between items-center gap-2"><div class="flex items-center gap-1">${me ? `<button type="button" id="navBtn" class="hb" onclick="navOpen()" aria-haspopup="dialog" aria-label="${tr('menuT')}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>` : ''}<b class="hdt">🛠 ${tr('app')}</b></div><div class="flex items-center gap-1 sm:gap-3 text-sm">${me ? `<span class="bg-teal-900 px-2 py-1 rounded hidden sm:inline">${me.sx ? tr('adminT') : '#' + esc(me.e) + (me.dp ? ' · ' + esc(me.dp) : '')}</span>${me.r == 'admin' ? `<button onclick="sxToggle()" class="hb" aria-label="${tr('acct')}">⚙</button>` : STAFF.includes(me.r) ? `<button onclick="pwToggle()" class="hb" aria-label="${tr('pwChange')}">🔑</button>` : ''}<button onclick="logout()" class="hb">${tr('logout')}</button>` : ''}<button type="button" id="lookBtn" onclick="lookToggle()" class="hb" aria-label="${tr('lookT')}" aria-haspopup="dialog" aria-expanded="${setOpen}">Aa</button><button onclick="setLang()" class="hb border border-white/50 rounded px-2">${lang == 'ar' ? 'EN' : 'عربي'}</button></div></div>${pop}</header><main id="main" tabindex="-1" class="max-w-[1600px] mx-auto p-4 lg:px-8 lg:py-6 w-full flex-1${tv ? ' text-lg' : ''}">`;
   if (tv) h = h.replace(/<header[\s\S]*?<\/header>/, `<button onclick="toggleTv()" class="np fixed top-2 left-2 z-10 bg-gray-800 text-white rounded-full w-8 h-8">✕</button>`);
   h += (me && !tv ? greet() : '') + (!me ? loginView() : (me.r == 'admin' && sxPanel) ? sxView() : (STAFF.includes(me.r) && pwPanel) ? pwView() : me.r == 'operator' ? opView() : me.r == 'technician' ? techHome() : me.r == 'deptadmin' ? deptView() : me.r == 'prodsup' ? psView() : me.r == 'storekeeper' ? storeView() : adminView());
   const og = document.getElementById('pmGrid'), gs = og ? [og.scrollLeft, og.scrollTop] : null, otb = document.querySelector('.tabs'), tsx = otb ? otb.scrollLeft : null;   // the yearly table keeps its place when the page is redrawn
   $('app').innerHTML = h + `</main><footer class="np" style="direction:ltr;display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:6px 12px 22px;font-size:11px;color:var(--mu2)"><span dir="auto">${tr('credit')}</span><b onclick="fx()" style="font-family:Georgia,serif;padding:8px 10px;margin:-8px -10px;user-select:none;-webkit-tap-highlight-color:transparent">A</b></footer>`;
+  secBar();
   if (me && me.r == 'operator' && !pwPanel && $('m')) {
     const qn = new URLSearchParams(location.search).get('m');
     const m = qn ? db.machines.find(x => x.n.toLowerCase() == qn.toLowerCase()) : null;
@@ -3856,8 +3990,8 @@ ${all.length ? all.map(r => `<div class="bg-white rounded-xl shadow p-3 mb-3 bor
 }
 /* ---------- STATISTICS: CHARTS (a separate view from the tables, with its own period) ---------- */
 const CC = {
-  get cnt() { return theme == 'dark' ? '#60a5fa' : '#2563eb'; }, get hrs() { return theme == 'dark' ? '#fb923c' : '#ea580c'; },
-  get pal() { return theme == 'dark' ? ['#60a5fa', '#fb923c', '#2dd4bf', '#a78bfa', '#f472b6', '#facc15', '#22d3ee', '#9ca3af'] : ['#2563eb', '#ea580c', '#0f766e', '#7c3aed', '#db2777', '#ca8a04', '#0891b2', '#6b7280']; },
+  get cnt() { return theme == 'dark' ? '#5aa2f0' : '#1557c0'; }, get hrs() { return theme == 'dark' ? '#f2b33d' : '#b7791f'; },
+  get pal() { return theme == 'dark' ? ['#5aa2f0', '#f2b33d', '#4cc38a', '#b08cf0', '#f07aa8', '#7fd3e6', '#f08a5a', '#9aa7b4'] : ['#1557c0', '#b7791f', '#16794a', '#6d3fc0', '#b8336a', '#0e7490', '#c2410c', '#5c6a77']; },
   get pr() { return theme == 'dark' ? { critical: '#f87171', high: '#fb923c', medium: '#facc15', low: '#4ade80' } : { critical: '#dc2626', high: '#ea580c', medium: '#ca8a04', low: '#16a34a' }; }
 };
 const CPER = [['today', 'today'], ['yesterday', 'yesterday'], ['7d', 'last7'], ['30d', 'last30'], ['month', 'thisMonth'], ['90d', 'last90'], ['year', 'thisYear'], ['all', 'all'], ['custom', 'custom']];
