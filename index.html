@@ -2582,15 +2582,20 @@ const fromReq = x => {
 const mapNote = x => ({ id: Number(x.id), rid: x.request_id == null ? null : Number(x.request_id), k: oneOf(x.kind, ['done', 'watch', 'info'], 'info'), t: txt(x.note) || '', e: txt(x.by_emp), n: txt(x.by_name) || '', at: (() => { try { return loc(x.created_at); } catch (e) { return ''; } })() });
 // full = reload everything; otherwise only fetch what changed since the last sync
 async function load(full) {
+  // update 28: everything that does not depend on another answer is asked at the same moment (start-up was a chain of waits)
+  const all = full || !lastSync, un = x => { if (x.e) throw x.e; return x.v; }, wrap = p => p.then(v => ({ v }), e => ({ e }));
+  const slP = me && (me.r == 'admin' || me.r == 'deptadmin') ? rpc('staff_list', { p_tok: stTok() }).catch(() => null) : null;
+  const aeP = all ? rpc('admin_emp').catch(() => null) : null;   // older database: keep the starting value
+  const rsP = all ? wrap(pages('requests?select=*&order=id')) : null, dlP = all ? wrap(api('req_deleted?select=at&order=at.desc&limit=1')) : null;
   const [m, u, c, pp, dpt, sn] = await Promise.all([api('machines?select=*&order=name'), api('staff_public?select=*'), api('custom_types?select=*'), api('pm_plans?select=*&order=next_due').catch(() => []), api('departments?select=name&order=name').catch(() => []), api('shift_notes?select=*&order=created_at.desc&limit=300').catch(() => [])]);
-  const sl = me && (me.r == 'admin' || me.r == 'deptadmin') ? await rpc('staff_list', { p_tok: stTok() }).catch(() => null) : null;
+  const sl = slP ? await slP : null;
   let n = 0;
   if (full || !lastSync) {
-    try { const ae = await rpc('admin_emp'); if (/^\d{3,12}$/.test(ae || '')) ADMIN_ID = ae; } catch (e) { /* older database: keep the starting value */ }
-    const rs = await pages('requests?select=*&order=id');
+    const ae = await aeP; if (/^\d{3,12}$/.test(ae || '')) ADMIN_ID = ae;
+    const rs = un(await rsP);
     db.requests = rs.map(fromReq);
     lastSync = rs.reduce((a, x) => x.updated_at > a ? x.updated_at : a, '1970-01-01T00:00:00Z');
-    const dl = await api('req_deleted?select=at&order=at.desc&limit=1');
+    const dl = un(await dlP);
     lastDel = dl.length ? dl[0].at : '1970-01-01T00:00:00Z';
     n = 1;
   } else {
@@ -2688,7 +2693,7 @@ async function load(full) {
 }
 async function refresh() { await load(); render(); }
 // creates the preventive tasks that are due (safe to call many times: never duplicates an open task)
-async function genPM() { try { const n = await rpc('pm_generate', {}); if (n > 0) await load(); } catch (e) { /* plans not set up yet */ } }
+async function genPM() { try { const n = await rpc('pm_generate', {}); if (n > 0) { await load(); render(); } } catch (e) { /* plans not set up yet */ } }
 let polling = false, pollFails = 0;
 async function poll() {
   if (document.hidden || polling) return;
@@ -5480,8 +5485,6 @@ function stBackup(table) {
     if (me && STAFF.includes(me.r)) { const c = await rpc('staff_check', { p_tok: me.t }); if (c && c.ok) { me.r = ROLE[c.role] || me.r; me.dp = c.dept || ''; me.nm = c.name || ''; } else me = null; }
     save();
     await load(true);
-    if (lang == 'en') await loadDict();
-    await genPM();
     save();
   } catch (e) {
     $('app').innerHTML = `<div class="p-8 text-center text-red-700">${tr('netErr')}<p class="text-xs text-gray-500 mt-2" dir="ltr">${esc(String((e && e.message) || e).slice(0, 300))}</p><button onclick="location.reload()" class="${btn} mt-4">↻</button>${me ? `<button onclick="try{localStorage.removeItem('napco_me');sessionStorage.removeItem('napco_s')}catch(x){}location.reload()" class="mt-3 text-sm underline text-gray-500">${tr('logout')}</button>` : ''}</div>`;   // the reason, so a problem can be traced; and a way out of a saved session
@@ -5489,6 +5492,9 @@ function stBackup(table) {
   }
   render();
   setInterval(poll, 10000);
+  // update 28: the page shows as soon as its data is in; the English dictionary and the due preventive tasks follow in the background
+  if (lang == 'en') { await loadDict(); render(); }
+  genPM();
 })();
 </script>
 </body>
